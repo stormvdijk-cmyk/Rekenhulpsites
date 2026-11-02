@@ -29,12 +29,14 @@ jobs:
       - run: npm test
       - name: Pages-instellingen ophalen
         id: pages
+        if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
       - name: Build
         run: npm run build
         env:
           # Eigen domein (CNAME)? Dan geeft configure-pages origin = https://jouwdomein.nl en base_path leeg.
-          SITE_URL: ${{ vars.SITE_URL || steps.pages.outputs.origin }}
+          # Bij een pull request is Pages niet nodig: dan bouwen we met het standaarddomein.
+          SITE_URL: ${{ vars.SITE_URL || steps.pages.outputs.origin || 'https://rekenhulp.nl' }}
           BASE_PATH: ${{ vars.SITE_URL && '/' || format('{0}/', steps.pages.outputs.base_path) }}
           PUBLIC_ADSENSE_CLIENT: ${{ vars.PUBLIC_ADSENSE_CLIENT }}
           PUBLIC_ADSENSE_SLOT_RESULTAAT: ${{ vars.PUBLIC_ADSENSE_SLOT_RESULTAAT }}
@@ -44,6 +46,7 @@ jobs:
           PUBLIC_CF_ANALYTICS_TOKEN: ${{ vars.PUBLIC_CF_ANALYTICS_TOKEN }}
           PUBLIC_GOATCOUNTER_CODE: ${{ vars.PUBLIC_GOATCOUNTER_CODE }}
       - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
         with:
           path: dist
 
