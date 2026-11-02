@@ -165,3 +165,48 @@ thead th { position: sticky; top: 0; background: var(--surface-2); }
 .tip[hidden] { display: none; }
 details.tabel summary { cursor: pointer; font-weight: 600; margin: var(--space-3) 0; }
 [hidden] { display: none !important; }
+
+/* Homepage */
+.home-hero { padding: var(--space-5) 0 var(--space-4); }
+.home-hero h1 { margin-top: 0; }
+.home-search { position: relative; margin: var(--space-4) 0 var(--space-3); }
+.home-search svg { position: absolute; left: 0.95rem; top: 50%; width: 20px; height: 20px; transform: translateY(-50%); fill: none; stroke: var(--text-muted); stroke-width: 2; stroke-linecap: round; pointer-events: none; }
+.home-search input { padding-left: 2.8rem; min-height: 3.25rem; font-size: 1.05rem; border-radius: var(--radius); box-shadow: var(--shadow); }
+.home-chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.home-chips a { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.8rem; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); text-decoration: none; font-size: 0.9rem; min-height: 2.5rem; }
+.home-chips a:hover { border-color: var(--primary); color: var(--primary); }
+.home-chips a span { font-size: 0.78rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+.home-popular { margin: var(--space-4) 0 var(--space-5); }
+.home-popular h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 0 0 var(--space-3); }
+.home-popular ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); grid-template-columns: 1fr 1fr; }
+@media (min-width: 40rem) { .home-popular ul { grid-template-columns: repeat(3, 1fr); } }
+.home-popular a { display: block; height: 100%; padding: var(--space-3); background: var(--accent-soft); color: var(--text); border: 1px solid transparent; border-radius: var(--radius-sm); text-decoration: none; }
+.home-popular a strong { display: block; font-size: 0.95rem; line-height: 1.3; }
+.home-popular a .kort { display: none; font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; }
+@media (min-width: 40rem) { .home-popular a .kort { display: block; } }
+.home-popular a:hover { border-color: var(--accent); }
+
+.home-topics { columns: 1; column-gap: var(--space-4); }
+@media (min-width: 52rem) { .home-topics { columns: 2; } }
+.home-topics > .topic { break-inside: avoid; margin-bottom: var(--space-4); }
+.topic { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); scroll-margin-top: var(--space-4); min-width: 0; }
+.topic header { display: flex; gap: var(--space-3); align-items: flex-start; }
+.topic h2 { margin: 0; font-size: 1.2rem; }
+.topic header p { margin: 2px 0 0; color: var(--text-muted); font-size: 0.92rem; }
+.topic-icon { flex: none; width: 2.5rem; height: 2.5rem; border-radius: 10px; background: var(--accent-soft); display: grid; place-items: center; }
+.topic-icon svg { width: 22px; height: 22px; fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.topic ul { list-style: none; margin: 0; padding: 0; display: grid; }
+.topic li + li { border-top: 1px solid var(--border); }
+.topic li a { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: 0.7rem 0.25rem; text-decoration: none; color: var(--text); min-height: 3rem; }
+.topic li a:hover strong { color: var(--primary); text-decoration: underline; text-underline-offset: 0.15em; }
+.topic .t { display: grid; min-width: 0; }
+.topic .t strong { font-weight: 600; }
+.topic .t span { font-size: 0.88rem; color: var(--text-muted); }
+.topic .chev { flex: none; width: 18px; height: 18px; fill: none; stroke: var(--text-muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.topic-extra { font-size: 0.92rem; font-weight: 600; }
+
+.home-about { margin-top: var(--space-7); }
+.home-about-grid { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+.home-about h3 { margin: 0 0 var(--space-1); font-size: 1rem; }
+.home-about p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
