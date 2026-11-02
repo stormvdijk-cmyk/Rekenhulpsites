@@ -1,0 +1,100 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const t = tarieven.schenkErf;
+const v = t.vrijstellingErf;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Hoeveel mag een kind belastingvrij erven in 2026?', antwoord: `Een kind heeft in 2026 een vrijstelling van ${eur(v.kind)}. Over het deel van de erfenis daarboven betaalt het 10%, en boven ${eur(t.schijfGrens)} belast 20%. Voor een kind met een beperking dat zelf weinig inkomen heeft, geldt onder voorwaarden een vrijstelling van ${eur(v.kindBeperking)}.` },
+  { vraag: 'Betaalt mijn partner erfbelasting?', antwoord: `Pas boven de partnervrijstelling van ${eur(v.partner)}. Die geldt voor echtgenoten, geregistreerde partners en onder voorwaarden ook voor samenwoners met een notarieel samenlevingscontract. Ontvangt de partner ook nabestaandenpensioen, dan kan de vrijstelling lager zijn.` },
+  { vraag: 'Wordt de erfbelasting berekend over de hele nalatenschap?', antwoord: 'Nee, per erfgenaam over zijn of haar eigen erfdeel. Elke erfgenaam heeft een eigen vrijstelling en eigen tarief. Vul hier dus het deel in dat één erfgenaam ontvangt, na aftrek van de schulden en de kosten van de begrafenis.' },
+  { vraag: 'Wanneer moet de aangifte erfbelasting binnen zijn?', antwoord: 'Binnen acht maanden na het overlijden. De Belastingdienst stuurt meestal zelf een uitnodiging. Is er geen erfbelasting verschuldigd, bijvoorbeeld omdat alles onder de vrijstelling valt, dan hoeft er vaak geen aangifte te worden gedaan.' },
+];
+---
+<CalculatorPage
+  slug="erfbelasting-berekenen"
+  title="Erfbelasting berekenen 2026"
+  description="Bereken de erfbelasting per erfgenaam in 2026: partner, kind, kleinkind, ouder of anderen, met de vrijstellingen en tarieven van 2026."
+  h1="Erfbelasting berekenen"
+  intro="Vul in hoeveel één erfgenaam erft en kies de relatie met de overledene. Je ziet direct de vrijstelling en de erfbelasting."
+  faq={faq}
+  bron={t.bronTarieven}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Erfbelasting</p>
+      <p class="result-main" id="r-bel">–</p>
+      <p class="result-sub">De erfgenaam houdt netto <strong id="r-netto">–</strong> over</p>
+      <dl>
+        <dt>Vrijstelling</dt><dd id="r-vrij">–</dd>
+        <dt>Belast bedrag</dt><dd id="r-belast">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="bedrag" label="Erfdeel van deze erfgenaam" value="100000" prefix="€" hint="Na aftrek van schulden en kosten van de uitvaart" />
+      <div class="field">
+        <label for="erfgenaam">Relatie met de overledene</label>
+        <select id="erfgenaam" name="erfgenaam">
+          <option value="partner">Partner</option>
+          <option value="kind" selected>Kind (ook stief- of pleegkind)</option>
+          <option value="kindBeperking">Kind met een beperking</option>
+          <option value="kleinkind">Kleinkind</option>
+          <option value="achterkleinkind">Achterkleinkind</option>
+          <option value="ouder">Ouder</option>
+          <option value="overig">Iemand anders (broer, zus, vriend)</option>
+        </select>
+      </div>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Vrijstellingen en tarieven in 2026</h2>
+    <p>Iedere erfgenaam betaalt erfbelasting over zijn of haar eigen erfdeel, na aftrek van een vrijstelling. De vrijstellingen in 2026:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Erfgenaam</th><th>Vrijstelling</th><th>Tarief</th></tr></thead>
+        <tbody>
+          <tr><td>Partner</td><td>{eur(v.partner)}</td><td>10% / 20%</td></tr>
+          <tr><td>Kind</td><td>{eur(v.kind)}</td><td>10% / 20%</td></tr>
+          <tr><td>Kind met een beperking</td><td>{eur(v.kindBeperking)}</td><td>10% / 20%</td></tr>
+          <tr><td>Kleinkind</td><td>{eur(v.kleinkind)}</td><td>18% / 36%</td></tr>
+          <tr><td>Achterkleinkind</td><td>{eur(v.achterkleinkind)}</td><td>18% / 36%</td></tr>
+          <tr><td>Ouder</td><td>{eur(v.ouder)}</td><td>30% / 40%</td></tr>
+          <tr><td>Overigen</td><td>{eur(v.overig)}</td><td>30% / 40%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Het lage tarief geldt over het belaste bedrag tot {eur(t.schijfGrens)}, het hoge tarief over het deel daarboven.</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Kind:</strong> een zoon erft € 100.000. Belast is € 100.000 − € 26.230 = € 73.770. Hij betaalt 10% = <strong>€ 7.377</strong>.</p>
+      <p><strong>Partner:</strong> een weduwe erft € 1.000.000. Belast is € 171.965. Over € 158.669 geldt 10% (€ 15.866,90) en over € 13.296 geldt 20% (€ 2.659,20), samen <strong>€ 18.526,10</strong>.</p>
+      <p><strong>Ouder:</strong> een moeder erft € 100.000 van haar zoon. Belast is € 37.890. Zij betaalt 30% = <strong>€ 11.367</strong>.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Wat de uitkomst kan veranderen</h2>
+    <ul>
+      <li><strong>Pensioen voor de partner.</strong> Krijgt de partner een nabestaandenpensioen, dan gaat een deel van de waarde daarvan af van de partnervrijstelling.</li>
+      <li><strong>Wettelijke verdeling.</strong> Zonder testament krijgt de partner meestal alle bezittingen, en krijgen de kinderen een vordering op die partner. Over die vordering betalen de kinderen nu al erfbelasting, ook al krijgen ze het geld pas later.</li>
+      <li><strong>Schenkingen kort voor overlijden.</strong> Schenkingen in de 180 dagen voor het overlijden tellen mee als erfenis.</li>
+      <li><strong>Bedrijfsopvolging.</strong> Voor ondernemingsvermogen gelden aparte vrijstellingen, die deze rekenhulp niet berekent.</li>
+    </ul>
+    <p>Wil je bij leven geld overdragen? Bekijk dan de vrijstellingen in <a href="../schenkbelasting-berekenen/">schenkbelasting berekenen</a>. Zet je de erfenis op een spaarrekening of belegt je het? Dan kan het in box 3 vallen; zie <a href="../box-3-belasting-berekenen/">box 3-belasting berekenen</a>. Bij een grote of ingewikkelde nalatenschap is advies van een notaris verstandig.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenErfbelasting, type Erfgenaam } from '../lib/calculators/schenkErf';
+  import { $, euro, getal, live, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenErfbelasting(getal('bedrag'), ($('erfgenaam') as HTMLSelectElement).value as Erfgenaam);
+    zet('r-bel', euro(r.belasting));
+    zet('r-netto', euro(r.netto));
+    zet('r-vrij', euro(r.vrijstelling));
+    zet('r-belast', euro(r.belast));
+  });
+</script>

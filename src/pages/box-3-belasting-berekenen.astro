@@ -1,0 +1,88 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const t = tarieven.box3;
+const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 2 }) + '%';
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Hoeveel spaargeld is belastingvrij in 2026?', antwoord: `Het heffingsvrij vermogen is ${eur(t.heffingsvrijVermogen)} per persoon, of ${eur(t.heffingsvrijVermogen * 2)} samen met een fiscale partner. Het gaat om je bezittingen min je schulden op 1 januari 2026.` },
+  { vraag: 'Waarom betaal ik belasting terwijl mijn spaarrente lager is?', antwoord: 'Box 3 rekent niet met je echte rente of je echte koerswinst, maar met vaste percentages per soort bezit. Is je werkelijke rendement lager dan het forfaitaire, dan kun je met de tegenbewijsregeling aantonen wat je echt hebt verdiend, en betaal je over dat lagere bedrag.' },
+  { vraag: 'Telt mijn eigen huis mee in box 3?', antwoord: 'Nee. Je eigen woning en de hypotheek daarop vallen in box 1. In box 3 tellen wel een tweede woning, een vakantiehuis, een verhuurde woning en schulden die niet bij je eigen woning horen.' },
+  { vraag: 'Zijn de percentages voor 2026 definitief?', antwoord: `Nog niet helemaal. Het percentage voor overige bezittingen (${pct(t.rendementOverig)}) staat vast. De percentages voor banktegoeden (${pct(t.rendementBank)}) en schulden (${pct(t.rendementSchulden)}) zijn voorlopig en worden begin 2027 vastgesteld. De uitkomst kan daardoor nog iets veranderen.` },
+];
+---
+<CalculatorPage
+  slug="box-3-belasting-berekenen"
+  title="Box 3 belasting berekenen 2026"
+  description="Bereken hoeveel box 3-belasting je in 2026 betaalt over spaargeld en beleggingen, met het heffingsvrij vermogen en de forfaitaire rendementen."
+  h1="Box 3-belasting berekenen"
+  intro="Vul je spaargeld, beleggingen en schulden op 1 januari 2026 in. Je ziet direct hoeveel vermogensbelasting je betaalt."
+  faq={faq}
+  bron={t.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Box 3-belasting 2026</p>
+      <p class="result-main" id="r-bel">–</p>
+      <dl>
+        <dt>Vermogen min schulden</dt><dd id="r-rg">–</dd>
+        <dt>Heffingsvrij vermogen</dt><dd id="r-hv">–</dd>
+        <dt>Belast vermogen (grondslag)</dt><dd id="r-gr">–</dd>
+        <dt>Effectief rendement</dt><dd id="r-er">–</dd>
+        <dt>Belastbaar voordeel</dt><dd id="r-vd">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="bank" label="Spaargeld en banktegoeden" value="100000" prefix="€" />
+      <Field id="overig" label="Beleggingen en overige bezittingen" value="50000" prefix="€" hint="Aandelen, fondsen, crypto, tweede woning, uitgeleend geld" />
+      <Field id="schulden" label="Schulden in box 3" value="0" prefix="€" hint="Geen hypotheek op je eigen woning" />
+      <label class="check"><input type="checkbox" id="partner" name="partner" /> Ik heb het hele jaar een fiscale partner (bedragen samen invullen)</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo werkt box 3 in 2026</h2>
+    <p>In box 3 betaal je belasting over een <strong>verondersteld rendement</strong> op je vermogen. De Belastingdienst gaat uit van vaste percentages per soort bezit:</p>
+    <ul>
+      <li>Banktegoeden en contant geld: {pct(t.rendementBank)} (voorlopig)</li>
+      <li>Beleggingen en overige bezittingen: {pct(t.rendementOverig)}</li>
+      <li>Schulden: {pct(t.rendementSchulden)} (voorlopig), na aftrek van een drempel van {eur(t.drempelSchulden)} per persoon</li>
+    </ul>
+    <p>De berekening gaat in vier stappen. Eerst tel je het rendement op je bezittingen op en trek je het rendement op je schulden af. Dan deel je dat door je totale vermogen min schulden: dat is je <strong>effectieve rendementspercentage</strong>. Vervolgens trek je het heffingsvrij vermogen van {eur(t.heffingsvrijVermogen)} af. Over het deel dat overblijft, reken je het effectieve rendement. Daarover betaal je {pct(t.tarief)} belasting.</p>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je hebt op 1 januari 2026 <strong>€ 100.000 spaargeld</strong> en <strong>€ 50.000 aan beleggingen</strong>, geen schulden en geen fiscale partner.</p>
+      <ul>
+        <li>Rendement: € 100.000 × 1,28% + € 50.000 × 6% = € 1.280 + € 3.000 = € 4.280</li>
+        <li>Effectief rendement: € 4.280 / € 150.000 = 2,85%</li>
+        <li>Belast vermogen: € 150.000 − € 59.357 = € 90.643</li>
+        <li>Voordeel: € 90.643 × 2,85% = € 2.586,35</li>
+        <li>Belasting: 36% × € 2.586,35 = <strong>€ 931,08</strong></li>
+      </ul>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Fiscale partners en tegenbewijs</h2>
+    <p>Met een fiscale partner tellen jullie bezittingen en schulden samen. Het heffingsvrij vermogen en de schuldendrempel verdubbelen. Daarna mogen jullie de grondslag verdelen zoals jullie willen; voor de totale belasting maakt dat bij dezelfde tarieven niet uit.</p>
+    <p>Box 3 rekent met vaste percentages. Heb je in 2026 minder verdiend dan het forfaitaire rendement, bijvoorbeeld door koersverlies of een lage spaarrente? Dan kun je met de <strong>tegenbewijsregeling</strong> je werkelijke rendement opgeven. Daarin tellen ook ongerealiseerde koerswinsten en -verliezen mee. Het kabinet werkt aan een nieuw stelsel op basis van werkelijk rendement, maar dat geldt nog niet voor 2026.</p>
+    <p>Deze rekenhulp rekent met de standaardberekening zonder tegenbewijs. Groene beleggingen, vrijgestelde bezittingen en vermogen in het buitenland zitten er niet in. Wil je zien hoe je vermogen groeit? Gebruik dan <a href="../samengestelde-rente/">samengestelde rente</a>. Ga je geld schenken? Kijk bij <a href="../schenkbelasting-berekenen/">schenkbelasting berekenen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenBox3 } from '../lib/calculators/box3';
+  import { formatProcent } from '../lib/calculators/format';
+  import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenBox3({ banktegoeden: getal('bank'), overigeBezittingen: getal('overig'), schulden: getal('schulden'), partner: vinkje('partner') });
+    zet('r-bel', euro(r.belasting));
+    zet('r-rg', euro(r.rendementsgrondslag));
+    zet('r-hv', euro(r.heffingsvrij));
+    zet('r-gr', euro(r.grondslag));
+    zet('r-er', formatProcent(r.effectiefRendement, 2));
+    zet('r-vd', euro(r.voordeel));
+  });
+</script>

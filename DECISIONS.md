@@ -29,3 +29,12 @@ Datum: 2 november 2026.
 - **Consent Mode v2 staat standaard op denied, en er is geen eigen banner.** De Google-CMP regelt de toestemming. Zonder publisher-ID wordt er geen enkel Google-script geladen.
 - **Contactadres via `PUBLIC_CONTACT_EMAIL`.** Er was geen adres opgegeven en we wilden geen adres publiceren zonder toestemming. Tot het is ingesteld, staat op de contactpagina dat het adres volgt.
 - **Grafiek als eigen inline SVG** (geen chartbibliotheek), met een tooltip en een tabel per jaar als alternatief. De kleuren zijn gecontroleerd op kleurenblindheid en contrast, in licht en donker.
+
+## Uitbreiding november 2026 (6 rekenhulpen)
+- **Nieuwe categorie Wonen** (overdrachtsbelasting, hypotheek).
+- **Overdrachtsbelasting:** 0% (starter 18 t/m 34, zelf bewonen, woning ≤ € 555.000, eenmalig), 2%, 8% (niet zelf bewonen, sinds 2026), 10,4% (overig). Bij twee kopers ieder de helft; de woningwaardegrens geldt voor de hele woning.
+- **Box 3:** forfaitaire berekening 2026 (heffingsvrij € 59.357, schuldendrempel € 3.800, 1,28% / 6,00% / 2,70%, tarief 36%). De percentages voor bank en schulden zijn voorlopig; dat staat op de pagina. Tegenbewijsregeling niet berekend.
+- **Schenk- en erfbelasting:** tarieven 10/20, 18/36, 30/40 met schijfgrens € 158.669. Schenkingen tussen partners en bedrijfsopvolging zijn bewust weggelaten.
+- **Hypotheek:** bruto via de bestaande leningslogica; netto = bruto − (rente − forfait/12) × aftrektarief (schijftarief, max 37,56%). Wet Hillen niet berekend (dan nul voordeel). Eigenwoningforfait alleen voor WOZ ≥ € 75.000 (lagere schijven niet bevestigd).
+- **Kilometervergoeding:** € 0,25/km (2026, terugwerkende kracht), vaste vergoeding 214 dagen bij 5 dagen per week, naar rato.
+- **Niet gebouwd:** minimumloon (bedragen per halfjaar niet bevestigd).

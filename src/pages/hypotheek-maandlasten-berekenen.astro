@@ -1,0 +1,107 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const e = tarieven.eigenWoning;
+const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 2 }) + '%';
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Wat is het verschil tussen bruto en netto maandlasten?', antwoord: 'De bruto maandlast is wat je elke maand aan de bank betaalt: rente plus aflossing. Omdat je de hypotheekrente mag aftrekken van je inkomen, krijg je een deel van de rente terug via de Belastingdienst. Wat je per saldo betaalt, is de netto maandlast.' },
+  { vraag: 'Tegen welk tarief mag ik de hypotheekrente aftrekken?', antwoord: `Tegen het tarief van je belastingschijf, maar in 2026 nooit hoger dan ${pct(e.maxAftrekTarief)}. Valt je inkomen in de eerste schijf, dan is het 35,75%. Verdien je meer, dan is het 37,56%, ook in de hoogste schijf.` },
+  { vraag: 'Waarom stijgen mijn netto lasten over de jaren?', antwoord: 'Bij een annuïteitenhypotheek betaal je in het begin vooral rente en later vooral aflossing. Aflossing is niet aftrekbaar. Je bruto maandlast blijft gelijk, maar je renteaftrek wordt elk jaar kleiner, dus je netto maandlast stijgt langzaam.' },
+  { vraag: 'Moet ik mijn hypotheek aflossen om renteaftrek te krijgen?', antwoord: 'Voor hypotheken vanaf 2013 wel: je moet de lening in maximaal 30 jaar minstens annuïtair aflossen. Een aflossingsvrije hypotheek van na 2013 geeft geen renteaftrek. Voor oudere hypotheken gelden overgangsregels.' },
+];
+---
+<CalculatorPage
+  slug="hypotheek-maandlasten-berekenen"
+  title="Hypotheek maandlasten: bruto en netto"
+  description="Bereken de bruto en netto maandlasten van je hypotheek in 2026, met hypotheekrenteaftrek en eigenwoningforfait. Annuïtair of lineair."
+  h1="Hypotheek maandlasten berekenen"
+  intro="Vul je hypotheekbedrag, de rente, de WOZ-waarde en je inkomen in. Je ziet direct wat je bruto aan de bank betaalt en netto na renteaftrek."
+  faq={faq}
+  bron={e.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Netto maandlast, eerste maand</p>
+      <p class="result-main" id="r-netto">–</p>
+      <p class="result-sub">Bruto <strong id="r-bruto">–</strong> per maand aan de bank</p>
+      <dl>
+        <dt>Netto gemiddeld in jaar 1</dt><dd id="r-nettoj">–</dd>
+        <dt>Rente in jaar 1</dt><dd id="r-rente">–</dd>
+        <dt>Eigenwoningforfait per jaar</dt><dd id="r-ewf">–</dd>
+        <dt>Belastingvoordeel jaar 1</dt><dd id="r-vd">–</dd>
+        <dt>Aftrektarief</dt><dd id="r-tarief">–</dd>
+        <dt>Totale rente over de looptijd</dt><dd id="r-totaal">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="bedrag" label="Hypotheekbedrag" value="300000" prefix="€" />
+      <div class="row-2">
+        <Field id="rente" label="Hypotheekrente" value="4" suffix="%" />
+        <Field id="jaren" label="Looptijd" value="30" suffix="jaar" inputmode="numeric" />
+      </div>
+      <fieldset class="seg">
+        <legend>Hypotheekvorm</legend>
+        <label><input type="radio" name="vorm" value="annuitair" checked /><span>Annuïtair</span></label>
+        <label><input type="radio" name="vorm" value="lineair" /><span>Lineair</span></label>
+      </fieldset>
+      <div class="row-2 stack">
+        <Field id="woz" label="WOZ-waarde woning" value="350000" prefix="€" />
+        <Field id="inkomen" label="Je bruto jaarinkomen" value="60000" prefix="€" hint="Bepaalt het aftrektarief" />
+      </div>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Van bruto naar netto</h2>
+    <p>Je bruto maandlast bestaat uit <strong>rente</strong> en <strong>aflossing</strong>. De rente over een hypotheek voor je eigen woning mag je aftrekken van je inkomen in box 1. Daar staat tegenover dat je het <strong>eigenwoningforfait</strong> bij je inkomen telt: in 2026 {pct(e.forfaitPercentage)} van de WOZ-waarde voor woningen tussen {eur(e.forfaitVanaf)} en {eur(e.forfaitVillaGrens)}.</p>
+    <p>Het verschil tussen rente en forfait levert belastingvoordeel op tegen je aftrektarief: het tarief van je schijf, maximaal {pct(e.maxAftrekTarief)}. Netto maandlast = bruto maandlast − (rente − forfait / 12) × aftrektarief.</p>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je leent <strong>€ 300.000</strong> tegen <strong>4%</strong> voor 30 jaar, annuïtair. De WOZ-waarde is € 350.000 en je verdient € 60.000 bruto per jaar.</p>
+      <ul>
+        <li>Bruto maandlast: <strong>€ 1.432,25</strong>, waarvan in de eerste maand € 1.000 rente</li>
+        <li>Eigenwoningforfait: 0,35% × € 350.000 = € 1.225 per jaar, € 102,08 per maand</li>
+        <li>Aftrektarief: 37,56%, want je inkomen valt in de tweede schijf</li>
+        <li>Belastingvoordeel: (€ 1.000 − € 102,08) × 37,56% = € 337,26</li>
+        <li>Netto maandlast in de eerste maand: <strong>€ 1.094,99</strong></li>
+      </ul>
+      <p>Kies je voor lineair aflossen, dan begin je bruto op € 1.833,33 en netto op € 1.496,07. Je betaalt dan in 30 jaar € 180.500 rente in plaats van € 215.608,52.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Beperkingen van deze berekening</h2>
+    <ul>
+      <li><strong>Gemiddelde over het eerste jaar.</strong> Je renteaftrek wordt elk jaar kleiner. De uitkomst geldt dus voor het begin van de looptijd.</li>
+      <li><strong>Aftrek over meerdere schijven.</strong> Valt je inkomen net boven de schijfgrens, dan valt een deel van je aftrek in de eerste schijf. Het echte voordeel ligt dan iets lager.</li>
+      <li><strong>Kleine hypotheek.</strong> Is het forfait hoger dan je rente, bijvoorbeeld bij een bijna afgeloste hypotheek, dan geldt een aparte regeling (Wet Hillen). Deze rekenhulp rekent dan met nul voordeel.</li>
+      <li><strong>Overige kosten.</strong> Verzekeringen, onderhoud, VvE-bijdrage en gemeentelijke belastingen tellen niet mee in deze maandlast.</li>
+    </ul>
+    <p>Gaat het om een gewone lening en niet om een hypotheek? Gebruik dan <a href="../lening-maandlasten/">maandlasten lening</a>. Ga je een huis kopen, reken dan ook de <a href="../overdrachtsbelasting-berekenen/">overdrachtsbelasting</a> uit. Hoeveel je mag lenen, hangt af van je inkomen en de leennormen. Daarover beslist je bank of hypotheekadviseur.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenHypotheek } from '../lib/calculators/hypotheek';
+  import type { Leningvorm } from '../lib/calculators/lening';
+  import { formatProcent } from '../lib/calculators/format';
+  import { euro, getal, live, radio, zet } from '../lib/ui';
+  live('f', () => {
+    const jaren = Math.min(40, Math.max(1, Math.round(getal('jaren', 30))));
+    const r = berekenHypotheek({
+      bedrag: getal('bedrag'), rente: getal('rente'), looptijdMaanden: jaren * 12,
+      vorm: (radio('vorm') || 'annuitair') as Leningvorm, woz: getal('woz'), brutoJaarinkomen: getal('inkomen'),
+    });
+    zet('r-netto', euro(r.nettoEersteMaand));
+    zet('r-bruto', euro(r.brutoEersteMaand));
+    zet('r-nettoj', euro(r.nettoGemiddeldJaar1));
+    zet('r-rente', euro(r.renteJaar1));
+    zet('r-ewf', r.forfaitJaar === null ? 'Lager tarief (WOZ onder € 75.000)' : euro(r.forfaitJaar));
+    zet('r-vd', euro(r.belastingvoordeelJaar1));
+    zet('r-tarief', formatProcent(r.aftrekTarief));
+    zet('r-totaal', euro(r.totaleRente));
+  });
+</script>

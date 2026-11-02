@@ -164,3 +164,4 @@ thead th { position: sticky; top: 0; background: var(--surface-2); }
 .tip { position: absolute; pointer-events: none; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; font-size: 0.82rem; box-shadow: var(--shadow); white-space: nowrap; transform: translate(-50%, -100%); }
 .tip[hidden] { display: none; }
 details.tabel summary { cursor: pointer; font-weight: 600; margin: var(--space-3) 0; }
+[hidden] { display: none !important; }
