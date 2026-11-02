@@ -1,5 +1,5 @@
 import { tarieven } from '../../data/tarieven';
-import { belastingOverLoon, marginaalTarief } from './belasting';
+import { belastingOverLoon, marginaalTarief, schijvenVoor } from './belasting';
 import { round2 } from './format';
 
 export interface NettoSalarisInput {
@@ -10,6 +10,10 @@ export interface NettoSalarisInput {
   /** Vakantiegeld meerekenen (8% van het jaarsalaris) */
   vakantiegeld: boolean;
   vakantiegeldPercentage?: number;
+  /** pensioenpremie werknemersdeel per maand (verlaagt het belastbare loon) */
+  pensioenpremieMaand?: number;
+  /** het hele jaar AOW-leeftijd */
+  aow?: boolean;
 }
 
 export interface NettoSalarisResultaat {
@@ -26,6 +30,8 @@ export interface NettoSalarisResultaat {
   /** Netto per maand zonder vakantiegeld (het bedrag dat je maandelijks ziet) */
   nettoMaand: number;
   vakantiegeldNetto: number;
+  pensioenpremieJaar: number;
+  ouderenkorting: number;
   gemiddeldTarief: number;
   marginaalTarief: number;
 }
@@ -35,14 +41,17 @@ export function berekenNettoSalaris(input: NettoSalarisInput): NettoSalarisResul
   const brutoMaand = Math.max(0, input.brutoMaand);
   const brutoJaar = brutoMaand * 12;
   const vakantiegeldBruto = input.vakantiegeld ? brutoJaar * pct : 0;
-  const belastbaarJaar = brutoJaar + vakantiegeldBruto;
+  const pensioen = Math.max(0, input.pensioenpremieMaand ?? 0) * 12;
+  const opties = { aow: Boolean(input.aow) };
+  const belastbaarJaar = Math.max(0, brutoJaar + vakantiegeldBruto - pensioen);
 
-  const b = belastingOverLoon(belastbaarJaar, belastbaarJaar, input.loonheffingskorting);
+  const b = belastingOverLoon(belastbaarJaar, belastbaarJaar, input.loonheffingskorting, opties);
   const nettoJaar = belastbaarJaar - b.teBetalen;
 
   // Netto vakantiegeld = verschil tussen netto met en zonder vakantiegeld.
-  const zonder = belastingOverLoon(brutoJaar, brutoJaar, input.loonheffingskorting);
-  const nettoZonderVg = brutoJaar - zonder.teBetalen;
+  const belastbaarZonderVg = Math.max(0, brutoJaar - pensioen);
+  const zonder = belastingOverLoon(belastbaarZonderVg, belastbaarZonderVg, input.loonheffingskorting, opties);
+  const nettoZonderVg = belastbaarZonderVg - zonder.teBetalen;
   const vakantiegeldNetto = nettoJaar - nettoZonderVg;
 
   return {
@@ -57,7 +66,9 @@ export function berekenNettoSalaris(input: NettoSalarisInput): NettoSalarisResul
     nettoMaandGemiddeld: round2(nettoJaar / 12),
     nettoMaand: round2(nettoZonderVg / 12),
     vakantiegeldNetto: round2(vakantiegeldNetto),
+    pensioenpremieJaar: round2(pensioen),
+    ouderenkorting: round2(b.ouderenkorting),
     gemiddeldTarief: belastbaarJaar > 0 ? round2((b.teBetalen / belastbaarJaar) * 100) : 0,
-    marginaalTarief: round2(marginaalTarief(belastbaarJaar) * 100),
+    marginaalTarief: round2(marginaalTarief(belastbaarJaar, schijvenVoor(opties.aow)) * 100),
   };
 }

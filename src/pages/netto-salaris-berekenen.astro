@@ -9,7 +9,7 @@ const faq = [
   { vraag: 'Wat is het verschil tussen bruto en netto salaris?', antwoord: 'Bruto is het loon dat in je contract staat. Netto is wat er op je rekening komt, nadat je werkgever loonheffing heeft ingehouden. Loonheffing bestaat uit loonbelasting en premies volksverzekeringen (AOW, Anw en Wlz). Heffingskortingen verlagen dat bedrag weer.' },
   { vraag: 'Moet ik de loonheffingskorting aanzetten?', antwoord: 'Bij je hoofdbaan meestal wel. Je mag de loonheffingskorting maar bij één werkgever of uitkeringsinstantie tegelijk laten toepassen. Bij een tweede baan zet je hem uit, anders moet je achteraf vaak bijbetalen.' },
   { vraag: 'Waarom is mijn netto vakantiegeld relatief laag?', antwoord: 'Vakantiegeld komt bovenop je gewone loon. Daardoor valt het in je hoogste tariefschijf, en daarnaast worden de algemene heffingskorting en de arbeidskorting afgebouwd naarmate je meer verdient. Het belastingpercentage over vakantiegeld ligt daardoor vaak rond de 40%.' },
-  { vraag: 'Rekent deze rekenhulp met pensioenpremie?', antwoord: 'Nee. Pensioenpremie die je werkgever inhoudt, verlaagt het loon waarover je belasting betaalt en dus ook je netto loon. Die premie verschilt per pensioenfonds en ontbreekt hier. Je loonstrook kan daardoor lager uitkomen.' },
+  { vraag: 'Rekent deze rekenhulp met pensioenpremie?', antwoord: 'Ja, als je die invult. Pensioenpremie die je werkgever inhoudt, verlaagt het loon waarover je belasting betaalt. Je netto loon wordt lager, maar minder dan de premie zelf, omdat je er ook minder belasting over betaalt. Het bedrag staat op je loonstrook.' },
   { vraag: 'Klopt de uitkomst precies met mijn loonstrook?', antwoord: 'Meestal zit je binnen enkele tientallen euro’s per maand. Werkgevers rekenen met de officiële loonbelastingtabellen per periode en houden soms ook pensioenpremie, een eigen bijdrage of andere posten in. Dit is een jaarberekening die gelijk wordt verdeeld over twaalf maanden.' },
 ];
 ---
@@ -34,13 +34,16 @@ const faq = [
         <dt>Loonheffing per jaar</dt><dd id="r-lh">–</dd>
         <dt>Algemene heffingskorting</dt><dd id="r-ahk">–</dd>
         <dt>Arbeidskorting</dt><dd id="r-ak">–</dd>
+        <dt>Pensioenpremie per jaar</dt><dd id="r-pp">–</dd>
         <dt>Gemiddeld / marginaal</dt><dd id="r-tarief">–</dd>
       </dl>
     </div>
     <div class="form">
       <Field id="bruto" label="Bruto maandsalaris" value="3500" prefix="€" hint="Zonder vakantiegeld, bij een fulltime of parttime baan" />
+      <Field id="pensioen" label="Pensioenpremie per maand (jouw deel)" value="0" prefix="€" hint="Staat op je loonstrook; laat 0 als je het niet weet" />
       <label class="check"><input type="checkbox" id="lhk" name="lhk" checked /> Loonheffingskorting toepassen (hoofdbaan)</label>
       <label class="check"><input type="checkbox" id="vg" name="vg" checked /> Vakantiegeld (8%) meerekenen</label>
+      <label class="check"><input type="checkbox" id="aow" name="aow" /> Ik heb het hele jaar de AOW-leeftijd</label>
     </div>
   </form>
 
@@ -73,10 +76,10 @@ const faq = [
     <h2>Wanneer wijkt je loonstrook af?</h2>
     <p>Deze berekening gaat uit van een jaarsalaris dat gelijk over twaalf maanden is verdeeld. Op je echte loonstrook kunnen andere posten staan:</p>
     <ul>
-      <li><strong>Pensioenpremie.</strong> Het werknemersdeel verlaagt je belastbaar loon. Je netto loon wordt daardoor lager, maar je betaalt ook iets minder belasting.</li>
+      <li><strong>Pensioenpremie.</strong> Het werknemersdeel verlaagt je belastbaar loon. Je netto loon wordt daardoor lager, maar je betaalt ook iets minder belasting. Vul het bedrag van je loonstrook in bij pensioenpremie.</li>
       <li><strong>Bijtelling.</strong> Heb je een auto van de zaak, dan telt de bijtelling als loon. Bereken het effect met de rekenhulp <a href="../bijtelling-auto-van-de-zaak/">bijtelling auto van de zaak</a>.</li>
       <li><strong>Dertiende maand of bonus.</strong> Werkgevers houden daarover het tarief voor bijzondere beloningen in. Dat ligt vaak hoger dan het tarief op je gewone loon.</li>
-      <li><strong>AOW-leeftijd.</strong> Heb je de AOW-leeftijd bereikt, dan gelden een lager tarief in de eerste schijf en lagere kortingen. Deze rekenhulp rekent alleen voor wie jonger is dan de AOW-leeftijd.</li>
+      <li><strong>AOW-leeftijd.</strong> Heb je het hele jaar de AOW-leeftijd, dan betaal je geen AOW-premie: de eerste schijf is 17,85%. De kortingen zijn lager, maar je krijgt ouderenkorting. Vink de optie aan. Bereik je de AOW-leeftijd in de loop van het jaar, dan ligt het tarief ertussenin.</li>
     </ul>
     <p>Bij je aangifte inkomstenbelasting rekent de Belastingdienst alles definitief af. Heb je meerdere banen of een groot verschil tussen maanden? Dan kun je dus geld terugkrijgen of moeten bijbetalen.</p>
   </Fragment>
@@ -87,7 +90,7 @@ const faq = [
   import { formatProcent } from '../lib/calculators/format';
   import { euro, getal, live, vinkje, zet } from '../lib/ui';
   live('f', () => {
-    const r = berekenNettoSalaris({ brutoMaand: getal('bruto'), loonheffingskorting: vinkje('lhk'), vakantiegeld: vinkje('vg') });
+    const r = berekenNettoSalaris({ brutoMaand: getal('bruto'), loonheffingskorting: vinkje('lhk'), vakantiegeld: vinkje('vg'), pensioenpremieMaand: getal('pensioen'), aow: vinkje('aow') });
     zet('r-maand', euro(r.nettoMaand));
     zet('r-jaar', euro(r.nettoJaar));
     zet('r-gem', euro(r.nettoMaandGemiddeld));
@@ -96,7 +99,8 @@ const faq = [
     zet('r-vg', euro(r.vakantiegeldNetto));
     zet('r-lh', euro(r.loonheffingJaar));
     zet('r-ahk', euro(r.algemeneHeffingskorting));
-    zet('r-ak', euro(r.arbeidskorting));
+    zet('r-ak', euro(r.arbeidskorting + r.ouderenkorting));
+    zet('r-pp', euro(r.pensioenpremieJaar));
     zet('r-tarief', `${formatProcent(r.gemiddeldTarief, 1)} / ${formatProcent(r.marginaalTarief)}`);
   });
 </script>

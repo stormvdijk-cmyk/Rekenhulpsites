@@ -1,0 +1,101 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const o = tarieven.ondernemer;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 2 }) + '%';
+const faq = [
+  { vraag: 'Hoeveel moet ik als zzp\'er reserveren voor de belasting?', antwoord: 'Dat hangt af van je winst. Bij een winst van € 50.000 is het ongeveer 19% van je winst, inclusief de bijdrage Zvw. Bij een hogere winst loopt het op. Reserveer liever iets te veel: de voorlopige aanslag of de definitieve aanslag kan hoger uitvallen. De btw die je ontvangt, zet je altijd apart.' },
+  { vraag: 'Wat is het verschil tussen omzet en winst?', antwoord: 'Omzet is alles wat je factureert, exclusief btw. Winst is omzet min zakelijke kosten, zoals je laptop, software, verzekeringen, opleidingen en de afschrijving van investeringen. Over je winst betaal je inkomstenbelasting.' },
+  { vraag: 'Wat levert het urencriterium op?', antwoord: `Werk je minstens 1.225 uur per jaar aan je onderneming, dan krijg je ${eur(o.zelfstandigenaftrek)} zelfstandigenaftrek, en als starter ${eur(o.startersaftrek)} startersaftrek erbij. Die aftrek verlaagt je winst voordat de mkb-winstvrijstelling van ${pct(o.mkbWinstvrijstelling)} wordt toegepast.` },
+  { vraag: 'Telt deze berekening pensioen en AOV mee?', antwoord: 'Nee. Premies voor een arbeidsongeschiktheidsverzekering en lijfrente kunnen onder voorwaarden aftrekbaar zijn, en verlagen dan je belasting. Ze zitten hier niet in. Het netto bedrag is dus wat je overhoudt vóór je eigen pensioen en AOV.' },
+];
+---
+<CalculatorPage
+  slug="zzp-netto-inkomen-berekenen"
+  title="Zzp netto inkomen berekenen 2026"
+  description="Bereken als zzp'er je netto inkomen uit omzet en kosten in 2026, en hoeveel je moet reserveren voor inkomstenbelasting en Zvw."
+  h1="Zzp netto inkomen berekenen"
+  intro="Vul je omzet en kosten per jaar in. Je ziet direct je netto inkomen per maand en hoeveel je moet opzijzetten voor de belasting."
+  faq={faq}
+  bron={o.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Netto per maand</p>
+      <p class="result-main" id="r-maand">–</p>
+      <p class="result-sub">Reserveer <strong id="r-res">–</strong> per jaar (<span id="r-respct">–</span> van je winst)</p>
+      <dl>
+        <dt>Winst</dt><dd id="r-winst">–</dd>
+        <dt>Ondernemersaftrek</dt><dd id="r-oa">–</dd>
+        <dt>Mkb-winstvrijstelling</dt><dd id="r-mkb">–</dd>
+        <dt>Belastbaar inkomen</dt><dd id="r-bel">–</dd>
+        <dt>Inkomstenbelasting</dt><dd id="r-ib">–</dd>
+        <dt>Bijdrage Zvw</dt><dd id="r-zvw">–</dd>
+        <dt>Netto per jaar</dt><dd id="r-jaar">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <div class="row-2 stack">
+        <Field id="omzet" label="Omzet per jaar (excl. btw)" value="60000" prefix="€" />
+        <Field id="kosten" label="Zakelijke kosten per jaar" value="10000" prefix="€" />
+      </div>
+      <label class="check"><input type="checkbox" id="urencrit" name="urencrit" checked /> Ik voldoe aan het urencriterium (1.225 uur)</label>
+      <label class="check"><input type="checkbox" id="starter" name="starter" /> Ik heb recht op startersaftrek</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Van omzet naar netto in vijf stappen</h2>
+    <ol>
+      <li><strong>Winst</strong> = omzet − zakelijke kosten.</li>
+      <li><strong>Ondernemersaftrek:</strong> voldoe je aan het urencriterium, dan gaat de zelfstandigenaftrek van {eur(o.zelfstandigenaftrek)} eraf, en als starter ook {eur(o.startersaftrek)}.</li>
+      <li><strong>Mkb-winstvrijstelling:</strong> {pct(o.mkbWinstvrijstelling)} van wat er dan over is, is vrijgesteld.</li>
+      <li><strong>Inkomstenbelasting</strong> over het belastbaar inkomen in box 1, met algemene heffingskorting en arbeidskorting. Aftrekposten leveren in 2026 maximaal {pct(o.aftrekTariefMaximum)} op.</li>
+      <li><strong>Bijdrage Zvw:</strong> {pct(o.zvwPercentage)} over je belastbaar inkomen, tot maximaal {eur(o.zvwMaximumInkomen)}.</li>
+    </ol>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je factureert <strong>€ 60.000</strong> exclusief btw en hebt <strong>€ 10.000</strong> kosten. Je voldoet aan het urencriterium.</p>
+      <ul>
+        <li>Winst: € 50.000</li>
+        <li>Na zelfstandigenaftrek: € 48.800; mkb-winstvrijstelling 12,7%: € 6.197,60</li>
+        <li>Belastbaar inkomen: € 42.602,40</li>
+        <li>Inkomstenbelasting na kortingen: € 7.607,83; bijdrage Zvw: € 2.066,22</li>
+        <li>Netto: <strong>€ 40.325,95</strong> per jaar, ongeveer <strong>€ 3.360,50</strong> per maand</li>
+      </ul>
+      <p>Je reserveert dus ongeveer € 9.674 per jaar, 19,3% van je winst.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Tips voor het reserveren</h2>
+    <ul>
+      <li><strong>Aparte rekening.</strong> Zet bij elke betaalde factuur meteen de btw en een vast percentage voor de inkomstenbelasting op een spaarrekening.</li>
+      <li><strong>Voorlopige aanslag.</strong> Vraag een voorlopige aanslag aan op basis van je verwachte winst. Dan betaal je de belasting in maandelijkse termijnen en voorkom je een grote rekening achteraf.</li>
+      <li><strong>Pensioen en AOV.</strong> Die betaal je zelf, uit je netto inkomen. Reken ze mee als je bepaalt welk uurtarief je nodig hebt.</li>
+    </ul>
+    <p>Wil je omgekeerd rekenen, van gewenst netto inkomen naar uurtarief? Gebruik <a href="../zzp-uurtarief-berekenen/">zzp-uurtarief berekenen</a>. Voor de btw op je facturen is er <a href="../btw-berekenen/">btw berekenen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenZzpNetto } from '../lib/calculators/zzpNetto';
+  import { formatProcent } from '../lib/calculators/format';
+  import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenZzpNetto({ omzet: getal('omzet'), kosten: getal('kosten'), urencriterium: vinkje('urencrit'), starter: vinkje('starter') });
+    zet('r-maand', euro(r.nettoMaand));
+    zet('r-res', euro(r.teReserveren));
+    zet('r-respct', formatProcent(r.reserveringPct, 1));
+    zet('r-winst', euro(r.winst));
+    zet('r-oa', euro(r.ondernemersaftrek));
+    zet('r-mkb', euro(r.mkbVrijstelling));
+    zet('r-bel', euro(r.belastbaar));
+    zet('r-ib', euro(r.inkomstenbelasting));
+    zet('r-zvw', euro(r.zvw));
+    zet('r-jaar', euro(r.nettoJaar));
+  });
+</script>

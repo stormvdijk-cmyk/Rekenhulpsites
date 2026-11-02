@@ -20,6 +20,10 @@ Snelle, installeerbare webapp (PWA) met Nederlandstalige financiële rekenhulpen
 | Erfbelasting | `/erfbelasting-berekenen/` |
 | Overdrachtsbelasting | `/overdrachtsbelasting-berekenen/` |
 | Hypotheek maandlasten | `/hypotheek-maandlasten-berekenen/` |
+| Inkomstenbelasting (ook AOW, teruggave) | `/inkomstenbelasting-berekenen/` |
+| Zzp netto inkomen | `/zzp-netto-inkomen-berekenen/` |
+
+Daarnaast: `/belastingtarieven-2026/`, een overzicht van alle tarieven, dat automatisch uit de tarieven-JSON wordt opgebouwd.
 
 ## Lokaal draaien
 

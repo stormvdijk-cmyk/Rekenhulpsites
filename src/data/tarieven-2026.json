@@ -216,5 +216,74 @@
     "omschrijving": "Maximale onbelaste vergoeding per kilometer in 2026 (met terugwerkende kracht vanaf 1 januari 2026). Vaste vergoeding: maximaal 214 reisdagen per jaar bij een vijfdaagse werkweek.",
     "onbelastPerKm": 0.25,
     "vasteVergoedingDagenFulltime": 214
+  },
+  "aow": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_1/box_1",
+    "bronKortingen": "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/heffingskortingen",
+    "bronAhk": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/algemene_heffingskorting/tabel-algemene-heffingskorting-2026",
+    "bronArbeidskorting": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/arbeidskorting/tabel-arbeidskorting-2026",
+    "opgezocht": "2026-11-02",
+    "omschrijving": "Voor wie het hele jaar 2026 de AOW-leeftijd heeft en geboren is op of na 1 januari 1946.",
+    "schijven": [
+      {
+        "tot": 38883,
+        "tarief": 0.1785
+      },
+      {
+        "tot": 78426,
+        "tarief": 0.3756
+      },
+      {
+        "tot": null,
+        "tarief": 0.495
+      }
+    ],
+    "algemeneHeffingskorting": {
+      "maximum": 1556,
+      "afbouwVanaf": 29736,
+      "afbouwPercentage": 0.03195,
+      "nulVanaf": 78426
+    },
+    "arbeidskorting": {
+      "schijven": [
+        {
+          "vanaf": 0,
+          "tot": 11965,
+          "basis": 0,
+          "percentage": 0.04156
+        },
+        {
+          "vanaf": 11965,
+          "tot": 25845,
+          "basis": 498,
+          "percentage": 0.15483
+        },
+        {
+          "vanaf": 25845,
+          "tot": 45592,
+          "basis": 2647,
+          "percentage": 0.00974
+        },
+        {
+          "vanaf": 45592,
+          "tot": 132920,
+          "basis": 2840,
+          "percentage": -0.0325
+        },
+        {
+          "vanaf": 132920,
+          "tot": null,
+          "basis": 0,
+          "percentage": 0
+        }
+      ],
+      "maximum": 2840
+    },
+    "ouderenkorting": {
+      "maximum": 2067,
+      "afbouwVanaf": 46002,
+      "afbouwPercentage": 0.15
+    },
+    "alleenstaandeOuderenkorting": 540
   }
 }
