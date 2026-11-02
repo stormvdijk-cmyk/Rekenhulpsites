@@ -12,15 +12,28 @@ const jsonLd = [
   },
 ];
 const anker = (c: string) => c.toLowerCase().replace(/[^a-z]+/g, '-');
+const POPULAIR = ['netto-salaris-berekenen', 'inkomstenbelasting-berekenen', 'btw-berekenen', 'vakantiegeld-berekenen', 'hypotheek-maandlasten-berekenen', 'box-3-belasting-berekenen'];
+const populair = POPULAIR.map((s) => REKENHULPEN.find((r) => r.slug === s)!).filter(Boolean);
 ---
 <Base title="Rekenhulp – gratis financiële rekenhulpen" description="Gratis Nederlandse rekenhulpen: netto salaris, btw, vakantiegeld, rente, lening, inflatie, zzp-uurtarief en bijtelling. Snel, ook offline." jsonLd={jsonLd}>
   <h1>Financiële rekenhulpen</h1>
-  <p class="lead">Gratis rekenhulpen voor salaris, belasting, sparen en lenen. Je vult in, de uitkomst staat er meteen. Werkt ook offline als je de app installeert.</p>
+  <p class="lead">Gratis rekenhulpen voor salaris, belasting, wonen, sparen en lenen, met de tarieven van 2026. Je vult in, de uitkomst staat er meteen. Werkt ook offline als je de app installeert.</p>
 
   <div class="search field">
     <label for="zoek">Zoek een rekenhulp</label>
     <input type="search" id="zoek" placeholder="Bijvoorbeeld: btw, netto, rente" autocomplete="off" />
   </div>
+
+  <section class="cat" id="populair" data-cat data-populair>
+    <h2>Meest gebruikt</h2>
+    <ul class="cards">
+      {populair.map((r) => (
+        <li data-zoek={`${r.titel} ${r.kort} ${r.trefwoorden}`.toLowerCase()} data-dubbel>
+          <a class="card" href={url(`${r.slug}/`)}><strong>{r.titel}</strong><span>{r.kort}</span></a>
+        </li>
+      ))}
+    </ul>
+  </section>
 
   {CATEGORIEEN.map((c) => (
     <section class="cat" id={anker(c)} data-cat>
@@ -44,13 +57,16 @@ const anker = (c: string) => c.toLowerCase().replace(/[^a-z]+/g, '-');
   <script>
     const zoek = document.getElementById('zoek') as HTMLInputElement;
     const items = [...document.querySelectorAll<HTMLElement>('[data-zoek]')];
+    const populair = document.querySelector<HTMLElement>('[data-populair]')!;
     const secties = [...document.querySelectorAll<HTMLElement>('[data-cat]')];
     const geen = document.getElementById('geen')!;
     zoek.addEventListener('input', () => {
       const q = zoek.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
       let n = 0;
-      items.forEach((li) => { const ok = q.every((w) => li.dataset.zoek!.includes(w)); li.hidden = !ok; if (ok) n++; });
+      items.forEach((li) => { const ok = q.every((w) => li.dataset.zoek!.includes(w)); li.hidden = !ok; if (ok && !('dubbel' in li.dataset)) n++; });
       secties.forEach((s) => { s.hidden = !s.querySelector('[data-zoek]:not([hidden])'); });
+      // Tijdens het zoeken de 'Meest gebruikt'-rij verbergen, zodat resultaten niet dubbel staan.
+      if (q.length) populair.hidden = true;
       geen.hidden = n > 0;
     });
   </script>
