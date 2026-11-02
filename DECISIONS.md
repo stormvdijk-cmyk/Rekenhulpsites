@@ -54,3 +54,8 @@ Datum: 2 november 2026.
 - **Minimumloon:** alleen 21+ (€ 14,71 jan–jun, € 14,99 vanaf 1-7-2026, Rijksoverheid). De jeugdpercentages zijn niet bevestigd en daarom weggelaten.
 - **Spaardoel:** inverse van de spaarformule met effectieve maandrente, inleg aan het eind van de maand.
 - **Niet gebouwd (cijfers niet bevestigd):** kindgebonden budget (afbouwpercentage 2026), huurtoeslag (formule basishuur 2026), zorgtoeslag (standaardpremie en normpremie 2026).
+
+## Nieuwe homepage (november 2026)
+- **Zeven onderwerpen** in plaats van vijf categorieën: Werk & salaris, Belastingen, Wonen, Sparen & lenen, Ondernemen, Schenken & erven, Handig rekenen. Breadcrumbs volgen automatisch.
+- **Opbouw:** zoekveld met snelknoppen per onderwerp, een compacte rij "Meest gebruikt" (op mobiel twee per rij, alleen titels), en per onderwerp een vak met icoon, uitleg en een lijst. Op desktop in twee kolommen (CSS columns), zodat er geen lege gaten ontstaan.
+- Binnen een onderwerp staan de meest gezochte rekenhulpen eerst (lijst VOORRANG in index.astro).

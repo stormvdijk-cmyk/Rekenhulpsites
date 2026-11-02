@@ -1,7 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
-import { CATEGORIEEN, REKENHULPEN } from '../data/calculators';
+import { ONDERWERPEN, REKENHULPEN, type Rekenhulp } from '../data/calculators';
 import { SITE, url } from '../data/site';
+import { TARIEF_JAAR } from '../data/tarieven';
 
 const home = new URL(url(''), Astro.site).href;
 const jsonLd = [
@@ -12,61 +13,95 @@ const jsonLd = [
   },
 ];
 const anker = (c: string) => c.toLowerCase().replace(/[^a-z]+/g, '-');
+
+// Volgorde binnen een onderwerp: meest gezochte eerst.
+const VOORRANG = [
+  'netto-salaris-berekenen', 'bruto-netto-uurloon', 'vakantiegeld-berekenen', 'minimumloon-berekenen', 'ww-uitkering-berekenen',
+  'inkomstenbelasting-berekenen', 'box-3-belasting-berekenen', 'combinatiekorting-berekenen',
+  'hypotheek-maandlasten-berekenen', 'overdrachtsbelasting-berekenen',
+  'samengestelde-rente', 'spaardoel-berekenen', 'lening-maandlasten', 'inflatie-berekenen',
+  'zzp-uurtarief-berekenen', 'zzp-netto-inkomen-berekenen', 'btw-berekenen',
+  'schenkbelasting-berekenen', 'erfbelasting-berekenen',
+];
+const rang = (r: Rekenhulp) => { const i = VOORRANG.indexOf(r.slug); return i === -1 ? 99 : i; };
+const perOnderwerp = ONDERWERPEN.map((o) => ({ ...o, items: REKENHULPEN.filter((r) => r.categorie === o.naam).sort((a, b) => rang(a) - rang(b)) }));
+
 const POPULAIR = ['netto-salaris-berekenen', 'inkomstenbelasting-berekenen', 'btw-berekenen', 'vakantiegeld-berekenen', 'hypotheek-maandlasten-berekenen', 'box-3-belasting-berekenen'];
 const populair = POPULAIR.map((s) => REKENHULPEN.find((r) => r.slug === s)!).filter(Boolean);
+const zoektekst = (r: Rekenhulp) => `${r.titel} ${r.kort} ${r.trefwoorden} ${r.categorie}`.toLowerCase();
 ---
-<Base title="Rekenhulp – gratis financiële rekenhulpen" description="Gratis Nederlandse rekenhulpen: netto salaris, btw, vakantiegeld, rente, lening, inflatie, zzp-uurtarief en bijtelling. Snel, ook offline." jsonLd={jsonLd}>
-  <h1>Financiële rekenhulpen</h1>
-  <p class="lead">Gratis rekenhulpen voor salaris, belasting, wonen, sparen en lenen, met de tarieven van 2026. Je vult in, de uitkomst staat er meteen. Werkt ook offline als je de app installeert.</p>
+<Base title={`Rekenhulp – gratis financiële rekenhulpen ${TARIEF_JAAR}`} description={`${REKENHULPEN.length} gratis rekenhulpen voor salaris, belasting, wonen, sparen en ondernemen, met de tarieven van ${TARIEF_JAAR}. Snel, ook offline.`} jsonLd={jsonLd}>
+  <section class="home-hero">
+    <h1>Financiële rekenhulpen</h1>
+    <p class="lead">{REKENHULPEN.length} gratis rekenhulpen voor je geldzaken, met de officiële tarieven van {TARIEF_JAAR}. Je vult in, de uitkomst staat er meteen.</p>
+    <div class="home-search">
+      <label for="zoek" class="visually-hidden">Zoek een rekenhulp</label>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <input type="search" id="zoek" placeholder="Zoek, bijv. netto of btw" autocomplete="off" />
+    </div>
+    <nav class="home-chips" aria-label="Onderwerpen">
+      {perOnderwerp.map((o) => <a href={`#${anker(o.naam)}`}>{o.naam} <span>{o.items.length}</span></a>)}
+    </nav>
+  </section>
 
-  <div class="search field">
-    <label for="zoek">Zoek een rekenhulp</label>
-    <input type="search" id="zoek" placeholder="Bijvoorbeeld: btw, netto, rente" autocomplete="off" />
-  </div>
-
-  <section class="cat" id="populair" data-cat data-populair>
-    <h2>Meest gebruikt</h2>
-    <ul class="cards">
+  <section class="home-popular" data-populair aria-labelledby="h-populair">
+    <h2 id="h-populair">Meest gebruikt</h2>
+    <ul>
       {populair.map((r) => (
-        <li data-zoek={`${r.titel} ${r.kort} ${r.trefwoorden}`.toLowerCase()} data-dubbel>
-          <a class="card" href={url(`${r.slug}/`)}><strong>{r.titel}</strong><span>{r.kort}</span></a>
-        </li>
+        <li><a href={url(`${r.slug}/`)}><strong>{r.titel}</strong><span class="kort">{r.kort}</span></a></li>
       ))}
     </ul>
   </section>
 
-  {CATEGORIEEN.map((c) => (
-    <section class="cat" id={anker(c)} data-cat>
-      <h2>{c}</h2>
-      <ul class="cards">
-        {REKENHULPEN.filter((r) => r.categorie === c).map((r) => (
-          <li data-zoek={`${r.titel} ${r.kort} ${r.trefwoorden}`.toLowerCase()}>
-            <a class="card" href={url(`${r.slug}/`)}><strong>{r.titel}</strong><span>{r.kort}</span></a>
-          </li>
-        ))}
-      </ul>
-    </section>
-  ))}
-  <p class="no-results" id="geen" hidden>Geen rekenhulp gevonden. Probeer een ander woord.</p>
+  <div class="home-topics">
+    {perOnderwerp.map((o) => (
+      <section class="topic" id={anker(o.naam)} data-topic aria-labelledby={`h-${anker(o.naam)}`}>
+        <header>
+          <span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={o.icoon} /></svg></span>
+          <div>
+            <h2 id={`h-${anker(o.naam)}`}>{o.naam}</h2>
+            <p>{o.omschrijving}</p>
+          </div>
+        </header>
+        <ul>
+          {o.items.map((r) => (
+            <li data-zoek={zoektekst(r)}>
+              <a href={url(`${r.slug}/`)}>
+                <span class="t"><strong>{r.titel}</strong><span>{r.kort}</span></span>
+                <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+              </a>
+            </li>
+          ))}
+        </ul>
+        {o.naam === 'Belastingen' && (
+          <a class="topic-extra" href={url(`belastingtarieven-${TARIEF_JAAR}/`)}>Alle belastingtarieven {TARIEF_JAAR} op een rij →</a>
+        )}
+      </section>
+    ))}
+  </div>
+  <p class="no-results" id="geen" hidden>Geen rekenhulp gevonden. Probeer een ander woord, zoals "loon", "belasting" of "huis".</p>
 
-  <p style="margin-top:1.5rem"><a href={url('belastingtarieven-2026/')}><strong>Alle belastingtarieven van 2026 op een rij →</strong></a></p>
-
-  <h2>Waarom deze rekenhulpen?</h2>
-  <p>Elke rekenhulp laat zien hoe de uitkomst tot stand komt. Bij de rekenhulpen met belastingregels staat welke tarieven we gebruiken en waar die vandaan komen: de Belastingdienst, de Rijksoverheid of het CBS. We werken de tarieven elk jaar bij. Je invoer blijft in je eigen browser. We slaan niets op een server op.</p>
+  <section class="home-about">
+    <h2>Waarom deze rekenhulpen?</h2>
+    <div class="home-about-grid">
+      <div><h3>Officiële tarieven</h3><p>Belastingtarieven, kortingen en grenzen komen van de Belastingdienst, de Rijksoverheid, het UWV en het CBS. Bij elke rekenhulp staat de bron.</p></div>
+      <div><h3>Uitleg erbij</h3><p>Elke rekenhulp laat zien hoe de uitkomst tot stand komt, met een uitgewerkt voorbeeld. Zo kun je het zelf nakijken.</p></div>
+      <div><h3>Je gegevens blijven bij jou</h3><p>Alles wordt in je eigen browser uitgerekend. We slaan niets op een server op. Installeer de site als app, dan werkt hij ook offline.</p></div>
+    </div>
+  </section>
 
   <script>
     const zoek = document.getElementById('zoek') as HTMLInputElement;
     const items = [...document.querySelectorAll<HTMLElement>('[data-zoek]')];
+    const topics = [...document.querySelectorAll<HTMLElement>('[data-topic]')];
     const populair = document.querySelector<HTMLElement>('[data-populair]')!;
-    const secties = [...document.querySelectorAll<HTMLElement>('[data-cat]')];
     const geen = document.getElementById('geen')!;
     zoek.addEventListener('input', () => {
       const q = zoek.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
       let n = 0;
-      items.forEach((li) => { const ok = q.every((w) => li.dataset.zoek!.includes(w)); li.hidden = !ok; if (ok && !('dubbel' in li.dataset)) n++; });
-      secties.forEach((s) => { s.hidden = !s.querySelector('[data-zoek]:not([hidden])'); });
-      // Tijdens het zoeken de 'Meest gebruikt'-rij verbergen, zodat resultaten niet dubbel staan.
-      if (q.length) populair.hidden = true;
+      items.forEach((li) => { const ok = q.every((w) => li.dataset.zoek!.includes(w)); li.hidden = !ok; if (ok) n++; });
+      topics.forEach((t) => { t.hidden = !t.querySelector('[data-zoek]:not([hidden])'); });
+      populair.hidden = q.length > 0;
       geen.hidden = n > 0;
     });
   </script>
