@@ -36,7 +36,7 @@ jobs:
         env:
           # Eigen domein (CNAME)? Dan geeft configure-pages origin = https://jouwdomein.nl en base_path leeg.
           # Bij een pull request is Pages niet nodig: dan bouwen we met het standaarddomein.
-          SITE_URL: ${{ vars.SITE_URL || steps.pages.outputs.origin || 'https://rekenhulp.nl' }}
+          SITE_URL: ${{ vars.SITE_URL || steps.pages.outputs.origin || 'https://uwrekenhulp.nl' }}
           BASE_PATH: ${{ vars.SITE_URL && '/' || format('{0}/', steps.pages.outputs.base_path) }}
           PUBLIC_ADSENSE_CLIENT: ${{ vars.PUBLIC_ADSENSE_CLIENT }}
           PUBLIC_ADSENSE_SLOT_RESULTAAT: ${{ vars.PUBLIC_ADSENSE_SLOT_RESULTAAT }}
