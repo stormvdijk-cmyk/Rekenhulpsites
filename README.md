@@ -65,13 +65,13 @@ Koppel de repository in Cloudflare Pages met build command `npm run build` en ou
 
 ## Een eigen domein koppelen
 
-1. Koop een domein, bijvoorbeeld `rekenhulp.nl`, bij een registrar naar keuze.
-2. Ga in GitHub naar **Settings → Pages → Custom domain**, vul `rekenhulp.nl` in en klik op *Save*. GitHub regelt het CNAME-bestand zelf bij een deploy via Actions.
+1. Koop een domein, bijvoorbeeld `uwrekenhulp.nl`, bij een registrar naar keuze.
+2. Ga in GitHub naar **Settings → Pages → Custom domain**, vul `uwrekenhulp.nl` in en klik op *Save*. GitHub regelt het CNAME-bestand zelf bij een deploy via Actions.
 3. Zet bij je registrar deze DNS-records:
-   - Apex (`rekenhulp.nl`): vier **A**-records naar `185.199.108.153`, `185.199.109.153`, `185.199.110.153` en `185.199.111.153`. Voor IPv6 voeg je eventueel vier **AAAA**-records toe: `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153` en `2606:50c0:8003::153`.
+   - Apex (`uwrekenhulp.nl`): vier **A**-records naar `185.199.108.153`, `185.199.109.153`, `185.199.110.153` en `185.199.111.153`. Voor IPv6 voeg je eventueel vier **AAAA**-records toe: `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153` en `2606:50c0:8003::153`.
    - `www`: een **CNAME**-record naar `<gebruiker>.github.io`.
 4. Wacht tot de DNS is bijgewerkt (soms tot 24 uur) en zet daarna **Enforce HTTPS** aan.
-5. Ga naar **Settings → Secrets and variables → Actions → Variables** en voeg `SITE_URL` = `https://rekenhulp.nl` toe. Dan komen de canonical-URL's, de sitemap en `robots.txt` op het juiste domein te staan, en is `BASE_PATH` gewoon `/`.
+5. Ga naar **Settings → Secrets and variables → Actions → Variables** en voeg `SITE_URL` = `https://uwrekenhulp.nl` toe. Dan komen de canonical-URL's, de sitemap en `robots.txt` op het juiste domein te staan, en is `BASE_PATH` gewoon `/`.
 6. Start de workflow opnieuw (tabblad *Actions* → *Run workflow*).
 
 Controleer de IP-adressen eerst in de GitHub-documentatie: *Managing a custom domain for your GitHub Pages site*.
@@ -82,7 +82,7 @@ Controleer de IP-adressen eerst in de GitHub-documentatie: *Managing a custom do
 
 1. **Zorg eerst voor een eigen domein** (zie hierboven). AdSense accepteert geen site op een subpad zoals `github.io/repository`. `ads.txt` moet bovendien in de root van het domein staan.
 2. Vul je contactadres in: maak de variabele `PUBLIC_CONTACT_EMAIL` aan (zie stap 6). AdSense controleert of de contact- en privacypagina's echt inhoud hebben.
-3. Meld je aan op https://adsense.google.com met je Google-account en voeg je site toe (`rekenhulp.nl`).
+3. Meld je aan op https://adsense.google.com met je Google-account en voeg je site toe (`uwrekenhulp.nl`).
 4. Je krijgt een publisher-ID van de vorm `ca-pub-1234567890123456`.
 5. Kies bij *Sites → je site → Verificatiemethode* voor de **AdSense-codefragment**- of **meta-tag**-methode. Beide worden automatisch toegevoegd zodra `PUBLIC_ADSENSE_CLIENT` is ingesteld.
 6. Ga in GitHub naar **Settings → Secrets and variables → Actions → tabblad Variables → New repository variable** en voeg toe:
@@ -108,15 +108,15 @@ Bezoekers uit de EER, het VK en Zwitserland moeten toestemming geven via een doo
 1. Ga in AdSense naar **Privacy en berichten**.
 2. Kies **Europese regelgeving** → *Bericht maken*.
 3. Selecteer je site, kies de taal Nederlands en zet *Toestemming beheren* (de link waarmee bezoekers hun keuze later aanpassen) aan.
-4. Vul de URL van je privacybeleid in: `https://rekenhulp.nl/privacy/`.
+4. Vul de URL van je privacybeleid in: `https://uwrekenhulp.nl/privacy/`.
 5. **Publiceer** het bericht. Het verschijnt automatisch, omdat het AdSense-script al op elke pagina staat.
 6. Doe eventueel hetzelfde voor *Amerikaanse staatsregelgeving*.
 
 ## Google Search Console en sitemap
 
-1. Ga naar https://search.google.com/search-console en kies **Property toevoegen → Domein**. Vul `rekenhulp.nl` in.
+1. Ga naar https://search.google.com/search-console en kies **Property toevoegen → Domein**. Vul `uwrekenhulp.nl` in.
 2. Verifieer met het **TXT-record** dat Google geeft. Zet dat bij je registrar in de DNS.
-3. Ga naar **Sitemaps** en dien `https://rekenhulp.nl/sitemap-index.xml` in. `robots.txt` verwijst er ook al naar.
+3. Ga naar **Sitemaps** en dien `https://uwrekenhulp.nl/sitemap-index.xml` in. `robots.txt` verwijst er ook al naar.
 4. Gebruik **URL-inspectie** om de belangrijkste rekenhulpen sneller te laten indexeren.
 
 ## Analytics (optioneel, zonder cookies)
