@@ -1,0 +1,110 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const t = tarieven.overdrachtsbelasting;
+const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 1 }) + '%';
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Wie krijgt de startersvrijstelling?', antwoord: `Kopers van 18 tot en met 34 jaar die de woning zelf gaan bewonen en de vrijstelling nog niet eerder hebben gebruikt. De woning mag in 2026 niet meer waard zijn dan ${eur(t.starterWoningwaardegrens)}. Je tekent bij de notaris een verklaring dat je aan de voorwaarden voldoet.` },
+  { vraag: 'Wat als ik samen met mijn partner koop en één van ons is ouder dan 35?', antwoord: 'De vrijstelling geldt per koper, voor zijn of haar deel van de woning. Koop je ieder de helft, dan betaalt de partner van 35 jaar of ouder 2% over de helft van de koopsom, en de jongere starter niets over de andere helft.' },
+  { vraag: 'Wat gebeurt er boven de woningwaardegrens?', antwoord: `Is de woning meer waard dan ${eur(t.starterWoningwaardegrens)}, dan vervalt de startersvrijstelling helemaal. Je betaalt dan ${pct(t.eigenWoning)} over de hele koopsom, niet alleen over het deel boven de grens.` },
+  { vraag: 'Wie betaalt de overdrachtsbelasting?', antwoord: 'De koper. De notaris int het bedrag bij de overdracht en draagt het af aan de Belastingdienst. Overdrachtsbelasting hoort bij de kosten koper (k.k.) en kun je meestal niet meefinancieren in je hypotheek.' },
+  { vraag: 'Waarom betaal ik 8% bij een beleggingswoning?', antwoord: `Sinds 1 januari 2026 geldt voor woningen die de koper niet zelf als hoofdverblijf gaat gebruiken een tarief van ${pct(t.woningNietZelfBewonen)}, bijvoorbeeld bij verhuur of een tweede woning. Voor andere onroerende zaken, zoals bedrijfspanden en grond, blijft ${pct(t.overig)} gelden.` },
+];
+---
+<CalculatorPage
+  slug="overdrachtsbelasting-berekenen"
+  title="Overdrachtsbelasting berekenen 2026"
+  description="Bereken de overdrachtsbelasting bij het kopen van een huis in 2026: startersvrijstelling, 2%, 8% of 10,4%. Ook voor twee kopers."
+  h1="Overdrachtsbelasting berekenen"
+  intro="Vul de koopsom in en beantwoord een paar vragen. Je ziet direct hoeveel overdrachtsbelasting je betaalt en of je de startersvrijstelling krijgt."
+  faq={faq}
+  bron={t.bron}
+  bronNaam="Rijksoverheid"
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Overdrachtsbelasting</p>
+      <p class="result-main" id="r-totaal">–</p>
+      <p class="result-sub" id="r-sub"></p>
+      <dl id="r-kopers"></dl>
+    </div>
+    <div class="form">
+      <Field id="koopsom" label="Koopsom" value="400000" prefix="€" hint="Meestal gelijk aan de waarde van de woning" />
+      <fieldset class="seg">
+        <legend>Wat koop je?</legend>
+        <label><input type="radio" name="soort" value="woning" checked /><span>Woning</span></label>
+        <label><input type="radio" name="soort" value="overig" /><span>Bedrijfspand of grond</span></label>
+      </fieldset>
+      <label class="check"><input type="checkbox" id="zelf" name="zelf" checked /> Ik ga er zelf wonen (hoofdverblijf)</label>
+      <fieldset class="seg">
+        <legend>Aantal kopers</legend>
+        <label><input type="radio" name="aantal" value="1" checked /><span>1 koper</span></label>
+        <label><input type="radio" name="aantal" value="2" /><span>2 kopers (ieder de helft)</span></label>
+      </fieldset>
+      <div class="row-2 stack">
+        <Field id="leeftijd1" label="Leeftijd koper 1" value="30" suffix="jaar" inputmode="numeric" />
+        <div id="k2" hidden><Field id="leeftijd2" label="Leeftijd koper 2" value="36" suffix="jaar" inputmode="numeric" /></div>
+      </div>
+      <label class="check"><input type="checkbox" id="eerder1" name="eerder1" /> Koper 1 heeft de startersvrijstelling al eens gebruikt</label>
+      <label class="check" id="k2b" hidden><input type="checkbox" id="eerder2" name="eerder2" /> Koper 2 heeft de startersvrijstelling al eens gebruikt</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>De tarieven in 2026</h2>
+    <p>Koop je een huis of ander onroerend goed, dan betaal je eenmalig overdrachtsbelasting over de koopsom. In 2026 zijn er vier mogelijkheden:</p>
+    <ul>
+      <li><strong>0% (startersvrijstelling):</strong> je bent 18 tot en met 34 jaar, gaat er zelf wonen, hebt de vrijstelling nog niet gebruikt, en de woning kost maximaal {eur(t.starterWoningwaardegrens)}.</li>
+      <li><strong>{pct(t.eigenWoning)}:</strong> je gaat er zelf wonen, maar voldoet niet aan de voorwaarden voor de startersvrijstelling.</li>
+      <li><strong>{pct(t.woningNietZelfBewonen)}:</strong> een woning die je niet zelf bewoont, zoals een huurwoning of tweede huis.</li>
+      <li><strong>{pct(t.overig)}:</strong> andere onroerende zaken, zoals bedrijfspanden, kantoren en grond.</li>
+    </ul>
+    <p>Koop je met z'n tweeën, dan kijkt de Belastingdienst per koper. Ieder betaalt over zijn of haar deel van de woning het tarief dat bij hem of haar hoort. Deze rekenhulp gaat uit van ieder de helft.</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Starter:</strong> je bent 30, koopt een woning van € 400.000 en gaat er zelf wonen. Je betaalt <strong>€ 0</strong> overdrachtsbelasting.</p>
+      <p><strong>Doorstromer:</strong> je bent 40 en koopt dezelfde woning. Je betaalt 2% × € 400.000 = <strong>€ 8.000</strong>.</p>
+      <p><strong>Stel met verschillende leeftijden:</strong> jij bent 30 en je partner 40. Jullie kopen ieder de helft van een woning van € 400.000. Jij betaalt niets over jouw € 200.000; je partner betaalt 2% × € 200.000 = <strong>€ 4.000</strong>.</p>
+      <p><strong>Belegger:</strong> je koopt een woning van € 400.000 om te verhuren. Dan betaal je 8% = <strong>€ 32.000</strong>.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Waar je verder op let</h2>
+    <ul>
+      <li><strong>Waarde inclusief aanhorigheden.</strong> De woningwaardegrens gaat over de hele woning, met schuur, garage of tuin. Een aparte koop van een garage of parkeerplaats kan meetellen.</li>
+      <li><strong>Roerende zaken.</strong> Spullen die je apart overneemt, zoals gordijnen of een losse keuken, vallen niet onder de overdrachtsbelasting. Een te hoge prijs voor roerende zaken om belasting te besparen, accepteert de Belastingdienst niet.</li>
+      <li><strong>Binnen zes maanden doorverkopen.</strong> Koop je binnen zes maanden na een eerdere overdracht, dan kan een vermindering gelden. De notaris weet of dat bij jou van toepassing is.</li>
+      <li><strong>Voorstel voor 2027.</strong> Het kabinet heeft voorgesteld het tarief van 8% in 2027 te verlagen naar 7%. Dat is nog geen vastgestelde wet.</li>
+    </ul>
+    <p>Wil je ook weten wat je maandlasten worden? Gebruik de rekenhulp <a href="../hypotheek-maandlasten-berekenen/">hypotheek maandlasten</a>. Helpen je ouders met een schenking? Kijk dan bij <a href="../schenkbelasting-berekenen/">schenkbelasting berekenen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenOverdrachtsbelasting, type Soort } from '../lib/calculators/overdrachtsbelasting';
+  import { formatProcent } from '../lib/calculators/format';
+  import { $, euro, getal, live, radio, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const twee = radio('aantal') === '2';
+    $('k2').hidden = !twee;
+    $('k2b').hidden = !twee;
+    const kopers = [{ leeftijd: getal('leeftijd1'), eerderGebruikt: vinkje('eerder1') }];
+    if (twee) kopers.push({ leeftijd: getal('leeftijd2'), eerderGebruikt: vinkje('eerder2') });
+    const r = berekenOverdrachtsbelasting({ koopsom: getal('koopsom'), soort: (radio('soort') || 'woning') as Soort, zelfBewonen: vinkje('zelf'), kopers });
+    zet('r-totaal', euro(r.totaal));
+    zet('r-sub', `Gemiddeld ${formatProcent(r.effectiefTarief, 1)} van de koopsom`);
+    const dl = $('r-kopers');
+    dl.replaceChildren();
+    r.perKoper.forEach((k, i) => {
+      const dt = document.createElement('dt');
+      dt.textContent = (twee ? `Koper ${i + 1}: ` : '') + `${k.reden} (${formatProcent(k.tarief * 100, 1)})`;
+      const dd = document.createElement('dd');
+      dd.textContent = euro(k.belasting);
+      dl.append(dt, dd);
+    });
+  });
+</script>

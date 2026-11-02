@@ -1,0 +1,83 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const r = tarieven.reiskosten;
+const eurKm = '€ ' + r.onbelastPerKm.toLocaleString('nl-NL', { minimumFractionDigits: 2 });
+const faq = [
+  { vraag: 'Hoe hoog is de onbelaste kilometervergoeding in 2026?', antwoord: `${eurKm} per kilometer. De verhoging van € 0,23 naar ${eurKm} geldt met terugwerkende kracht vanaf 1 januari 2026. Je werkgever mag het verschil over de eerdere maanden alsnog onbelast uitbetalen.` },
+  { vraag: 'Moet mijn werkgever reiskosten vergoeden?', antwoord: 'Nee, een reiskostenvergoeding is in Nederland niet wettelijk verplicht. Vaak staat het in je cao of arbeidscontract. Als je werkgever het wel vergoedt, mag dat tot het maximum per kilometer belastingvrij.' },
+  { vraag: 'Waarom rekent de werkgever met 214 dagen?', antwoord: 'Bij een vaste vergoeding per maand mag je werkgever uitgaan van maximaal 214 reisdagen per jaar bij een werkweek van vijf dagen. Zo zijn vakantie, feestdagen en ziekte al verrekend. Werk je minder dagen, dan gaat het naar verhouding: bij drie dagen zijn het er 128.' },
+  { vraag: 'Telt thuiswerken mee?', antwoord: 'Voor dagen dat je thuiswerkt, krijg je geen reiskostenvergoeding voor die dag. Je werkgever mag dan wel een onbelaste thuiswerkvergoeding geven. Werk je deels thuis, vul dan alleen het aantal dagen in dat je naar kantoor reist.' },
+];
+---
+<CalculatorPage
+  slug="kilometervergoeding-berekenen"
+  title="Kilometervergoeding berekenen 2026"
+  description="Bereken de onbelaste reiskostenvergoeding voor woon-werkverkeer in 2026: € 0,25 per km. Per maand en per jaar, ook het belaste deel."
+  h1="Kilometervergoeding berekenen"
+  intro="Vul je reisafstand en het aantal reisdagen in. Je ziet direct hoeveel reiskostenvergoeding je werkgever je onbelast mag geven."
+  faq={faq}
+  bron={r.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Onbelaste vergoeding per maand</p>
+      <p class="result-main" id="r-maand">–</p>
+      <p class="result-sub">Per jaar <strong id="r-jaar">–</strong></p>
+      <dl>
+        <dt>Reisdagen per jaar</dt><dd id="r-dagen">–</dd>
+        <dt>Kilometers per jaar</dt><dd id="r-km">–</dd>
+        <dt>Vergoeding van je werkgever per jaar</dt><dd id="r-verg">–</dd>
+        <dt>Daarvan belast</dt><dd id="r-belast">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <div class="row-2">
+        <Field id="km" label="Afstand enkele reis" value="20" suffix="km" />
+        <Field id="dagen" label="Reisdagen per week" value="5" inputmode="numeric" />
+      </div>
+      <Field id="verg" label="Vergoeding van je werkgever per km" value="0,25" prefix="€" hint="Laat 0,25 staan als je wilt weten wat maximaal onbelast mag" />
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo werkt de reiskostenvergoeding</h2>
+    <p>Reis je met eigen vervoer naar je werk, met de auto, fiets, scooter of te voet? Dan mag je werkgever je in 2026 maximaal <strong>{eurKm} per kilometer</strong> belastingvrij vergoeden. Het gaat om de afstand heen en terug, dus twee keer de enkele reis.</p>
+    <p>Veel werkgevers betalen een <strong>vaste vergoeding per maand</strong>. Die mag uitgaan van maximaal 214 reisdagen per jaar bij een vijfdaagse werkweek. Werk je minder dagen op kantoor, dan gaat het naar verhouding. Daarna deel je door twaalf voor het bedrag per maand.</p>
+    <p>Geeft je werkgever meer dan {eurKm} per kilometer? Dan is het deel daarboven loon. Daarover betaal je loonheffing, tenzij je werkgever het in de werkkostenregeling onderbrengt.</p>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je woont <strong>20 km</strong> van je werk en reist <strong>5 dagen per week</strong>.</p>
+      <ul>
+        <li>Kilometers per jaar: 20 × 2 × 214 = 8.560 km</li>
+        <li>Onbelast per jaar: 8.560 × € 0,25 = <strong>€ 2.140</strong></li>
+        <li>Per maand: € 2.140 / 12 = <strong>€ 178,33</strong></li>
+      </ul>
+      <p>Betaalt je werkgever € 0,30 per kilometer, dan krijg je € 2.568 per jaar. Daarvan is € 428 belast.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Openbaar vervoer en auto van de zaak</h2>
+    <p>Reis je met het openbaar vervoer, dan mag je werkgever ook de werkelijke kosten van je kaartje onbelast vergoeden, zelfs als dat meer is dan {eurKm} per kilometer. Heb je een auto van de zaak, dan krijg je geen kilometervergoeding voor woon-werkverkeer. Daar geldt de bijtelling; zie <a href="../bijtelling-auto-van-de-zaak/">bijtelling auto van de zaak</a>.</p>
+    <p>Krijg je geen vergoeding van je werkgever? Reizigers met het openbaar vervoer kunnen onder voorwaarden een reisaftrek in hun aangifte opnemen. Voor reizen met de eigen auto bestaat die aftrek niet.</p>
+    <p>Wil je zien wat de vergoeding netto voor je betekent naast je salaris? Gebruik <a href="../netto-salaris-berekenen/">netto salaris berekenen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenKilometervergoeding } from '../lib/calculators/kilometervergoeding';
+  import { formatGetal } from '../lib/calculators/format';
+  import { euro, getal, live, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenKilometervergoeding({ kmEnkel: getal('km'), dagenPerWeek: getal('dagen', 5), vergoedingPerKm: getal('verg', 0.25) });
+    zet('r-maand', euro(r.onbelastMaand));
+    zet('r-jaar', euro(r.onbelastJaar));
+    zet('r-dagen', formatGetal(r.reisdagenJaar));
+    zet('r-km', formatGetal(r.kmJaar));
+    zet('r-verg', euro(r.vergoedingJaar));
+    zet('r-belast', euro(r.belastDeelJaar));
+  });
+</script>

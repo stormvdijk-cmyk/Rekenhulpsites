@@ -1,0 +1,99 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const t = tarieven.schenkErf;
+const v = t.vrijstellingSchenk;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Hoeveel mag ik mijn kind belastingvrij schenken in 2026?', antwoord: `Ouders mogen hun kind in 2026 ${eur(v.kind)} belastingvrij schenken. Is je kind tussen de 18 en 40 jaar, dan mag je één keer een hoger bedrag geven: ${eur(v.kindEenmalig)}, of ${eur(v.kindEenmaligStudie)} als het geld naar een dure studie gaat. In dat jaar vervalt dan de gewone vrijstelling.` },
+  { vraag: 'Geldt de vrijstelling per ouder of per gezin?', antwoord: 'De vrijstelling voor kinderen geldt per kind, per jaar, voor beide ouders samen. Schenken je vader en moeder elk € 6.908, dan heeft je kind in totaal € 13.816 ontvangen, en is het deel boven € 6.908 belast.' },
+  { vraag: 'Wie betaalt de schenkbelasting?', antwoord: 'De ontvanger doet aangifte en betaalt de belasting. Schenk je meer dan de vrijstelling, dan moet de aangifte vóór 1 maart van het jaar na de schenking binnen zijn. Een schenker kan de belasting ook voor de ontvanger betalen, maar dat telt dan zelf ook als schenking.' },
+  { vraag: 'Bestaat de vrijstelling voor een eigen woning nog?', antwoord: 'Nee. De eenmalige verhoogde vrijstelling voor een eigen woning, de zogenaamde jubelton, is per 1 januari 2024 afgeschaft. Voor kinderen van 18 tot 40 jaar bestaat wel nog de eenmalig verhoogde vrijstelling die ze vrij mogen besteden.' },
+];
+---
+<CalculatorPage
+  slug="schenkbelasting-berekenen"
+  title="Schenkbelasting berekenen 2026"
+  description="Bereken hoeveel schenkbelasting de ontvanger in 2026 betaalt. Met de vrijstellingen voor kinderen, kleinkinderen en anderen."
+  h1="Schenkbelasting berekenen"
+  intro="Vul het bedrag van de schenking in en kies aan wie je schenkt. Je ziet direct de vrijstelling en hoeveel schenkbelasting de ontvanger betaalt."
+  faq={faq}
+  bron={t.bronTarievenSchenk}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Schenkbelasting</p>
+      <p class="result-main" id="r-bel">–</p>
+      <p class="result-sub">De ontvanger houdt netto <strong id="r-netto">–</strong> over</p>
+      <dl>
+        <dt>Vrijstelling</dt><dd id="r-vrij">–</dd>
+        <dt>Belast bedrag</dt><dd id="r-belast">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="bedrag" label="Bedrag van de schenking (in 2026)" value="20000" prefix="€" hint="Alle schenkingen van dezelfde schenker in 2026 samen" />
+      <div class="field">
+        <label for="ontvanger">Ik schenk aan</label>
+        <select id="ontvanger" name="ontvanger">
+          <option value="kind" selected>Mijn kind (jaarlijkse vrijstelling)</option>
+          <option value="kindEenmalig">Mijn kind van 18–40 jaar (eenmalig verhoogd)</option>
+          <option value="kindEenmaligStudie">Mijn kind van 18–40 jaar (eenmalig, dure studie)</option>
+          <option value="kleinkind">Mijn kleinkind</option>
+          <option value="overig">Iemand anders</option>
+        </select>
+      </div>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Vrijstellingen en tarieven in 2026</h2>
+    <p>Over een schenking betaalt de ontvanger belasting, maar pas boven een vrijstelling. Die hangt af van de relatie tussen schenker en ontvanger:</p>
+    <ul>
+      <li><strong>Ouders aan een kind:</strong> {eur(v.kind)} per jaar.</li>
+      <li><strong>Eenmalig verhoogd, kind van 18 tot 40 jaar:</strong> {eur(v.kindEenmalig)}, of {eur(v.kindEenmaligStudie)} voor een dure studie.</li>
+      <li><strong>Iedereen anders, ook kleinkinderen:</strong> {eur(v.overig)} per jaar.</li>
+    </ul>
+    <p>Over het bedrag boven de vrijstelling geldt een tarief in twee schijven, met de grens bij {eur(t.schijfGrens)}:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Ontvanger</th><th>Tot {eur(t.schijfGrens)}</th><th>Daarboven</th></tr></thead>
+        <tbody>
+          <tr><td>Partner en kinderen</td><td>10%</td><td>20%</td></tr>
+          <tr><td>Kleinkinderen</td><td>18%</td><td>36%</td></tr>
+          <tr><td>Overigen</td><td>30%</td><td>40%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Aan je kind:</strong> je schenkt je dochter € 20.000. Belast is € 20.000 − € 6.908 = € 13.092. Zij betaalt 10% = <strong>€ 1.309,20</strong>.</p>
+      <p><strong>Aan je kleinkind:</strong> je schenkt € 10.000. Belast is € 10.000 − € 2.769 = € 7.231. De belasting is 18% = <strong>€ 1.301,58</strong>.</p>
+      <p><strong>Aan een vriend:</strong> je schenkt € 200.000. Belast is € 197.231. Over € 158.669 geldt 30% (€ 47.600,70) en over de rest 40% (€ 15.424,80), samen <strong>€ 63.025,50</strong>.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Slim schenken</h2>
+    <ul>
+      <li><strong>Spreiden over jaren.</strong> De jaarlijkse vrijstelling geldt elk jaar opnieuw. Wie elk jaar € 6.908 aan een kind schenkt, betaalt nooit schenkbelasting.</li>
+      <li><strong>Schenken op papier.</strong> Je kunt ook een bedrag schenken zonder het direct te betalen: een schuldigerkenning bij de notaris. Daar gelden strenge voorwaarden, zoals een jaarlijkse rente van minstens 6% die echt betaald wordt.</li>
+      <li><strong>Overlijden binnen 180 dagen.</strong> Overlijdt de schenker binnen 180 dagen na de schenking, dan valt de schenking onder de erfbelasting. De betaalde schenkbelasting wordt dan verrekend.</li>
+      <li><strong>Aangifte.</strong> Schenk je meer dan de vrijstelling, of gebruik je de eenmalig verhoogde vrijstelling? Dan doet de ontvanger aangifte vóór 1 maart van het volgende jaar.</li>
+    </ul>
+    <p>Deze rekenhulp gaat uit van één schenker en geldt niet voor schenkingen tussen partners of bij bedrijfsopvolging. Voor erfenissen gelden andere vrijstellingen; gebruik daarvoor <a href="../erfbelasting-berekenen/">erfbelasting berekenen</a>. Geld dat de ontvanger overhoudt, kan in box 3 vallen. Reken dat na met <a href="../box-3-belasting-berekenen/">box 3-belasting berekenen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenSchenkbelasting, type Ontvanger } from '../lib/calculators/schenkErf';
+  import { $, euro, getal, live, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenSchenkbelasting(getal('bedrag'), ($('ontvanger') as HTMLSelectElement).value as Ontvanger);
+    zet('r-bel', euro(r.belasting));
+    zet('r-netto', euro(r.netto));
+    zet('r-vrij', euro(r.vrijstelling));
+    zet('r-belast', euro(r.belast));
+  });
+</script>

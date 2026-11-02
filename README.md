@@ -14,6 +14,12 @@ Snelle, installeerbare webapp (PWA) met Nederlandstalige financiële rekenhulpen
 | Inflatie (CBS) | `/inflatie-berekenen/` |
 | Zzp-uurtarief | `/zzp-uurtarief-berekenen/` |
 | Bijtelling auto van de zaak | `/bijtelling-auto-van-de-zaak/` |
+| Kilometervergoeding | `/kilometervergoeding-berekenen/` |
+| Box 3-belasting | `/box-3-belasting-berekenen/` |
+| Schenkbelasting | `/schenkbelasting-berekenen/` |
+| Erfbelasting | `/erfbelasting-berekenen/` |
+| Overdrachtsbelasting | `/overdrachtsbelasting-berekenen/` |
+| Hypotheek maandlasten | `/hypotheek-maandlasten-berekenen/` |
 
 ## Lokaal draaien
 
@@ -138,6 +144,7 @@ Alle belastingcijfers staan in één bestand. Doe dit voor bijvoorbeeld 2027:
    - Algemene heffingskorting en arbeidskorting: belastingdienst.nl → *Tabel algemene heffingskorting <jaar>* en *Tabel arbeidskorting <jaar>*
    - Bijtelling: belastingdienst.nl → *Bijtelling privégebruik auto <jaar>*
    - Zelfstandigenaftrek, mkb-winstvrijstelling, Zvw: belastingdienst.nl → *Veranderingen inkomstenbelasting <jaar>*
+   - Overdrachtsbelasting, box 3, schenk- en erfbelasting, eigenwoningforfait, kilometervergoeding: zie de `bron`-velden in de JSON
    - Inflatie: voeg het nieuwe jaarcijfer toe uit CBS-tabel 70936ned (*Jaarmutatie consumentenprijsindex*)
 3. Verander in `src/data/tarieven.ts` de import naar `./tarieven-2027.json`.
 4. Pas de verwachte bedragen in `tests/calculators.test.ts` aan. Reken ze met de hand na; neem ze niet over uit de code.

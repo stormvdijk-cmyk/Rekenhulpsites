@@ -1,4 +1,4 @@
-export type Categorie = 'Salaris' | 'Belasting' | 'Sparen & lenen' | 'Zakelijk';
+export type Categorie = 'Salaris' | 'Belasting' | 'Wonen' | 'Sparen & lenen' | 'Zakelijk';
 
 export interface Rekenhulp {
   slug: string;
@@ -9,7 +9,7 @@ export interface Rekenhulp {
   trefwoorden: string;
 }
 
-export const CATEGORIEEN: Categorie[] = ['Salaris', 'Belasting', 'Sparen & lenen', 'Zakelijk'];
+export const CATEGORIEEN: Categorie[] = ['Salaris', 'Belasting', 'Wonen', 'Sparen & lenen', 'Zakelijk'];
 
 export const REKENHULPEN: Rekenhulp[] = [
   { slug: 'netto-salaris-berekenen', titel: 'Netto salaris berekenen', kort: 'Van bruto naar netto per maand en per jaar.', categorie: 'Salaris', verwant: ['vakantiegeld-berekenen', 'bruto-netto-uurloon', 'bijtelling-auto-van-de-zaak'], trefwoorden: 'bruto netto loon salaris loonheffing heffingskorting' },
@@ -20,8 +20,14 @@ export const REKENHULPEN: Rekenhulp[] = [
   { slug: 'inflatie-berekenen', titel: 'Inflatie berekenen', kort: 'Koopkracht van een bedrag tussen twee jaartallen.', categorie: 'Belasting', verwant: ['samengestelde-rente', 'procenten-berekenen', 'netto-salaris-berekenen'], trefwoorden: 'inflatie koopkracht cbs cpi prijzen geldontwaarding' },
   { slug: 'procenten-berekenen', titel: 'Procenten berekenen', kort: 'Percentage van, stijging of daling en korting.', categorie: 'Sparen & lenen', verwant: ['btw-berekenen', 'inflatie-berekenen', 'samengestelde-rente'], trefwoorden: 'procent percentage korting stijging daling' },
   { slug: 'samengestelde-rente', titel: 'Samengestelde rente', kort: 'Sparen of beleggen met maandelijkse inleg, met grafiek.', categorie: 'Sparen & lenen', verwant: ['inflatie-berekenen', 'lening-maandlasten', 'procenten-berekenen'], trefwoorden: 'rente op rente sparen beleggen vermogen groei' },
-  { slug: 'lening-maandlasten', titel: 'Maandlasten lening', kort: 'Annuïtair en lineair, met aflossingstabel.', categorie: 'Sparen & lenen', verwant: ['samengestelde-rente', 'procenten-berekenen', 'netto-salaris-berekenen'], trefwoorden: 'lening krediet hypotheek annuiteit lineair aflossing' },
+  { slug: 'lening-maandlasten', titel: 'Maandlasten lening', kort: 'Annuïtair en lineair, met aflossingstabel.', categorie: 'Sparen & lenen', verwant: ['hypotheek-maandlasten-berekenen', 'samengestelde-rente', 'procenten-berekenen'], trefwoorden: 'lening krediet annuiteit lineair aflossing persoonlijke lening' },
   { slug: 'zzp-uurtarief-berekenen', titel: 'Zzp-uurtarief berekenen', kort: 'Van gewenst netto inkomen naar een minimaal uurtarief.', categorie: 'Zakelijk', verwant: ['btw-berekenen', 'bruto-netto-uurloon', 'bijtelling-auto-van-de-zaak'], trefwoorden: 'zzp freelancer uurtarief zelfstandige ondernemer' },
+  { slug: 'kilometervergoeding-berekenen', titel: 'Kilometervergoeding berekenen', kort: 'Onbelaste reiskostenvergoeding voor woon-werkverkeer.', categorie: 'Salaris', verwant: ['netto-salaris-berekenen', 'bijtelling-auto-van-de-zaak', 'bruto-netto-uurloon'], trefwoorden: 'reiskosten reiskostenvergoeding woon-werk kilometer 0,25' },
+  { slug: 'box-3-belasting-berekenen', titel: 'Box 3-belasting berekenen', kort: 'Belasting over spaargeld en beleggingen.', categorie: 'Belasting', verwant: ['samengestelde-rente', 'schenkbelasting-berekenen', 'inflatie-berekenen'], trefwoorden: 'box 3 vermogensbelasting spaargeld beleggingen heffingsvrij vermogen' },
+  { slug: 'schenkbelasting-berekenen', titel: 'Schenkbelasting berekenen', kort: 'Belastingvrij schenken en de schenkbelasting.', categorie: 'Belasting', verwant: ['erfbelasting-berekenen', 'box-3-belasting-berekenen', 'overdrachtsbelasting-berekenen'], trefwoorden: 'schenken schenking vrijstelling kind kleinkind' },
+  { slug: 'erfbelasting-berekenen', titel: 'Erfbelasting berekenen', kort: 'Erfbelasting per erfgenaam, met vrijstellingen.', categorie: 'Belasting', verwant: ['schenkbelasting-berekenen', 'box-3-belasting-berekenen', 'inflatie-berekenen'], trefwoorden: 'erfenis erven successierecht vrijstelling partner kind' },
+  { slug: 'overdrachtsbelasting-berekenen', titel: 'Overdrachtsbelasting berekenen', kort: '0%, 2%, 8% of 10,4%, met startersvrijstelling.', categorie: 'Wonen', verwant: ['hypotheek-maandlasten-berekenen', 'schenkbelasting-berekenen', 'procenten-berekenen'], trefwoorden: 'overdrachtsbelasting huis kopen starter startersvrijstelling woning' },
+  { slug: 'hypotheek-maandlasten-berekenen', titel: 'Hypotheek maandlasten', kort: 'Bruto en netto maandlasten met renteaftrek.', categorie: 'Wonen', verwant: ['overdrachtsbelasting-berekenen', 'lening-maandlasten', 'netto-salaris-berekenen'], trefwoorden: 'hypotheek maandlasten hypotheekrenteaftrek eigenwoningforfait netto huis' },
 ];
 
 export const rekenhulp = (slug: string): Rekenhulp => {
