@@ -1,0 +1,152 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+const faq = [
+  { vraag: 'Wat is samengestelde rente?', antwoord: 'Bij samengestelde rente krijg je rente over je inleg én over de rente die je eerder hebt ontvangen. Je vermogen groeit daardoor elk jaar iets sneller. Dat heet ook wel rente op rente.' },
+  { vraag: 'Welk rendement moet ik invullen?', antwoord: 'Voor een spaarrekening vul je de rente in die je bank nu geeft. Bij beleggen is het rendement onzeker. Wie wil inschatten, rekent vaak met een paar scenario’s, bijvoorbeeld 2%, 4% en 6% per jaar. Rendementen uit het verleden zijn geen garantie voor de toekomst.' },
+  { vraag: 'Houdt deze berekening rekening met belasting en inflatie?', antwoord: 'Nee. Spaargeld en beleggingen boven het heffingsvrij vermogen vallen in box 3. Kosten van een broker of fonds verlagen je rendement ook. En door inflatie is een euro later minder waard. Gebruik de rekenhulp inflatie berekenen om te zien hoeveel koopkracht je verliest.' },
+  { vraag: 'Wat is de regel van 72?', antwoord: 'Een vuistregel: deel 72 door het rendement per jaar, dan weet je ongeveer na hoeveel jaar je geld verdubbelt. Bij 6% is dat 72 / 6 = 12 jaar. Bij 3% duurt het ongeveer 24 jaar.' },
+];
+---
+<CalculatorPage
+  slug="samengestelde-rente"
+  title="Samengestelde rente berekenen – sparen en beleggen"
+  description="Bereken hoe je spaargeld of beleggingen groeien met maandelijkse inleg en rente op rente. Met grafiek en overzicht per jaar."
+  h1="Samengestelde rente berekenen"
+  intro="Vul je startbedrag, je maandelijkse inleg, de rente en de looptijd in. Je ziet direct je eindbedrag en hoe het per jaar groeit."
+  faq={faq}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Eindbedrag</p>
+      <p class="result-main" id="r-eind">–</p>
+      <dl>
+        <dt>Totaal ingelegd</dt><dd id="r-inleg">–</dd>
+        <dt>Rente / rendement</dt><dd id="r-rente">–</dd>
+      </dl>
+      <div class="chart-wrap" id="chart-wrap">
+        <svg class="chart" id="chart" viewBox="0 0 640 260" role="img" aria-labelledby="chart-titel"><title id="chart-titel">Groei van het vermogen per jaar</title></svg>
+        <div class="tip" id="tip" hidden></div>
+      </div>
+      <div class="legend" aria-hidden="true"><span><i style="background:var(--chart-1)"></i>Ingelegd</span><span><i style="background:var(--chart-2)"></i>Rente</span></div>
+    </div>
+    <div class="form">
+      <div class="row-2">
+        <Field id="start" label="Startbedrag" value="5000" prefix="€" />
+        <Field id="inleg" label="Inleg per maand" value="200" prefix="€" />
+      </div>
+      <div class="row-2">
+        <Field id="rente" label="Rente of rendement per jaar" value="5" suffix="%" />
+        <Field id="jaren" label="Looptijd" value="20" suffix="jaar" inputmode="numeric" />
+      </div>
+      <details class="tabel">
+        <summary>Overzicht per jaar</summary>
+        <div class="table-wrap"><table><thead><tr><th>Jaar</th><th>Ingelegd</th><th>Rente</th><th>Saldo</th></tr></thead><tbody id="tabel"></tbody></table></div>
+      </details>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Hoe werkt rente op rente?</h2>
+    <p>Zet je € 1.000 op een rekening met 5% rente, dan heb je na een jaar € 1.050. In het tweede jaar krijg je 5% over € 1.050. Dat is € 52,50 in plaats van € 50. Dat verschil lijkt klein. Over twintig of dertig jaar wordt het een groot deel van je eindbedrag. Hoe langer je geld blijft staan, hoe groter het aandeel van de rente.</p>
+    <p>Deze rekenhulp rekent per maand. Je maandelijkse inleg komt aan het eind van elke maand op de rekening. De jaarrente wordt omgerekend naar een maandrente: (1 + jaarrente)<sup>1/12</sup> − 1. Na twaalf maanden heb je dan precies het opgegeven jaarpercentage. Zo kun je de uitkomst vergelijken met het effectieve jaarrendement dat banken en fondsen noemen.</p>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je begint met <strong>€ 5.000</strong> en legt <strong>€ 200 per maand</strong> in, twintig jaar lang, tegen <strong>5% per jaar</strong>.</p>
+      <ul>
+        <li>Zelf ingelegd: € 5.000 + 240 × € 200 = € 53.000</li>
+        <li>Eindbedrag na 20 jaar: <strong>€ 94.427,39</strong></li>
+        <li>Rente en rendement: € 41.427,39</li>
+      </ul>
+      <p>Bijna 44% van het eindbedrag komt dus uit rente. Wacht je tien jaar langer, dan wordt de rente groter dan alles wat je zelf hebt ingelegd.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Sparen of beleggen?</h2>
+    <p>Met een spaarrekening weet je wat je krijgt, maar de rente ligt vaak onder de inflatie. Bij beleggen is het verwachte rendement op lange termijn hoger, maar het schommelt. Dan kun je in een slecht jaar flink terugvallen. Deze rekenhulp rekent met een gelijk rendement per jaar. Dat geeft een helder beeld van het rente-op-rente-effect, maar het is geen voorspelling.</p>
+    <p>Twee dingen hebben veel invloed op het resultaat:</p>
+    <ul>
+      <li><strong>Kosten.</strong> Kost een fonds 1% per jaar, dan zakt je rendement van bijvoorbeeld 6% naar 5%. Over dertig jaar scheelt dat al snel een kwart van je eindbedrag.</li>
+      <li><strong>Inflatie.</strong> € 94.000 over twintig jaar is minder waard dan € 94.000 vandaag. Bij 2% inflatie per jaar is de koopkracht ongeveer een derde lager. Reken het na met <a href="../inflatie-berekenen/">inflatie berekenen</a>.</li>
+    </ul>
+    <p>Ga je lenen in plaats van sparen? Dan werkt rente op rente tegen je. Bekijk de kosten van een lening met <a href="../lening-maandlasten/">maandlasten lening</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenSamengesteldeRente, type RenteJaar } from '../lib/calculators/samengesteldeRente';
+  import { formatEuro } from '../lib/calculators/format';
+  import { $, euro, getal, live, zet } from '../lib/ui';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const W = 640, H = 260, L = 56, R = 8, T = 10, B = 26;
+  const kort = (n: number) => (n >= 1e6 ? `€ ${(n / 1e6).toLocaleString('nl-NL', { maximumFractionDigits: 1 })} mln` : n >= 1000 ? `€ ${Math.round(n / 1000)}k` : `€ ${Math.round(n)}`);
+  function el(tag: string, attrs: Record<string, string | number>, parent: Element) {
+    const e = document.createElementNS(NS, tag);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, String(v));
+    parent.appendChild(e);
+    return e;
+  }
+  function nice(max: number) {
+    const p = Math.pow(10, Math.floor(Math.log10(max || 1)));
+    const f = max / p;
+    return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p;
+  }
+  function teken(data: RenteJaar[]) {
+    const svg = $('chart');
+    svg.querySelectorAll(':scope > :not(title)').forEach((n) => n.remove());
+    if (!data.length) return;
+    const max = nice(Math.max(...data.map((d) => d.saldo)));
+    const ph = H - T - B, pw = W - L - R;
+    const y = (v: number) => T + ph - (v / max) * ph;
+    for (let i = 0; i <= 4; i++) {
+      const v = (max / 4) * i;
+      el('line', { x1: L, x2: W - R, y1: y(v), y2: y(v), class: 'grid' }, svg);
+      el('text', { x: L - 6, y: y(v) + 4, 'text-anchor': 'end', class: 'axis' }, svg).textContent = kort(v);
+    }
+    const slot = pw / data.length;
+    const bw = Math.max(2, Math.min(28, slot * 0.7));
+    const tip = $('tip');
+    const wrap = $('chart-wrap');
+    const stap = Math.ceil(data.length / 10);
+    data.forEach((d, i) => {
+      const x = L + i * slot + (slot - bw) / 2;
+      const inleg = Math.max(0, Math.min(d.ingelegd, d.saldo));
+      const yIn = y(inleg);
+      const r = Math.min(4, bw / 2);
+      // inleg (onder) en rente (boven), met 2px tussenruimte
+      el('rect', { x, y: yIn, width: bw, height: Math.max(0, T + ph - yIn), class: 'inleg', rx: d.saldo - inleg > 0 ? 0 : r }, svg);
+      if (d.saldo - inleg > 0) {
+        const top = y(d.saldo);
+        el('path', { d: `M${x},${yIn - 2} V${top + r} q0,-${r} ${r},-${r} H${x + bw - r} q${r},0 ${r},${r} V${yIn - 2} Z`, class: 'rente' }, svg);
+      }
+      if (i % stap === 0 || i === data.length - 1) {
+        el('text', { x: x + bw / 2, y: H - 8, 'text-anchor': 'middle', class: 'axis' }, svg).textContent = String(d.jaar);
+      }
+      const hit = el('rect', { x: L + i * slot, y: T, width: slot, height: ph, class: 'hit' }, svg);
+      const toon = () => {
+        tip.hidden = false;
+        tip.innerHTML = `<strong>Jaar ${d.jaar}</strong><br>Saldo ${formatEuro(d.saldo, false)}<br>Ingelegd ${formatEuro(d.ingelegd, false)}<br>Rente ${formatEuro(d.rente, false)}`;
+        const box = wrap.getBoundingClientRect();
+        const sx = box.width / W;
+        const left = Math.min(Math.max((x + bw / 2) * sx, 70), box.width - 70);
+        tip.style.left = `${left}px`;
+        tip.style.top = `${Math.max(y(d.saldo) * sx - 6, 60)}px`;
+      };
+      hit.addEventListener('pointerenter', toon);
+      hit.addEventListener('pointermove', toon);
+      hit.addEventListener('pointerleave', () => (tip.hidden = true));
+    });
+  }
+  live('f', () => {
+    const jaren = Math.min(80, Math.max(0, Math.round(getal('jaren'))));
+    const r = berekenSamengesteldeRente({ startbedrag: getal('start'), maandInleg: getal('inleg'), rente: getal('rente'), jaren });
+    zet('r-eind', euro(r.eindsaldo));
+    zet('r-inleg', euro(r.totaalIngelegd));
+    zet('r-rente', euro(r.totaleRente));
+    $('tabel').innerHTML = r.perJaar.map((j) => `<tr><td>${j.jaar}</td><td>${euro(j.ingelegd)}</td><td>${euro(j.rente)}</td><td>${euro(j.saldo)}</td></tr>`).join('');
+    teken(r.perJaar);
+  });
+</script>

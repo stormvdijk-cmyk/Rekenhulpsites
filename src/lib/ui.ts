@@ -42,7 +42,7 @@ export function live(formId: string, bereken: () => void): void {
   };
   let t: number | undefined;
   const sync = () => {
-    const p = new URLSearchParams();
+    const p = new URLSearchParams(location.search);
     form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[name]').forEach((el) => {
       if (el instanceof HTMLInputElement && el.type === 'radio') { if (el.checked) p.set(el.name, el.value); }
       else if (el instanceof HTMLInputElement && el.type === 'checkbox') p.set(el.name, el.checked ? '1' : '0');

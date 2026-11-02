@@ -13,8 +13,8 @@
   --warn-soft: #fff6e0;
   --warn-border: #e7c66b;
   --focus: #2563eb;
-  --chart-1: #1f7a6f;
-  --chart-2: #9fb8bf;
+  --chart-1: #5b8def;
+  --chart-2: #0f8f7f;
   --radius: 12px;
   --radius-sm: 8px;
   --space-1: 0.25rem;
@@ -34,14 +34,14 @@
   :root:not([data-theme='light']) {
     --bg: #0e171b; --surface: #152227; --surface-2: #1c2d33; --text: #e6eef0; --text-muted: #a5b7bd;
     --border: #2c4148; --primary: #7cc8d6; --primary-contrast: #0b1a1f; --accent: #6fd0bf; --accent-soft: #163a36;
-    --warn-soft: #2e2814; --warn-border: #7a6526; --focus: #8ab4ff; --chart-1: #6fd0bf; --chart-2: #4d6870;
+    --warn-soft: #2e2814; --warn-border: #7a6526; --focus: #8ab4ff; --chart-1: #5f8de6; --chart-2: #24a08f;
     --shadow: 0 1px 2px rgb(0 0 0 / 30%); color-scheme: dark;
   }
 }
 :root[data-theme='dark'] {
   --bg: #0e171b; --surface: #152227; --surface-2: #1c2d33; --text: #e6eef0; --text-muted: #a5b7bd;
   --border: #2c4148; --primary: #7cc8d6; --primary-contrast: #0b1a1f; --accent: #6fd0bf; --accent-soft: #163a36;
-  --warn-soft: #2e2814; --warn-border: #7a6526; --focus: #8ab4ff; --chart-1: #6fd0bf; --chart-2: #4d6870;
+  --warn-soft: #2e2814; --warn-border: #7a6526; --focus: #8ab4ff; --chart-1: #5f8de6; --chart-2: #24a08f;
   --shadow: 0 1px 2px rgb(0 0 0 / 30%); color-scheme: dark;
 }
 
@@ -153,3 +153,14 @@ thead th { position: sticky; top: 0; background: var(--surface-2); }
 .legend i { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 2px; margin-right: 0.35rem; vertical-align: -0.05rem; }
 .visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .input-wrap:has(.suffix) input { padding-right: 3.25rem; }
+.chart-wrap { position: relative; }
+.chart .grid { stroke: var(--border); stroke-width: 1; }
+.chart .axis { fill: var(--text-muted); font-size: 11px; font-family: var(--font); }
+.chart .inleg { fill: var(--chart-1); }
+.chart .rente { fill: var(--chart-2); }
+.chart .hit { fill: transparent; cursor: crosshair; }
+.chart .hit:hover + .hl, .chart .hl.on { opacity: 1; }
+.chart .hl { fill: var(--text); opacity: 0; pointer-events: none; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; font-size: 0.82rem; box-shadow: var(--shadow); white-space: nowrap; transform: translate(-50%, -100%); }
+.tip[hidden] { display: none; }
+details.tabel summary { cursor: pointer; font-weight: 600; margin: var(--space-3) 0; }
