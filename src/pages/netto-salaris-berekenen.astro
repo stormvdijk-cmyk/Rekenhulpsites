@@ -29,11 +29,12 @@ const faq = [
       <p class="result-sub">Netto per jaar <strong id="r-jaar">–</strong> · gemiddeld <span id="r-gem">–</span> per maand</p>
       <dl>
         <dt>Bruto per jaar</dt><dd id="r-bruto">–</dd>
-        <dt>Vakantiegeld bruto / netto</dt><dd id="r-vg">–</dd>
+        <dt>Vakantiegeld bruto</dt><dd id="r-vgb">–</dd>
+        <dt>Vakantiegeld netto</dt><dd id="r-vg">–</dd>
         <dt>Loonheffing per jaar</dt><dd id="r-lh">–</dd>
         <dt>Algemene heffingskorting</dt><dd id="r-ahk">–</dd>
         <dt>Arbeidskorting</dt><dd id="r-ak">–</dd>
-        <dt>Gemiddeld / marginaal tarief</dt><dd id="r-tarief">–</dd>
+        <dt>Gemiddeld / marginaal</dt><dd id="r-tarief">–</dd>
       </dl>
     </div>
     <div class="form">
@@ -91,7 +92,8 @@ const faq = [
     zet('r-jaar', euro(r.nettoJaar));
     zet('r-gem', euro(r.nettoMaandGemiddeld));
     zet('r-bruto', euro(r.belastbaarJaar));
-    zet('r-vg', `${euro(r.vakantiegeldBruto)} / ${euro(r.vakantiegeldNetto)}`);
+    zet('r-vgb', euro(r.vakantiegeldBruto));
+    zet('r-vg', euro(r.vakantiegeldNetto));
     zet('r-lh', euro(r.loonheffingJaar));
     zet('r-ahk', euro(r.algemeneHeffingskorting));
     zet('r-ak', euro(r.arbeidskorting));

@@ -87,7 +87,7 @@ main { padding-bottom: var(--space-7); }
 .result-sub { margin: var(--space-1) 0 0; color: var(--text-muted); font-size: 0.95rem; }
 .result dl { display: grid; grid-template-columns: 1fr auto; gap: var(--space-1) var(--space-4); margin: var(--space-3) 0 0; font-size: 0.95rem; }
 .result dt { color: var(--text-muted); }
-.result dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.result dd { margin: 0; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; font-weight: 600; }
 .form { padding: var(--space-4); display: grid; gap: var(--space-4); }
 .field { display: grid; gap: var(--space-1); }
 .field label, .field .label { font-weight: 600; font-size: 0.95rem; }
