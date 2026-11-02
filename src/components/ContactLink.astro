@@ -1,0 +1,6 @@
+---
+import { SITE } from '../data/site';
+---
+{SITE.contactEmail
+  ? <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>
+  : <span>het e-mailadres op onze contactpagina</span>}

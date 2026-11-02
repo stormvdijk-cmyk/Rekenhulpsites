@@ -1,0 +1,19 @@
+---
+import Page from '../components/Page.astro';
+import { REKENHULPEN } from '../data/calculators';
+import { TARIEF_JAAR } from '../data/tarieven';
+import { SITE, url } from '../data/site';
+---
+<Page title="Over Rekenhulp" description="Wie maakt Rekenhulp, hoe we rekenen en waar onze tarieven vandaan komen." h1={`Over ${SITE.naam}`}>
+  <p>{SITE.naam} is een verzameling gratis rekenhulpen voor geldzaken in Nederland. Je rekent snel je netto salaris uit, haalt btw uit een bedrag, of ziet wat rente op rente met je spaargeld doet. Je hoeft niets te installeren en geen account aan te maken. Wil je de site als app op je telefoon zetten? Dan werken de rekenhulpen ook zonder internet.</p>
+  <h2>Hoe we rekenen</h2>
+  <p>De rekenregels staan los van de opmaak van de site en zijn getest met voorbeelden die met de hand zijn nagerekend. Bij elke rekenhulp leggen we uit hoe de berekening werkt, met een uitgewerkt voorbeeld. Zo kun je de uitkomst zelf controleren.</p>
+  <h2>Waar de cijfers vandaan komen</h2>
+  <p>Belastingtarieven, heffingskortingen, bijtellingspercentages en btw-tarieven komen van de Belastingdienst en de Rijksoverheid. De inflatiecijfers komen van het CBS. Alle tarieven voor {TARIEF_JAAR} staan op één plek, met de bron en de datum waarop we ze hebben opgezocht. Bij elke rekenhulp met belastingregels staat een link naar de bron.</p>
+  <h2>Wat we niet doen</h2>
+  <p>We geven geen persoonlijk financieel advies. De uitkomsten zijn een goede indicatie, maar je persoonlijke situatie kan afwijken, bijvoorbeeld door pensioenpremie, toeslagen of andere aftrekposten. Lees ook onze <a href={url('disclaimer/')}>disclaimer</a>.</p>
+  <h2>Hoe de site wordt betaald</h2>
+  <p>De rekenhulpen zijn gratis. We betalen de site met advertenties van Google AdSense. Advertenties staan altijd duidelijk gemarkeerd en nooit tussen het formulier en de uitkomst. Lees in het <a href={url('privacy/')}>privacybeleid</a> en het <a href={url('cookies/')}>cookiebeleid</a> wat dat betekent voor je gegevens.</p>
+  <h2>Fout gevonden?</h2>
+  <p>Klopt er iets niet, of mis je een rekenhulp? <a href={url('contact/')}>Laat het ons weten</a>. We hebben nu {REKENHULPEN.length} rekenhulpen en breiden dat uit.</p>
+</Page>

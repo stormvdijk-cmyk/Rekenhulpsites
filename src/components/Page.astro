@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+interface Props { title: string; description: string; h1: string; bijgewerkt?: string }
+const { title, description, h1, bijgewerkt } = Astro.props;
+---
+<Base title={title} description={description}>
+  <article class="prose">
+    <h1>{h1}</h1>
+    {bijgewerkt && <p class="hint">Laatst bijgewerkt: {bijgewerkt}</p>}
+    <slot />
+  </article>
+</Base>
