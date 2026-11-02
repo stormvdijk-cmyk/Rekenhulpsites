@@ -16,11 +16,11 @@ const anker = (c: string) => c.toLowerCase().replace(/[^a-z]+/g, '-');
 
 // Volgorde binnen een onderwerp: meest gezochte eerst.
 const VOORRANG = [
-  'netto-salaris-berekenen', 'bruto-netto-uurloon', 'vakantiegeld-berekenen', 'minimumloon-berekenen', 'ww-uitkering-berekenen',
-  'inkomstenbelasting-berekenen', 'box-3-belasting-berekenen', 'combinatiekorting-berekenen',
+  'netto-salaris-berekenen', 'netto-naar-bruto-berekenen', 'bruto-netto-uurloon', 'vakantiegeld-berekenen', 'bonus-13e-maand-netto', 'minimumloon-berekenen', 'ww-uitkering-berekenen', 'transitievergoeding-berekenen',
+  'inkomstenbelasting-berekenen', 'box-3-belasting-berekenen', 'combinatiekorting-berekenen', 'box-2-belasting-berekenen',
   'hypotheek-maandlasten-berekenen', 'overdrachtsbelasting-berekenen',
   'samengestelde-rente', 'spaardoel-berekenen', 'lening-maandlasten', 'inflatie-berekenen',
-  'zzp-uurtarief-berekenen', 'zzp-netto-inkomen-berekenen', 'btw-berekenen',
+  'zzp-uurtarief-berekenen', 'zzp-netto-inkomen-berekenen', 'loondienst-of-zzp', 'btw-berekenen', 'kor-kleineondernemersregeling', 'vennootschapsbelasting-berekenen',
   'schenkbelasting-berekenen', 'erfbelasting-berekenen',
 ];
 const rang = (r: Rekenhulp) => { const i = VOORRANG.indexOf(r.slug); return i === -1 ? 99 : i; };

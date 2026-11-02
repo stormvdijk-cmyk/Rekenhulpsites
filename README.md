@@ -26,6 +26,13 @@ Snelle, installeerbare webapp (PWA) met Nederlandstalige financiële rekenhulpen
 | WW-uitkering | `/ww-uitkering-berekenen/` |
 | Minimumloon | `/minimumloon-berekenen/` |
 | Spaardoel | `/spaardoel-berekenen/` |
+| Netto naar bruto | `/netto-naar-bruto-berekenen/` |
+| Bonus en 13e maand netto | `/bonus-13e-maand-netto/` |
+| Transitievergoeding | `/transitievergoeding-berekenen/` |
+| Loondienst of zzp | `/loondienst-of-zzp/` |
+| Vennootschapsbelasting en dividend | `/vennootschapsbelasting-berekenen/` |
+| Box 2-belasting | `/box-2-belasting-berekenen/` |
+| Kleineondernemersregeling | `/kor-kleineondernemersregeling/` |
 
 Daarnaast: `/belastingtarieven-2026/`, een overzicht van alle tarieven, dat automatisch uit de tarieven-JSON wordt opgebouwd.
 

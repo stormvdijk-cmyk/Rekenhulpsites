@@ -1,0 +1,87 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const faq = [
+  { vraag: 'Verdien ik meer als zzp\'er?', antwoord: 'Vaak wel per uur, maar niet altijd per jaar. Een zzp\'er betaalt zelf zijn pensioen, verzekering bij arbeidsongeschiktheid en vrije dagen, en factureert niet elk uur dat hij werkt. Vergelijk daarom wat je na die kosten echt kunt besteden.' },
+  { vraag: 'Wat moet ik invullen bij reservering?', antwoord: 'Het bedrag dat je als zzp\'er per jaar opzijzet voor pensioen, een arbeidsongeschiktheidsverzekering en een buffer. In loondienst regelt je werkgever een groot deel daarvan. Veel zzp\'ers reserveren € 5.000 tot € 12.000 per jaar.' },
+  { vraag: 'Hoeveel declarabele uren zijn realistisch?', antwoord: 'Bij een volle werkweek vaak 1.100 tot 1.400 uur per jaar. Van de 52 weken gaan vakantie, feestdagen en ziekte af, en van elke week een deel voor administratie en acquisitie.' },
+  { vraag: 'Wat betekent het break-even uurtarief?', antwoord: 'Het uurtarief waarbij je als zzp\'er, na belasting en reservering, precies evenveel overhoudt als in loondienst. Vraag je meer, dan heb je als zzp\'er meer te besteden. Het is een ondergrens: risico\'s zoals stille maanden zitten er niet in.' },
+];
+---
+<CalculatorPage
+  slug="loondienst-of-zzp"
+  title="Loondienst of zzp? Vergelijk je netto 2026"
+  description="Vergelijk wat je netto overhoudt in loondienst met wat je als zzp'er overhoudt, inclusief belasting, Zvw en reservering voor pensioen en AOV."
+  h1="Loondienst of zzp vergelijken"
+  intro="Vul je salaris in loondienst en je zzp-tarief in. Je ziet direct wat je in beide situaties per jaar netto kunt besteden."
+  faq={faq}
+  bron={tarieven.ondernemer.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label" id="r-label">Verschil per jaar</p>
+      <p class="result-main" id="r-verschil">–</p>
+      <p class="result-sub">Break-even uurtarief: <strong id="r-be">–</strong></p>
+      <dl>
+        <dt>Loondienst: netto per jaar</dt><dd id="r-w">–</dd>
+        <dt>Zzp: omzet</dt><dd id="r-omzet">–</dd>
+        <dt>Zzp: netto na belasting</dt><dd id="r-zn">–</dd>
+        <dt>Zzp: besteedbaar na reservering</dt><dd id="r-zb">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <h3 style="margin:0">Loondienst</h3>
+      <div class="row-2 stack">
+        <Field id="bruto" label="Bruto maandsalaris" value="3500" prefix="€" hint="Met 8% vakantiegeld" />
+        <Field id="pensioen" label="Pensioenpremie per maand" value="0" prefix="€" hint="Jouw deel" />
+      </div>
+      <h3 style="margin:0.5rem 0 0">Als zzp'er</h3>
+      <div class="row-2">
+        <Field id="tarief" label="Uurtarief (excl. btw)" value="60" prefix="€" />
+        <Field id="uren" label="Declarabele uren per jaar" value="1300" inputmode="numeric" />
+      </div>
+      <div class="row-2 stack">
+        <Field id="kosten" label="Zakelijke kosten per jaar" value="5000" prefix="€" />
+        <Field id="reserve" label="Reservering per jaar" value="6000" prefix="€" hint="Pensioen, AOV, buffer" />
+      </div>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Appels met appels vergelijken</h2>
+    <p>Een werknemer met € 3.500 bruto per maand en een zzp'er met € 60 per uur zijn lastig te vergelijken. De werknemer krijgt vakantiegeld, doorbetaalde vakantie, pensioenopbouw en loon bij ziekte. De zzp'er krijgt ondernemersaftrek, maar betaalt zelf de bijdrage Zvw en regelt alles zelf. Deze rekenhulp zet beide om naar hetzelfde getal: <strong>wat je per jaar kunt besteden</strong>.</p>
+    <ul>
+      <li><strong>Loondienst:</strong> bruto jaarloon met vakantiegeld, min pensioenpremie en loonheffing.</li>
+      <li><strong>Zzp:</strong> uurtarief × declarabele uren, min kosten, min inkomstenbelasting (met zelfstandigenaftrek en mkb-winstvrijstelling) en bijdrage Zvw, min je eigen reservering.</li>
+    </ul>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p><strong>Loondienst:</strong> € 3.500 bruto per maand geeft <strong>€ 36.822,49</strong> netto per jaar.</p>
+      <p><strong>Zzp:</strong> € 60 per uur × 1.300 uur = € 78.000 omzet. Na € 5.000 kosten is de winst € 73.000. Na belasting en Zvw blijft € 52.028,49 over. Na € 6.000 reservering kun je <strong>€ 46.028,49</strong> besteden.</p>
+      <p>Het verschil is <strong>€ 9.206</strong> per jaar in het voordeel van zzp. Het break-even tarief is € 46,08 per uur: daaronder heb je in loondienst meer te besteden.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Meer dan geld</h2>
+    <p>Netto inkomen is niet het enige verschil. Als werknemer heb je ontslagbescherming, recht op WW en loon tijdens ziekte. Als zzp'er heb je meer vrijheid, maar ook meer risico: een stille maand of een klant die niet betaalt, raakt je direct. Sinds 2025 controleert de Belastingdienst ook strenger op schijnzelfstandigheid. Werk je lang voor één opdrachtgever onder diens leiding, dan kan het als loondienst worden gezien.</p>
+    <p>Bepaal je minimale tarief nauwkeuriger met <a href="../zzp-uurtarief-berekenen/">zzp-uurtarief berekenen</a>, of reken je verwachte winst door met <a href="../zzp-netto-inkomen-berekenen/">zzp netto inkomen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { vergelijkLoondienstZzp } from '../lib/calculators/loondienstZzp';
+  import { euro, getal, live, zet } from '../lib/ui';
+  live('f', () => {
+    const r = vergelijkLoondienstZzp({ brutoMaand: getal('bruto'), pensioenpremieMaand: getal('pensioen'), uurtarief: getal('tarief'), declarabeleUren: getal('uren'), kostenPerJaar: getal('kosten'), zzpReserveringJaar: getal('reserve') });
+    zet('r-label', r.verschil >= 0 ? 'Zzp levert per jaar meer op' : 'Loondienst levert per jaar meer op');
+    zet('r-verschil', euro(Math.abs(r.verschil)));
+    zet('r-be', euro(r.breakEvenTarief));
+    zet('r-w', euro(r.werknemerNettoJaar));
+    zet('r-omzet', euro(r.zzpOmzet));
+    zet('r-zn', euro(r.zzpNettoJaar));
+    zet('r-zb', euro(r.zzpBesteedbaarJaar));
+  });
+</script>

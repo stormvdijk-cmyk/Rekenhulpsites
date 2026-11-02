@@ -1,0 +1,85 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const b = tarieven.box2;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 2 }) + '%';
+const faq = [
+  { vraag: 'Wanneer val ik in box 2?', antwoord: 'Als je, alleen of samen met je fiscale partner, minstens 5% van de aandelen van een bv of nv hebt. Dat heet een aanmerkelijk belang. Dividend en de winst bij verkoop van die aandelen vallen dan in box 2.' },
+  { vraag: 'Hoe werken de twee schijven bij partners?', antwoord: `Sinds 2024 heeft iedere belastingplichtige een eigen eerste schijf van ${eur(b.grens)}. Fiscale partners kunnen het box 2-inkomen onderling verdelen. Zo kunnen jullie samen tot ${eur(b.grens * 2)} tegen ${pct(b.tariefLaag)} laten belasten.` },
+  { vraag: 'Telt de verkoop van aandelen ook mee?', antwoord: 'Ja. Verkoop je aandelen uit een aanmerkelijk belang, dan is de winst (verkoopprijs min verkrijgingsprijs) box 2-inkomen. Bij bedrijfsoverdracht aan een opvolger kan onder voorwaarden uitstel van betaling of doorschuiving gelden.' },
+  { vraag: 'Is dividendbelasting extra?', antwoord: 'Nee. De 15% dividendbelasting die de bv inhoudt, is een voorheffing. Je trekt die in je aangifte af van de box 2-belasting die je verschuldigd bent.' },
+];
+---
+<CalculatorPage
+  slug="box-2-belasting-berekenen"
+  title="Box 2-belasting berekenen 2026"
+  description={`Bereken de box 2-belasting over dividend of verkoopwinst uit een aanmerkelijk belang in 2026: ${pct(b.tariefLaag)} tot ${eur(b.grens)}, daarboven ${pct(b.tariefHoog)}.`}
+  h1="Box 2-belasting berekenen"
+  intro="Vul je inkomen uit aanmerkelijk belang in, zoals dividend uit je bv. Je ziet direct hoeveel box 2-belasting je betaalt."
+  faq={faq}
+  bron={b.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Box 2-belasting 2026</p>
+      <p class="result-main" id="r-bel">–</p>
+      <p class="result-sub">Netto <strong id="r-netto">–</strong> · gemiddeld <span id="r-pct">–</span></p>
+      <dl>
+        <dt>Waarvan dividendbelasting (15%, voorheffing)</dt><dd id="r-db">–</dd>
+        <dt>Nog te betalen bij de aangifte</dt><dd id="r-rest">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="inkomen" label="Inkomen uit aanmerkelijk belang" value="100000" prefix="€" hint="Dividend of verkoopwinst" />
+      <label class="check"><input type="checkbox" id="partner" name="partner" /> Verdelen met mijn fiscale partner</label>
+      <label class="check"><input type="checkbox" id="div" name="div" checked /> Het gaat om dividend (met 15% dividendbelasting)</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>De tarieven in box 2</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Inkomen uit aanmerkelijk belang</th><th>Tarief 2026</th></tr></thead>
+        <tbody>
+          <tr><td>tot en met {eur(b.grens)} per persoon</td><td>{pct(b.tariefLaag)}</td></tr>
+          <tr><td>boven {eur(b.grens)}</td><td>{pct(b.tariefHoog)}</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Box 2 kent geen heffingsvrij bedrag en geen kortingen. Het tarief geldt over het hele inkomen uit aanmerkelijk belang, min eventuele aftrekbare kosten, zoals de kosten van een adviseur bij een verkoop.</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Zonder partner:</strong> je keert € 100.000 dividend uit. Box 2: € 68.843 × 24,5% = € 16.866,54 plus € 31.157 × 31% = € 9.658,67. Samen <strong>€ 26.525,21</strong>.</p>
+      <p><strong>Met partner:</strong> jullie verdelen de € 100.000. Alles valt in de lage schijf: 24,5% = <strong>€ 24.500</strong>, een besparing van € 2.025,21.</p>
+      <p>De bv hield 15% dividendbelasting in: € 15.000. Die gaat af van de box 2-belasting. Zonder partner betaal je in je aangifte nog € 11.525,21 bij.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Slim uitkeren</h2>
+    <p>Omdat de eerste schijf per jaar geldt, kan het lonen om dividend te spreiden: liever twee jaar € 68.843 dan één keer € 137.686. Bij partners verdubbelt dat. De winst moet dan wel in de bv kunnen blijven, en de bv moet de uitkeringstoets doorstaan.</p>
+    <h3>Wat valt er nog meer in box 2?</h3>
+    <p>Naast dividend en verkoopwinst kunnen ook andere voordelen in box 2 vallen. Leen je als aandeelhouder veel geld van je eigen bv, dan wordt het deel van die schulden boven € 500.000 gezien als een fictief dividend en belast in box 2. Ook bij emigratie of bij het overlijden van een aandeelhouder kan box 2-belasting ontstaan, omdat de aandelen dan als vervreemd gelden. Vraag in zulke situaties een belastingadviseur om mee te kijken.</p>
+    <p>Wil je zien hoeveel vennootschapsbelasting er vóór het dividend al is betaald? Gebruik <a href="../vennootschapsbelasting-berekenen/">vennootschapsbelasting en dividend</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { box2Belasting } from '../lib/calculators/dga';
+  import { formatProcent } from '../lib/calculators/format';
+  import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const ink = getal('inkomen');
+    const bel = box2Belasting(ink, vinkje('partner'));
+    const db = vinkje('div') ? ink * 0.15 : 0;
+    zet('r-bel', euro(bel));
+    zet('r-netto', euro(ink - bel));
+    zet('r-pct', ink > 0 ? formatProcent((bel / ink) * 100, 1) : '–');
+    zet('r-db', euro(db));
+    zet('r-rest', euro(bel - db));
+  });
+</script>

@@ -1,0 +1,82 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const faq = [
+  { vraag: 'Waarom gaat de helft van mijn bonus naar de belasting?', antwoord: 'Een bonus komt bovenop je gewone loon en valt dus in je hoogste schijf. Daarnaast worden de algemene heffingskorting en de arbeidskorting lager als je meer verdient. Bij een inkomen tussen ongeveer € 45.600 en € 78.400 tellen die effecten op tot ruim 50%.' },
+  { vraag: 'Wat is het bijzonder tarief?', antwoord: 'Werkgevers houden over een bonus, dertiende maand of vakantiegeld loonheffing in met de tabel voor bijzondere beloningen. Daarin staat één percentage dat afhangt van je jaarloon. Het percentage benadert wat je over het hele jaar echt betaalt, zoals deze rekenhulp uitrekent.' },
+  { vraag: 'Krijg ik een deel van de belasting terug?', antwoord: 'Soms. Bij je aangifte rekent de Belastingdienst alles definitief af. Was het bijzonder tarief hoger dan wat je over het hele jaar echt verschuldigd bent, dan krijg je het verschil terug. Andersom kun je ook moeten bijbetalen.' },
+  { vraag: 'Telt een dertiende maand mee voor mijn pensioen of vakantiegeld?', antwoord: 'Dat hangt af van je cao of arbeidsvoorwaarden. Een vaste dertiende maand telt vaak mee voor je pensioen. Vakantiegeld wordt meestal niet over een eindejaarsuitkering berekend.' },
+];
+---
+<CalculatorPage
+  slug="bonus-13e-maand-netto"
+  title="Bonus of 13e maand netto berekenen 2026"
+  description="Bereken wat je netto overhoudt van een bonus, dertiende maand of eindejaarsuitkering in 2026, en hoeveel procent belasting je erover betaalt."
+  h1="Bonus en 13e maand netto berekenen"
+  intro="Vul je bruto maandsalaris en het bedrag van je bonus of dertiende maand in. Je ziet direct wat er netto van overblijft."
+  faq={faq}
+  bron={tarieven.box1.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Bonus netto</p>
+      <p class="result-main" id="r-netto">–</p>
+      <p class="result-sub">Belasting <strong id="r-bel">–</strong> (<span id="r-pct">–</span>)</p>
+      <dl>
+        <dt>Bonus bruto</dt><dd id="r-bruto">–</dd>
+        <dt>Jaarloon zonder bonus</dt><dd id="r-jaar">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <div class="row-2 stack">
+        <Field id="maand" label="Bruto maandsalaris" value="3500" prefix="€" />
+        <Field id="bonus" label="Bonus of 13e maand (bruto)" value="3000" prefix="€" />
+      </div>
+      <button type="button" class="btn" id="dertiende" style="justify-self:start;background:var(--surface-2);color:var(--text)">Vul één maandsalaris in (13e maand)</button>
+      <label class="check"><input type="checkbox" id="vg" name="vg" checked /> Ik krijg 8% vakantiegeld</label>
+      <label class="check"><input type="checkbox" id="lhk" name="lhk" checked /> Loonheffingskorting toepassen (hoofdbaan)</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Hoe wordt een bonus belast?</h2>
+    <p>Een bonus, dertiende maand of eindejaarsuitkering is gewoon loon. Omdat het bovenop je vaste salaris komt, betaal je erover het tarief van je hoogste schijf. Daarbij komt een minder bekend effect: de algemene heffingskorting en de arbeidskorting worden kleiner naarmate je meer verdient. Over het extra bedrag verlies je dus ook een stukje korting.</p>
+    <p>De rekenhulp rekent je netto jaarinkomen twee keer uit: met en zonder bonus. Het verschil is wat de bonus je netto oplevert. Zo tellen schijfgrenzen en de afbouw van de kortingen precies mee.</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Bonus:</strong> je verdient € 3.500 bruto per maand en krijgt <strong>€ 3.000 bonus</strong>. Daarvan gaat € 1.494,48 naar de belasting. Je houdt <strong>€ 1.505,52</strong> netto over, een effectief tarief van bijna 50%.</p>
+      <p><strong>Dertiende maand:</strong> bij hetzelfde salaris krijg je een dertiende maand van € 3.500. Netto blijft er <strong>€ 1.753,18</strong> van over.</p>
+      <p>Waarom zo hoog? Je jaarloon komt boven € 45.592 uit. Daarboven betaal je 37,56% in de tweede schijf, en dalen de algemene heffingskorting (6,398%) en de arbeidskorting (6,51%) tegelijk.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Tips</h2>
+    <ul>
+      <li><strong>Bonus omzetten.</strong> Sommige werkgevers laten je een bonus inzetten voor extra pensioen, een fiets of opleiding via de werkkostenregeling. Dan betaal je er minder of geen belasting over. Vraag naar de mogelijkheden.</li>
+      <li><strong>Lijfrente.</strong> Heb je een pensioentekort, dan kan een lijfrentestorting je belastbaar inkomen verlagen. De aftrek levert maximaal 37,56% op.</li>
+      <li><strong>Verschil met je loonstrook.</strong> Je werkgever gebruikt het bijzonder tarief, en dat kan een paar procent afwijken. In je aangifte wordt alles definitief verrekend.</li>
+    </ul>
+    <p>Bekijk ook wat je vakantiegeld netto oplevert met <a href="../vakantiegeld-berekenen/">vakantiegeld berekenen</a>, of reken je hele jaar door met <a href="../inkomstenbelasting-berekenen/">inkomstenbelasting berekenen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenBonus } from '../lib/calculators/bonus';
+  import { formatProcent } from '../lib/calculators/format';
+  import { $, euro, getal, live, vinkje, zet } from '../lib/ui';
+  $('dertiende').addEventListener('click', () => {
+    ($('bonus') as HTMLInputElement).value = ($('maand') as HTMLInputElement).value;
+    $('f').dispatchEvent(new Event('input'));
+  });
+  live('f', () => {
+    const r = berekenBonus({ brutoMaand: getal('maand'), bonus: getal('bonus'), vakantiegeld: vinkje('vg'), loonheffingskorting: vinkje('lhk') });
+    zet('r-netto', euro(r.bonusNetto));
+    zet('r-bel', euro(r.belasting));
+    zet('r-pct', formatProcent(r.effectiefTarief, 1));
+    zet('r-bruto', euro(r.bonusBruto));
+    zet('r-jaar', euro(r.jaarloonZonder));
+  });
+</script>

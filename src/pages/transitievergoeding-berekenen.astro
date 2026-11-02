@@ -1,0 +1,79 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const t = tarieven.transitievergoeding;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Wanneer heb ik recht op een transitievergoeding?', antwoord: 'Als je werkgever je ontslaat, of je tijdelijke contract niet verlengt. Dat geldt vanaf de eerste werkdag, ook bij een korte baan. Neem je zelf ontslag, dan krijg je meestal geen transitievergoeding, tenzij je werkgever ernstig verwijtbaar heeft gehandeld.' },
+  { vraag: 'Wat telt mee in het maandsalaris?', antwoord: 'Je vaste bruto maandloon, plus vakantiegeld, vaste toeslagen (zoals ploegentoeslag), een vaste dertiende maand en het gemiddelde van overwerk en variabele beloning van de afgelopen drie jaar. Het werkgeversdeel van de pensioenpremie, een auto van de zaak en onkostenvergoedingen tellen niet mee.' },
+  { vraag: 'Mag de werkgever kosten aftrekken?', antwoord: 'Soms. Kosten die de werkgever heeft gemaakt om je naar ander werk te begeleiden, bijvoorbeeld een opleiding voor een ander beroep, mogen onder voorwaarden van de transitievergoeding af. Dat moet je dan wel van tevoren schriftelijk hebben afgesproken.' },
+  { vraag: 'Moet ik belasting betalen over de transitievergoeding?', antwoord: 'Ja. De transitievergoeding is loon. Je werkgever houdt loonheffing in met het tarief voor bijzondere beloningen. Netto houd je daardoor vaak 50 tot 60% over, afhankelijk van je inkomen.' },
+];
+---
+<CalculatorPage
+  slug="transitievergoeding-berekenen"
+  title="Transitievergoeding berekenen 2026"
+  description="Bereken je transitievergoeding bij ontslag of het niet verlengen van je contract in 2026: 1/3 maandsalaris per dienstjaar, maximaal € 102.000."
+  h1="Transitievergoeding berekenen"
+  intro="Vul je bruto maandsalaris en hoe lang je in dienst bent in. Je ziet direct op welke transitievergoeding je recht hebt."
+  faq={faq}
+  bron={t.bron}
+  bronNaam="Rijksoverheid"
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Transitievergoeding (bruto)</p>
+      <p class="result-main" id="r-verg">–</p>
+      <p class="result-sub" id="r-sub"></p>
+      <dl>
+        <dt>Maandsalaris voor de berekening</dt><dd id="r-maand">–</dd>
+        <dt>Dienstjaren</dt><dd id="r-jaren">–</dd>
+        <dt>Maximum voor jou</dt><dd id="r-max">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="loon" label="Bruto maandsalaris" value="3000" prefix="€" hint="Inclusief vaste toeslagen" />
+      <div class="row-2">
+        <Field id="jaren" label="Jaren in dienst" value="9" inputmode="numeric" />
+        <Field id="maanden" label="Plus maanden" value="0" inputmode="numeric" />
+      </div>
+      <label class="check"><input type="checkbox" id="vg" name="vg" /> 8% vakantiegeld meetellen</label>
+      <label class="check"><input type="checkbox" id="dm" name="dm" /> Vaste 13e maand meetellen</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo wordt de transitievergoeding berekend</h2>
+    <p>Je krijgt <strong>een derde bruto maandsalaris per jaar</strong> dat je in dienst bent geweest. Voor een deel van een jaar krijg je naar verhouding: per extra maand 1/12 van dat bedrag. Er is geen opbouw meer met hogere bedragen na tien jaar; sinds 2020 telt elk jaar even zwaar, vanaf de eerste dag.</p>
+    <p>In het maandsalaris tellen je vaste loon, het vakantiegeld en vaste toeslagen mee. Vink vakantiegeld of een dertiende maand aan als je die krijgt. Er geldt een maximum: in 2026 is dat {eur(t.maximum)} bruto, of één bruto jaarsalaris als je meer verdient dan dat.</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>9 jaar in dienst:</strong> je verdient € 3.000 bruto per maand. De transitievergoeding is € 3.000 / 3 × 9 = <strong>€ 9.000</strong>.</p>
+      <p><strong>Met vakantiegeld en een half jaar extra:</strong> € 3.000 + 8% = € 3.240. Over 9,5 jaar is dat € 3.240 / 3 × 9,5 = <strong>€ 10.260</strong>.</p>
+      <p><strong>Maximum:</strong> verdien je € 10.000 per maand en ben je 40 jaar in dienst, dan zou het € 133.333 zijn. Je jaarsalaris (€ 120.000) is hoger dan € 102.000, dus je krijgt maximaal <strong>€ 120.000</strong>.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Transitievergoeding of vaststellingsovereenkomst?</h2>
+    <p>Bij ontslag met wederzijds goedvinden teken je een vaststellingsovereenkomst. Daarin spreek je zelf een vergoeding af; die kan hoger of lager zijn dan de transitievergoeding. Laat zo'n overeenkomst nakijken, bijvoorbeeld via je vakbond of een arbeidsrechtadvocaat, zeker als het om je WW-recht gaat.</p>
+    <p>Ben je ontslagen na twee jaar ziekte, dan heb je ook recht op de transitievergoeding. Je werkgever kan die dan onder voorwaarden van het UWV terugkrijgen.</p>
+    <p>Na ontslag krijg je mogelijk WW. Bereken de hoogte met <a href="../ww-uitkering-berekenen/">WW-uitkering berekenen</a>. Wat de vergoeding netto oplevert, schat je met <a href="../bonus-13e-maand-netto/">bonus netto</a>: de belasting werkt op dezelfde manier.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenTransitievergoeding } from '../lib/calculators/transitievergoeding';
+  import { formatGetal } from '../lib/calculators/format';
+  import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenTransitievergoeding({ brutoMaand: getal('loon'), jaren: getal('jaren'), maanden: getal('maanden'), vakantiegeld: vinkje('vg'), dertiendeMaand: vinkje('dm') });
+    zet('r-verg', euro(r.vergoeding));
+    zet('r-sub', r.begrensd ? 'Begrensd op het wettelijk maximum' : '1/3 maandsalaris per dienstjaar');
+    zet('r-maand', euro(r.maandsalaris));
+    zet('r-jaren', formatGetal(r.dienstjaren));
+    zet('r-max', euro(r.maximum));
+  });
+</script>
