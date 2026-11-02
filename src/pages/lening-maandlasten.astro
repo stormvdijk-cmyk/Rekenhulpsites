@@ -1,0 +1,86 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+const faq = [
+  { vraag: 'Wat is het verschil tussen annuïtair en lineair aflossen?', antwoord: 'Bij annuïtair aflossen betaal je elke maand hetzelfde bedrag. In het begin is dat vooral rente, later vooral aflossing. Bij lineair aflossen los je elke maand hetzelfde bedrag af. Je rente daalt mee met je schuld. De maandlasten beginnen hoger en worden steeds lager.' },
+  { vraag: 'Welke vorm is goedkoper?', antwoord: 'Lineair aflossen kost in totaal minder rente, omdat je schuld sneller daalt. Daar staat tegenover dat je eerste maandtermijnen hoger zijn. Bij annuïtair betaal je meer rente, maar je maandlast is lager en blijft gelijk.' },
+  { vraag: 'Is deze rekenhulp geschikt voor een hypotheek?', antwoord: 'Voor de bruto maandlasten wel: de berekening is dezelfde. Hypotheekrenteaftrek, de looptijd van je rentevaste periode en andere kosten zitten er niet in. Je netto maandlast is daardoor meestal lager dan de bruto termijn die je hier ziet.' },
+  { vraag: 'Wat is het verschil tussen de rente en het jaarlijks kostenpercentage?', antwoord: 'Bij consumptief krediet vermeldt de aanbieder het jaarlijks kostenpercentage (JKP). Daarin zitten ook kosten. Vul je het JKP in als rente, dan krijg je een goede schatting van je maandtermijn. Deze rekenhulp rekent met een maandrente van jaarrente gedeeld door 12.' },
+];
+---
+<CalculatorPage
+  slug="lening-maandlasten"
+  title="Maandlasten lening berekenen – annuïtair en lineair"
+  description="Bereken de maandlasten en totale rente van een lening, annuïtair of lineair, met een volledige aflossingstabel per maand."
+  h1="Maandlasten van een lening berekenen"
+  intro="Vul het leenbedrag, de rente en de looptijd in en kies annuïtair of lineair. Je ziet je maandtermijn, de totale rente en het aflossingsschema."
+  faq={faq}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label" id="r-label">Maandtermijn</p>
+      <p class="result-main" id="r-termijn">–</p>
+      <p class="result-sub" id="r-sub"></p>
+      <dl>
+        <dt>Totale rente</dt><dd id="r-rente">–</dd>
+        <dt>Totaal terugbetaald</dt><dd id="r-totaal">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="bedrag" label="Leenbedrag" value="15000" prefix="€" />
+      <div class="row-2">
+        <Field id="rente" label="Rente per jaar" value="7" suffix="%" />
+        <Field id="maanden" label="Looptijd" value="60" suffix="mnd" inputmode="numeric" />
+      </div>
+      <fieldset class="seg">
+        <legend>Aflosvorm</legend>
+        <label><input type="radio" name="vorm" value="annuitair" checked /><span>Annuïtair</span></label>
+        <label><input type="radio" name="vorm" value="lineair" /><span>Lineair</span></label>
+      </fieldset>
+      <details class="tabel">
+        <summary>Aflossingstabel per maand</summary>
+        <div class="table-wrap"><table><thead><tr><th>Maand</th><th>Rente</th><th>Aflossing</th><th>Termijn</th><th>Restschuld</th></tr></thead><tbody id="tabel"></tbody></table></div>
+      </details>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo worden je maandlasten berekend</h2>
+    <p>Elke maandtermijn bestaat uit twee delen: <strong>rente</strong> over je restschuld en <strong>aflossing</strong>, waarmee je schuld kleiner wordt. De maandrente is de jaarrente gedeeld door twaalf. Bij 7% per jaar is dat 0,5833% per maand.</p>
+    <p><strong>Annuïtair:</strong> de termijn blijft elke maand gelijk. Die bereken je met de annuïteitenformule: bedrag × r / (1 − (1 + r)<sup>−n</sup>). Daarin is r de maandrente en n het aantal maanden. Omdat je schuld in het begin het hoogst is, betaal je dan vooral rente. Aan het eind is bijna de hele termijn aflossing.</p>
+    <p><strong>Lineair:</strong> je lost elke maand hetzelfde bedrag af, namelijk het leenbedrag gedeeld door het aantal maanden. De rente wordt steeds lager, en dus je termijn ook.</p>
+
+    <h2>Rekenvoorbeeld: € 15.000 lenen tegen 7% in 5 jaar</h2>
+    <div class="voorbeeld">
+      <p><strong>Annuïtair:</strong> je betaalt 60 maanden lang <strong>€ 297,02</strong> per maand. De totale rente is <strong>€ 2.821,08</strong>. In de eerste maand is € 87,50 daarvan rente en € 209,52 aflossing.</p>
+      <p><strong>Lineair:</strong> je lost elke maand € 250 af. De eerste termijn is € 250 + € 87,50 rente = <strong>€ 337,50</strong>. De laatste is € 251,46. De totale rente is <strong>€ 2.668,75</strong>, dus € 152,33 minder dan bij annuïtair.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Tips voordat je leent</h2>
+    <ul>
+      <li><strong>Vergelijk op JKP.</strong> Het jaarlijks kostenpercentage is bij consumptief krediet het eerlijkste vergelijkingsgetal, omdat alle verplichte kosten erin zitten.</li>
+      <li><strong>Kortere looptijd, minder rente.</strong> Leen je hetzelfde bedrag in drie jaar in plaats van vijf, dan is je maandlast hoger, maar betaal je flink minder rente.</li>
+      <li><strong>Extra aflossen.</strong> Bij een doorlopend of persoonlijk krediet mag je in Nederland meestal boetevrij extra aflossen. Dat verkort de looptijd of verlaagt je termijn.</li>
+      <li><strong>Registratie bij BKR.</strong> Leningen vanaf € 250 met een looptijd van meer dan drie maanden worden geregistreerd bij het BKR. Dat kan meetellen als je later een hypotheek aanvraagt.</li>
+    </ul>
+    <p>Wil je weten wat je netto per maand verdient, om te zien welke maandlast past? Gebruik de rekenhulp <a href="../netto-salaris-berekenen/">netto salaris berekenen</a>. Wil je in plaats van lenen eerst sparen? Kijk dan bij <a href="../samengestelde-rente/">samengestelde rente</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenLening, type Leningvorm } from '../lib/calculators/lening';
+  import { $, euro, getal, live, radio, zet } from '../lib/ui';
+  live('f', () => {
+    const vorm = (radio('vorm') || 'annuitair') as Leningvorm;
+    const maanden = Math.min(600, Math.max(1, Math.round(getal('maanden', 1))));
+    const r = berekenLening({ bedrag: getal('bedrag'), rente: getal('rente'), looptijdMaanden: maanden, vorm });
+    zet('r-label', vorm === 'annuitair' ? 'Maandtermijn (gelijk)' : 'Eerste maandtermijn');
+    zet('r-termijn', euro(r.eersteTermijn));
+    zet('r-sub', vorm === 'lineair' ? `Daalt tot ${euro(r.laatsteTermijn)} in de laatste maand` : `${maanden} maanden`);
+    zet('r-rente', euro(r.totaleRente));
+    zet('r-totaal', euro(r.totaalBetaald));
+    $('tabel').innerHTML = r.schema.map((t) => `<tr><td>${t.maand}</td><td>${euro(t.rente)}</td><td>${euro(t.aflossing)}</td><td>${euro(t.termijn)}</td><td>${euro(t.restschuld)}</td></tr>`).join('');
+  });
+</script>
