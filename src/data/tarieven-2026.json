@@ -285,5 +285,42 @@
       "afbouwPercentage": 0.15
     },
     "alleenstaandeOuderenkorting": 540
+  },
+  "iack": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/inkomensafhankelijke_combikorting/inkomensafhankelijke-combinatiekorting-2026",
+    "bronVoorwaarden": "https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/voorwaarden-inkomensafhankelijke-combinatiekorting",
+    "opgezocht": "2026-11-02",
+    "omschrijving": "Voor ouders met een kind jonger dan 12 jaar dat vóór 1 januari 2025 is geboren, met een arbeidsinkomen boven de drempel. Bij fiscale partners krijgt alleen de partner met het laagste arbeidsinkomen de korting.",
+    "drempel": 6239,
+    "percentage": 0.1145,
+    "maximum": 3032,
+    "percentageAow": 0.0572,
+    "maximumAow": 1513
+  },
+  "ww": {
+    "bron": "https://www.uwv.nl/nl/ww/hoogte-ww",
+    "bronMaximum": "https://www.uwv.nl/nl/premies-bedragen/maximum-dagloon",
+    "opgezocht": "2026-11-02",
+    "omschrijving": "WW: 75% van het WW-maandloon in de eerste 2 maanden, daarna 70%. WW-maandloon = dagloon × 21,75. Maximumdagloon vanaf 1 januari 2026.",
+    "maximumDagloon": 309.91,
+    "werkdagenPerMaand": 21.75,
+    "werkdagenPerJaar": 261,
+    "percentageEerste2Maanden": 0.75,
+    "percentageDaarna": 0.7
+  },
+  "minimumloon": {
+    "bron": "https://www.rijksoverheid.nl/actueel/nieuws/2026/06/11/uitkeringsbedragen-per-1-juli-2026",
+    "opgezocht": "2026-11-02",
+    "omschrijving": "Wettelijk minimumloon per uur voor werknemers van 21 jaar en ouder.",
+    "perUur": [
+      {
+        "vanaf": "2026-01-01",
+        "bedrag": 14.71
+      },
+      {
+        "vanaf": "2026-07-01",
+        "bedrag": 14.99
+      }
+    ]
   }
 }

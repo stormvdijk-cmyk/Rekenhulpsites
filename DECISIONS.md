@@ -47,3 +47,10 @@ Datum: 2 november 2026.
 - **Zzp netto inkomen:** hergebruikt `nettoUitWinst` uit de uurtariefrekenhulp.
 - **Belastingtarieven 2026-pagina:** leest alles uit de JSON, zodat een jaarupdate deze pagina automatisch bijwerkt. Het jaartal staat in de slug; bij 2027 komt er een nieuwe pagina bij.
 - **Zorgtoeslag niet gebouwd:** de standaardpremie 2026 en het normpremie-percentage boven het drempelinkomen konden niet met een officiële bron worden bevestigd.
+
+## Fiscaal fase 2 (november 2026)
+- **IACK 2026:** drempel € 6.239, 11,45%, max € 3.032 (AOW 5,72%, max € 1.513). De bovengrens van de tabel (€ 32.710 of € 32.719) volgt uit drempel + max/percentage = € 32.719. Kan als optie in de inkomstenbelasting; kortingen niet onder nul.
+- **WW:** dagloon ≈ maandloon × 12 / 261, WW-maandloon = dagloon × 21,75, 75% (2 mnd) / 70%. Maximumdagloon € 309,91 (UWV, vanaf 1-1-2026). Netto zonder arbeidskorting. De duur van de WW wordt niet berekend.
+- **Minimumloon:** alleen 21+ (€ 14,71 jan–jun, € 14,99 vanaf 1-7-2026, Rijksoverheid). De jeugdpercentages zijn niet bevestigd en daarom weggelaten.
+- **Spaardoel:** inverse van de spaarformule met effectieve maandrente, inleg aan het eind van de maand.
+- **Niet gebouwd (cijfers niet bevestigd):** kindgebonden budget (afbouwpercentage 2026), huurtoeslag (formule basishuur 2026), zorgtoeslag (standaardpremie en normpremie 2026).

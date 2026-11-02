@@ -1,5 +1,6 @@
 import { belastingOverLoon, marginaalTarief, schijvenVoor } from './belasting';
 import { round2 } from './format';
+import { iack } from './iack';
 
 export interface IbInput {
   /** loon uit dienstbetrekking (bruto, incl. vakantiegeld en bijtelling, na pensioenpremie) */
@@ -14,6 +15,8 @@ export interface IbInput {
   alleenstaand?: boolean;
   /** al ingehouden loonheffing; optioneel voor de teruggave-schatting */
   ingehoudenLoonheffing?: number;
+  /** recht op inkomensafhankelijke combinatiekorting */
+  iack?: boolean;
 }
 
 export interface IbResultaat {
@@ -23,6 +26,7 @@ export interface IbResultaat {
   arbeidskorting: number;
   ouderenkorting: number;
   alleenstaandeOuderenkorting: number;
+  combinatiekorting: number;
   kortingen: number;
   teBetalen: number;
   gemiddeldTarief: number;
@@ -34,7 +38,9 @@ export interface IbResultaat {
 export function berekenInkomstenbelasting(i: IbInput): IbResultaat {
   const arbeidsinkomen = Math.max(0, i.loon) + Math.max(0, i.winst ?? 0);
   const belastbaar = Math.max(0, arbeidsinkomen + Math.max(0, i.overigInkomen ?? 0) - Math.max(0, i.aftrekposten ?? 0));
-  const b = belastingOverLoon(belastbaar, arbeidsinkomen, true, { aow: i.aow, alleenstaand: i.alleenstaand });
+  const b0 = belastingOverLoon(belastbaar, arbeidsinkomen, true, { aow: i.aow, alleenstaand: i.alleenstaand });
+  const ck = i.iack ? Math.min(iack(arbeidsinkomen, i.aow), b0.teBetalen) : 0;
+  const b = { ...b0, kortingen: b0.kortingen + ck, teBetalen: b0.teBetalen - ck };
   const heeftLh = i.ingehoudenLoonheffing !== undefined && i.ingehoudenLoonheffing !== null && Number.isFinite(i.ingehoudenLoonheffing) && i.ingehoudenLoonheffing > 0;
   return {
     belastbaarInkomen: round2(belastbaar),
@@ -43,6 +49,7 @@ export function berekenInkomstenbelasting(i: IbInput): IbResultaat {
     arbeidskorting: round2(b.arbeidskorting),
     ouderenkorting: round2(b.ouderenkorting),
     alleenstaandeOuderenkorting: round2(b.alleenstaandeOuderenkorting),
+    combinatiekorting: round2(ck),
     kortingen: round2(b.kortingen),
     teBetalen: round2(b.teBetalen),
     gemiddeldTarief: belastbaar > 0 ? round2((b.teBetalen / belastbaar) * 100) : 0,

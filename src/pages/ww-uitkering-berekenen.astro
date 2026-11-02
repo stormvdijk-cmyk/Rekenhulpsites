@@ -1,0 +1,91 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const w = tarieven.ww;
+const eur2 = (n: number) => '€ ' + n.toLocaleString('nl-NL', { minimumFractionDigits: 2 });
+const maxMaand = w.maximumDagloon * w.werkdagenPerMaand;
+const faq = [
+  { vraag: 'Hoe hoog is een WW-uitkering?', antwoord: 'De eerste 2 maanden krijg je 75% van je WW-maandloon, daarna 70%. Je WW-maandloon is ongeveer je vaste bruto maandloon van het jaar voor je werkloos werd, zonder vakantiegeld. Er geldt een maximum: verdiende je veel, dan krijg je minder dan 75% van je echte loon.' },
+  { vraag: 'Hoe lang krijg ik WW?', antwoord: 'Minimaal 3 maanden, als je in de laatste 36 weken minstens 26 weken hebt gewerkt. Daarna hangt de duur af van je arbeidsverleden: per gewerkt jaar meestal een maand extra, tot maximaal 24 maanden. UWV rekent je precieze duur uit.' },
+  { vraag: 'Krijg ik vakantiegeld bij de WW?', antwoord: 'Ja. Je bouwt 8% vakantiegeld op over je bruto WW-uitkering. UWV betaalt dat meestal één keer per jaar uit, in mei of juni, of aan het einde van je uitkering.' },
+  { vraag: 'Waarom is mijn netto WW lager dan verwacht?', antwoord: 'Over een uitkering krijg je geen arbeidskorting, want dat is een korting voor wie werkt. Je betaalt daardoor naar verhouding meer belasting dan over hetzelfde bedrag aan loon. Vraag UWV om de loonheffingskorting toe te passen als de WW je enige inkomen is.' },
+];
+---
+<CalculatorPage
+  slug="ww-uitkering-berekenen"
+  title="WW-uitkering berekenen 2026: bruto en netto"
+  description="Bereken je WW-uitkering in 2026: 75% van je WW-maandloon in de eerste 2 maanden, daarna 70%. Bruto en netto per maand."
+  h1="WW-uitkering berekenen"
+  intro="Vul je bruto maandloon in van voor je werkloos werd. Je ziet direct je WW-uitkering per maand, bruto en netto."
+  faq={faq}
+  bron={w.bron}
+  bronNaam="UWV"
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">WW eerste 2 maanden (75%)</p>
+      <p class="result-main" id="r-b1">–</p>
+      <p class="result-sub">Netto ongeveer <strong id="r-n1">–</strong> per maand</p>
+      <dl>
+        <dt>Daarna (70%) bruto</dt><dd id="r-b2">–</dd>
+        <dt>Daarna (70%) netto</dt><dd id="r-n2">–</dd>
+        <dt>Dagloon</dt><dd id="r-dag">–</dd>
+        <dt>WW-maandloon</dt><dd id="r-ml">–</dd>
+      </dl>
+      <p class="result-sub" id="r-max"></p>
+    </div>
+    <div class="form">
+      <Field id="loon" label="Bruto maandloon (zonder vakantiegeld)" value="3000" prefix="€" hint="Gemiddeld over het jaar voor je werkloos werd" />
+      <label class="check"><input type="checkbox" id="lhk" name="lhk" checked /> Loonheffingskorting toepassen (WW is je enige inkomen)</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo berekent UWV je WW</h2>
+    <ol>
+      <li><strong>Dagloon:</strong> UWV deelt je loon van het jaar voor je werkloos werd door het aantal werkdagen in die periode. Bij een vast maandloon is dat ongeveer maandloon × 12 / {w.werkdagenPerJaar}.</li>
+      <li><strong>WW-maandloon:</strong> dagloon × {w.werkdagenPerMaand.toLocaleString('nl-NL')}, het gemiddelde aantal werkdagen per maand.</li>
+      <li><strong>Uitkering:</strong> de eerste 2 maanden 75% van het WW-maandloon, daarna 70%.</li>
+    </ol>
+    <p>Het dagloon is begrensd. Vanaf 1 januari 2026 is het maximumdagloon {eur2(w.maximumDagloon)}. Het hoogste WW-maandloon is dan {eur2(maxMaand)}. Verdiende je meer, dan wordt met dat maximum gerekend.</p>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je verdiende <strong>€ 3.000 bruto per maand</strong>.</p>
+      <ul>
+        <li>Dagloon: € 36.000 / 261 = € 137,93</li>
+        <li>WW-maandloon: € 137,93 × 21,75 = € 3.000</li>
+        <li>Eerste 2 maanden: 75% = <strong>€ 2.250 bruto</strong>, netto ongeveer € 1.705</li>
+        <li>Daarna: 70% = <strong>€ 2.100 bruto</strong>, netto ongeveer € 1.609</li>
+      </ul>
+      <p>Verdiende je € 8.000 per maand, dan geldt het maximumdagloon. Je WW is dan maximaal € 5.055,41 bruto in de eerste 2 maanden en € 4.718,38 daarna.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Wat de uitkering kan veranderen</h2>
+    <ul>
+      <li><strong>Wisselend loon.</strong> Had je overwerk, toeslagen of wisselende uren, dan rekent UWV met je werkelijke sv-loon. Dat kan hoger of lager zijn dan je vaste maandloon.</li>
+      <li><strong>Inkomsten naast de WW.</strong> Werk je een paar uur, dan trekt UWV 70% van wat je verdient af van je uitkering.</li>
+      <li><strong>Toeslag.</strong> Is je WW lager dan het sociaal minimum en heb je weinig ander inkomen, dan kun je een toeslag krijgen via de Toeslagenwet.</li>
+      <li><strong>Netto bedrag.</strong> De netto bedragen zijn een schatting. Over een uitkering krijg je geen arbeidskorting, alleen de algemene heffingskorting.</li>
+    </ul>
+    <p>Vergelijk je WW met je oude salaris via <a href="../netto-salaris-berekenen/">netto salaris berekenen</a>. Wil je weten wat je over het hele jaar aan belasting betaalt, met loon en WW samen? Gebruik dan <a href="../inkomstenbelasting-berekenen/">inkomstenbelasting berekenen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenWw } from '../lib/calculators/ww';
+  import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenWw(getal('loon'), vinkje('lhk'));
+    zet('r-b1', euro(r.brutoEerste2));
+    zet('r-n1', euro(r.nettoEerste2));
+    zet('r-b2', euro(r.brutoDaarna));
+    zet('r-n2', euro(r.nettoDaarna));
+    zet('r-dag', euro(r.dagloon));
+    zet('r-ml', euro(r.wwMaandloon));
+    zet('r-max', r.begrensd ? 'Je loon is hoger dan het maximumdagloon; er wordt met het maximum gerekend.' : '');
+  });
+</script>

@@ -22,6 +22,10 @@ Snelle, installeerbare webapp (PWA) met Nederlandstalige financiële rekenhulpen
 | Hypotheek maandlasten | `/hypotheek-maandlasten-berekenen/` |
 | Inkomstenbelasting (ook AOW, teruggave) | `/inkomstenbelasting-berekenen/` |
 | Zzp netto inkomen | `/zzp-netto-inkomen-berekenen/` |
+| Combinatiekorting (IACK) | `/combinatiekorting-berekenen/` |
+| WW-uitkering | `/ww-uitkering-berekenen/` |
+| Minimumloon | `/minimumloon-berekenen/` |
+| Spaardoel | `/spaardoel-berekenen/` |
 
 Daarnaast: `/belastingtarieven-2026/`, een overzicht van alle tarieven, dat automatisch uit de tarieven-JSON wordt opgebouwd.
 

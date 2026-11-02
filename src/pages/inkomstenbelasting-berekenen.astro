@@ -33,6 +33,7 @@ const faq = [
         <dt>Algemene heffingskorting</dt><dd id="r-ahk">–</dd>
         <dt>Arbeidskorting</dt><dd id="r-ak">–</dd>
         <dt>Ouderenkortingen</dt><dd id="r-ouk">–</dd>
+        <dt>Combinatiekorting</dt><dd id="r-ck">–</dd>
         <dt>Gemiddeld / marginaal tarief</dt><dd id="r-tarief">–</dd>
       </dl>
     </div>
@@ -42,6 +43,7 @@ const faq = [
       <Field id="overig" label="AOW, pensioen, uitkering en overig inkomen" value="0" prefix="€" />
       <Field id="aftrek" label="Aftrekposten" value="0" prefix="€" hint="Bijv. hypotheekrente min eigenwoningforfait, giften, zorgkosten" />
       <Field id="lh" label="Al ingehouden loonheffing (optioneel)" value="" prefix="€" hint="Staat op je jaaropgaaf; voor een schatting van je teruggave" />
+      <label class="check"><input type="checkbox" id="iack" name="iack" /> Ik krijg de combinatiekorting (IACK): kind jonger dan 12, geboren vóór 2025</label>
       <label class="check"><input type="checkbox" id="aow" name="aow" /> Ik heb het hele jaar de AOW-leeftijd</label>
       <label class="check" id="al-wrap" hidden><input type="checkbox" id="alleen" name="alleen" /> Ik ben alleenstaand (alleenstaande-ouderenkorting)</label>
     </div>
@@ -74,7 +76,7 @@ const faq = [
     <h2>Wat deze berekening niet meeneemt</h2>
     <ul>
       <li><strong>Box 2 en box 3.</strong> Inkomen uit een aanmerkelijk belang en uit sparen en beleggen telt apart. Reken box 3 uit met <a href="../box-3-belasting-berekenen/">box 3-belasting berekenen</a>. Box 2 en 3 tellen wel mee in het verzamelinkomen dat de algemene heffingskorting bepaalt; dat zit hier niet in.</li>
-      <li><strong>Andere kortingen.</strong> De inkomensafhankelijke combinatiekorting (voor ouders van kinderen geboren vóór 2025) en de jonggehandicaptenkorting zitten er niet in.</li>
+      <li><strong>Andere kortingen.</strong> De combinatiekorting kun je aanvinken; reken je recht precies uit met <a href="../combinatiekorting-berekenen/">combinatiekorting berekenen</a>. De jonggehandicaptenkorting zit er niet in.</li>
       <li><strong>AOW in de loop van het jaar.</strong> Bereik je in 2026 de AOW-leeftijd, dan ligt het tarief in de eerste schijf tussen 17,85% en 35,75%, afhankelijk van je geboortemaand. Ben je geboren vóór 1946, dan loopt je eerste schijf door tot € 41.123.</li>
       <li><strong>Aftrekbeperking.</strong> In de hoogste schijf leveren aftrekposten maximaal 37,56% op. Bij hoge inkomens met grote aftrekposten valt de echte belasting dus iets hoger uit.</li>
     </ul>
@@ -92,7 +94,7 @@ const faq = [
     const lhRuw = parseGetal(($('lh') as HTMLInputElement).value);
     const r = berekenInkomstenbelasting({
       loon: getal('loon'), winst: getal('winst'), overigInkomen: getal('overig'), aftrekposten: getal('aftrek'),
-      aow, alleenstaand: aow && vinkje('alleen'), ingehoudenLoonheffing: Number.isFinite(lhRuw) ? lhRuw : undefined,
+      aow, alleenstaand: aow && vinkje('alleen'), iack: vinkje('iack'), ingehoudenLoonheffing: Number.isFinite(lhRuw) ? lhRuw : undefined,
     });
     zet('r-bel', euro(r.teBetalen));
     zet('r-saldo', r.saldo === null ? 'Vul de ingehouden loonheffing in om je teruggave te schatten' : r.saldo >= 0 ? `Je krijgt ongeveer ${euro(r.saldo)} terug` : `Je betaalt ongeveer ${euro(-r.saldo)} bij`);
@@ -101,6 +103,7 @@ const faq = [
     zet('r-ahk', euro(r.algemeneHeffingskorting));
     zet('r-ak', euro(r.arbeidskorting));
     zet('r-ouk', euro(r.ouderenkorting + r.alleenstaandeOuderenkorting));
+    zet('r-ck', euro(r.combinatiekorting));
     zet('r-tarief', `${formatProcent(r.gemiddeldTarief, 1)} / ${formatProcent(r.marginaalTarief)}`);
   });
 </script>

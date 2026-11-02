@@ -1,0 +1,84 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const t = tarieven.iack;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 2 }) + '%';
+const maxBij = Math.round(t.drempel + t.maximum / t.percentage);
+const faq = [
+  { vraag: 'Wie heeft recht op de combinatiekorting?', antwoord: `Je werkt (loon of winst boven ${eur(t.drempel)}), je hebt een kind dat op 1 januari jonger is dan 12 jaar en vóór 1 januari 2025 is geboren, en dat kind staat minstens 6 maanden van het jaar op je woonadres ingeschreven. Heb je een fiscale partner, dan krijgt alleen degene met het laagste arbeidsinkomen de korting.` },
+  { vraag: 'Waarom krijg ik geen IACK voor mijn baby?', antwoord: 'De combinatiekorting wordt afgebouwd. Voor kinderen die op of na 1 januari 2025 zijn geboren, bestaat er geen recht meer. Heb je ook een ouder kind dat aan de voorwaarden voldoet, dan krijg je de korting voor dat kind nog wel.' },
+  { vraag: 'Hoe krijg ik de combinatiekorting?', antwoord: 'Via je aangifte inkomstenbelasting of met een voorlopige aanslag. Je werkgever verrekent de IACK niet in je loon, dus je ziet hem niet op je loonstrook. Met een voorlopige aanslag krijg je het bedrag al per maand.' },
+  { vraag: 'Is de combinatiekorting een toeslag?', antwoord: 'Nee, het is een heffingskorting: een korting op de belasting die je betaalt. Je hoeft hem dus niet bij Dienst Toeslagen aan te vragen. Betaal je weinig belasting, dan kan de korting lager uitvallen dan het berekende bedrag.' },
+];
+---
+<CalculatorPage
+  slug="combinatiekorting-berekenen"
+  title="Combinatiekorting (IACK) berekenen 2026"
+  description="Bereken je inkomensafhankelijke combinatiekorting (IACK) over 2026: voor werkende ouders van een kind jonger dan 12, maximaal € 3.032."
+  h1="Combinatiekorting (IACK) berekenen"
+  intro="Werk je en heb je een kind jonger dan 12? Vul je arbeidsinkomen in en zie direct hoeveel inkomensafhankelijke combinatiekorting je krijgt."
+  faq={faq}
+  bron={t.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Combinatiekorting 2026</p>
+      <p class="result-main" id="r-ck">–</p>
+      <p class="result-sub" id="r-reden"></p>
+      <dl>
+        <dt>Per maand (bij voorlopige aanslag)</dt><dd id="r-maand">–</dd>
+        <dt>Maximum bereikt vanaf</dt><dd id="r-max">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="ink" label="Jouw arbeidsinkomen per jaar" value="20000" prefix="€" hint="Bruto loon en/of winst uit onderneming" />
+      <label class="check"><input type="checkbox" id="partner" name="partner" /> Ik heb een fiscale partner</label>
+      <div id="p-wrap" hidden><Field id="pink" label="Arbeidsinkomen partner per jaar" value="40000" prefix="€" /></div>
+      <label class="check"><input type="checkbox" id="kind" name="kind" checked /> Mijn kind is op 1 januari jonger dan 12 en geboren vóór 1 januari 2025</label>
+      <label class="check"><input type="checkbox" id="inschr" name="inschr" checked /> Mijn kind staat minstens 6 maanden op mijn adres ingeschreven</label>
+      <label class="check"><input type="checkbox" id="aow" name="aow" /> Ik heb het hele jaar de AOW-leeftijd</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo wordt de combinatiekorting berekend</h2>
+    <p>De inkomensafhankelijke combinatiekorting (IACK) is een heffingskorting voor ouders die werken en jonge kinderen hebben. Het bedrag hangt af van je eigen arbeidsinkomen: je loon en je winst uit onderneming.</p>
+    <ul>
+      <li>Onder {eur(t.drempel)} arbeidsinkomen krijg je niets.</li>
+      <li>Boven die drempel krijg je {pct(t.percentage)} van het meerdere.</li>
+      <li>Het maximum is {eur(t.maximum)}. Dat bereik je vanaf ongeveer {eur(maxBij)}.</li>
+      <li>Heb je het hele jaar de AOW-leeftijd, dan is het {pct(t.percentageAow)} met een maximum van {eur(t.maximumAow)}.</li>
+    </ul>
+    <p>De korting gaat van je belasting af, net als de algemene heffingskorting en de arbeidskorting. Is je belasting lager dan al je kortingen samen, dan krijg je niet het volle bedrag.</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Parttime werkende ouder:</strong> je verdient € 20.000. Je krijgt (€ 20.000 − € 6.239) × 11,45% = <strong>€ 1.575,63</strong>.</p>
+      <p><strong>Fulltime werkend:</strong> je verdient € 40.000. Dat is boven de grens voor het maximum, dus je krijgt <strong>€ 3.032</strong>.</p>
+      <p><strong>Stel:</strong> jij verdient € 25.000 en je partner € 40.000. Jij hebt het laagste inkomen en krijgt (€ 25.000 − € 6.239) × 11,45% = <strong>€ 2.148,13</strong>. Je partner krijgt niets.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>De IACK verdwijnt langzaam</h2>
+    <p>Sinds 2025 bouwt het kabinet de combinatiekorting af. Voor kinderen die op of na 1 januari 2025 zijn geboren, krijg je hem niet meer. Voor oudere kinderen blijft het recht bestaan tot het jongste kind dat aan de voorwaarden voldoet 12 wordt. In 2026 krijg je de korting dus alleen nog voor kinderen geboren tussen 2014 en eind 2024.</p>
+    <p>Zijn jullie gescheiden en zorgen jullie samen voor je kind (co-ouderschap), dan kan ook de ouder bij wie het kind niet staat ingeschreven recht hebben. Daarvoor gelden extra voorwaarden. Twijfel je, kijk dan bij de <a href="https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/voorwaarden-inkomensafhankelijke-combinatiekorting" rel="noopener" target="_blank">voorwaarden van de Belastingdienst</a>.</p>
+    <p>Wil je zien wat de combinatiekorting doet met je totale belasting? Vink hem aan in <a href="../inkomstenbelasting-berekenen/">inkomstenbelasting berekenen</a>. Werk je per uur, reken dan eerst je jaarloon uit met <a href="../bruto-netto-uurloon/">uurloon omrekenen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenIack } from '../lib/calculators/iack';
+  import { $, euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const partner = vinkje('partner');
+    $('p-wrap').hidden = !partner;
+    const r = berekenIack({ arbeidsinkomen: getal('ink'), partner, partnerArbeidsinkomen: getal('pink'), kindVoldoet: vinkje('kind'), ingeschreven: vinkje('inschr'), aow: vinkje('aow') });
+    zet('r-ck', euro(r.korting));
+    zet('r-reden', r.reden);
+    zet('r-maand', euro(r.korting / 12));
+    zet('r-max', euro(r.maximumBij, false));
+  });
+</script>
