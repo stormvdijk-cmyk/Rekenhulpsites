@@ -1,0 +1,79 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const faq = [
+  { vraag: 'Hoeveel vakantiegeld krijg ik?', antwoord: 'Wettelijk minimaal 8% van je brutoloon over de afgelopen twaalf maanden. In veel cao’s staat hetzelfde percentage, soms iets meer. Bij een bruto maandloon van € 3.000 is dat € 3.000 × 12 × 8% = € 2.880 bruto.' },
+  { vraag: 'Wanneer wordt vakantiegeld uitbetaald?', antwoord: 'De meeste werkgevers betalen het vakantiegeld één keer per jaar uit, meestal in mei of juni. Het vakantiejaar loopt dan vaak van 1 juni tot en met 31 mei. Je werkgever mag het ook per maand uitbetalen als dat in je contract of cao staat.' },
+  { vraag: 'Waarom gaat er zoveel belasting van mijn vakantiegeld af?', antwoord: 'Vakantiegeld komt bovenop je gewone loon. Je betaalt het tarief van je hoogste schijf. Daarnaast worden je algemene heffingskorting en arbeidskorting lager als je meer verdient. Werkgevers gebruiken daarom het tarief voor bijzondere beloningen, en dat kan oplopen tot boven de 40%.' },
+  { vraag: 'Krijg ik vakantiegeld bij een nulurencontract of uitkering?', antwoord: 'Ja. Ook met een nulurencontract of als oproepkracht heb je recht op minimaal 8% vakantiegeld. Bij een WW-uitkering bouw je ook vakantiegeld op, namelijk 8% van je bruto-uitkering.' },
+];
+---
+<CalculatorPage
+  slug="vakantiegeld-berekenen"
+  title="Vakantiegeld berekenen 2026 – bruto en netto"
+  description="Bereken je vakantiegeld: 8% van je brutoloon, en wat er netto van overblijft met de belastingregels van 2026."
+  h1="Vakantiegeld berekenen"
+  intro="Vul je bruto maandloon in. Je ziet je bruto vakantiegeld en een schatting van wat er netto overblijft."
+  faq={faq}
+  bron={tarieven.box1.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Netto vakantiegeld (indicatie)</p>
+      <p class="result-main" id="r-netto">–</p>
+      <dl>
+        <dt>Bruto vakantiegeld</dt><dd id="r-bruto">–</dd>
+        <dt>Belasting over vakantiegeld</dt><dd id="r-bel">–</dd>
+        <dt>Effectief tarief</dt><dd id="r-tarief">–</dd>
+        <dt>Bruto jaarloon (zonder vakantiegeld)</dt><dd id="r-jaar">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <div class="row-2 stack">
+        <Field id="bruto" label="Bruto maandloon" value="3000" prefix="€" hint="Zonder toeslagen en bonussen" />
+        <Field id="pct" label="Percentage vakantiegeld" value="8" suffix="%" hint="Wettelijk minimum: 8%" />
+      </div>
+      <label class="check"><input type="checkbox" id="lhk" name="lhk" checked /> Loonheffingskorting toepassen (hoofdbaan)</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Hoe wordt vakantiegeld berekend?</h2>
+    <p>Vakantiegeld heet officieel vakantiebijslag. Volgens de wet heb je recht op minimaal <strong>8% van je brutoloon</strong> over de voorafgaande twaalf maanden. Overwerk, de eindejaarsuitkering en winstdelingen tellen meestal niet mee. Verdien je meer dan drie keer het minimumloon, dan mag je werkgever andere afspraken maken. Ook een cao kan een hoger percentage geven.</p>
+    <p>Bruto rekenen is eenvoudig: <strong>maandloon × 12 × 8%</strong>. Netto is lastiger, omdat het vakantiegeld bovenop je gewone loon komt. Deze rekenhulp rekent je netto jaarinkomen twee keer uit: één keer met en één keer zonder vakantiegeld. Het verschil is wat het vakantiegeld je netto oplevert. Zo tellen ook de afbouw van de heffingskortingen en de schijfgrenzen mee.</p>
+
+    <h2>Rekenvoorbeeld: € 3.000 bruto per maand</h2>
+    <div class="voorbeeld">
+      <ul>
+        <li>Jaarloon: € 3.000 × 12 = € 36.000</li>
+        <li>Bruto vakantiegeld: € 36.000 × 8% = <strong>€ 2.880</strong></li>
+        <li>Extra belasting door het vakantiegeld: ongeveer € 1.157,70</li>
+        <li>Netto vakantiegeld: ongeveer <strong>€ 1.722,30</strong></li>
+      </ul>
+      <p>Het effectieve tarief over het vakantiegeld is hier ongeveer 40%. Een deel van die € 2.880 valt in de tweede schijf (37,56%). Daarnaast nemen de algemene heffingskorting en de arbeidskorting af als je inkomen stijgt.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Waarom wijkt het bedrag op je loonstrook af?</h2>
+    <p>Werkgevers houden over vakantiegeld loonheffing in met de <strong>tabel voor bijzondere beloningen</strong>. Daarin staat één percentage per jaarloon. Dat percentage benadert hetzelfde effect als deze rekenhulp, maar de uitkomst kan enkele tientallen euro’s verschillen. Houdt je werkgever ook pensioenpremie in over het vakantiegeld? Dan valt het netto bedrag lager uit. Bij je aangifte inkomstenbelasting wordt alles definitief verrekend.</p>
+    <p>Wil je je hele netto jaarinkomen zien, met en zonder vakantiegeld? Gebruik dan de rekenhulp <a href="../netto-salaris-berekenen/">netto salaris berekenen</a>. Werk je per uur? Met <a href="../bruto-netto-uurloon/">uurloon omrekenen</a> vind je eerst je maandloon.</p>
+    <h3>Vakantiegeld bij parttime werk en wisselende uren</h3>
+    <p>Werk je parttime, dan bouw je vakantiegeld op over je parttimeloon. Heb je wisselende uren, dan geldt 8% van wat je echt hebt verdiend. Ga je uit dienst, dan wordt het vakantiegeld dat je tot dan toe hebt opgebouwd uitbetaald bij je eindafrekening.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenVakantiegeld } from '../lib/calculators/vakantiegeld';
+  import { formatProcent } from '../lib/calculators/format';
+  import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenVakantiegeld(getal('bruto'), getal('pct', 8) / 100, vinkje('lhk'));
+    zet('r-netto', euro(r.vakantiegeldNetto));
+    zet('r-bruto', euro(r.vakantiegeldBruto));
+    zet('r-bel', euro(r.belastingOverVakantiegeld));
+    zet('r-tarief', formatProcent(r.effectiefTarief, 1));
+    zet('r-jaar', euro(r.brutoJaarloon));
+  });
+</script>
