@@ -7,9 +7,18 @@
     "opgezocht": "2026-11-02",
     "omschrijving": "Tarieven box 1 voor wie in 2026 de AOW-leeftijd nog niet heeft (inclusief premies volksverzekeringen)",
     "schijven": [
-      { "tot": 38883, "tarief": 0.3575 },
-      { "tot": 78426, "tarief": 0.3756 },
-      { "tot": null, "tarief": 0.495 }
+      {
+        "tot": 38883,
+        "tarief": 0.3575
+      },
+      {
+        "tot": 78426,
+        "tarief": 0.3756
+      },
+      {
+        "tot": null,
+        "tarief": 0.495
+      }
     ]
   },
   "algemeneHeffingskorting": {
@@ -25,11 +34,36 @@
     "opgezocht": "2026-11-02",
     "omschrijving": "Arbeidskorting 2026, jonger dan AOW-leeftijd. Per schijf: basis + percentage x (arbeidsinkomen - vanaf).",
     "schijven": [
-      { "vanaf": 0, "tot": 11965, "basis": 0, "percentage": 0.08324 },
-      { "vanaf": 11965, "tot": 25845, "basis": 996, "percentage": 0.31009 },
-      { "vanaf": 25845, "tot": 45592, "basis": 5300, "percentage": 0.0195 },
-      { "vanaf": 45592, "tot": 132920, "basis": 5685, "percentage": -0.0651 },
-      { "vanaf": 132920, "tot": null, "basis": 0, "percentage": 0 }
+      {
+        "vanaf": 0,
+        "tot": 11965,
+        "basis": 0,
+        "percentage": 0.08324
+      },
+      {
+        "vanaf": 11965,
+        "tot": 25845,
+        "basis": 996,
+        "percentage": 0.31009
+      },
+      {
+        "vanaf": 25845,
+        "tot": 45592,
+        "basis": 5300,
+        "percentage": 0.0195
+      },
+      {
+        "vanaf": 45592,
+        "tot": 132920,
+        "basis": 5685,
+        "percentage": -0.0651
+      },
+      {
+        "vanaf": 132920,
+        "tot": null,
+        "basis": 0,
+        "percentage": 0
+      }
     ],
     "maximum": 5685
   },
@@ -73,12 +107,114 @@
     "opgezocht": "2026-11-02",
     "omschrijving": "Jaarmutatie consumentenprijsindex (CPI) in procenten, CBS",
     "jaarmutatie": {
-      "2000": 2.6, "2001": 4.5, "2002": 3.4, "2003": 2.1, "2004": 1.2,
-      "2005": 1.7, "2006": 1.1, "2007": 1.6, "2008": 2.5, "2009": 1.2,
-      "2010": 1.3, "2011": 2.3, "2012": 2.5, "2013": 2.5, "2014": 1.0,
-      "2015": 0.6, "2016": 0.3, "2017": 1.4, "2018": 1.7, "2019": 2.6,
-      "2020": 1.3, "2021": 2.7, "2022": 10.0, "2023": 3.8, "2024": 3.3,
+      "2000": 2.6,
+      "2001": 4.5,
+      "2002": 3.4,
+      "2003": 2.1,
+      "2004": 1.2,
+      "2005": 1.7,
+      "2006": 1.1,
+      "2007": 1.6,
+      "2008": 2.5,
+      "2009": 1.2,
+      "2010": 1.3,
+      "2011": 2.3,
+      "2012": 2.5,
+      "2013": 2.5,
+      "2014": 1.0,
+      "2015": 0.6,
+      "2016": 0.3,
+      "2017": 1.4,
+      "2018": 1.7,
+      "2019": 2.6,
+      "2020": 1.3,
+      "2021": 2.7,
+      "2022": 10.0,
+      "2023": 3.8,
+      "2024": 3.3,
       "2025": 3.3
     }
+  },
+  "overdrachtsbelasting": {
+    "bron": "https://www.rijksoverheid.nl/vraag-en-antwoord/huis-kopen/vrijstelling-overdrachtsbelasting",
+    "bronStarter": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/woning/overdrachtsbelasting/startersvrijstelling/startersvrijstelling",
+    "opgezocht": "2026-11-02",
+    "omschrijving": "Starters 18 t/m 34 jaar die zelf gaan wonen: 0% tot de woningwaardegrens (eenmalig). Zelf bewonen: 2%. Woning niet zelf bewonen: 8% (sinds 1-1-2026). Overige onroerende zaken: 10,4%.",
+    "starterWoningwaardegrens": 555000,
+    "starterMinLeeftijd": 18,
+    "starterMaxLeeftijd": 34,
+    "eigenWoning": 0.02,
+    "woningNietZelfBewonen": 0.08,
+    "overig": 0.104
+  },
+  "box3": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2026",
+    "bronHeffingsvrij": "https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/heffingsvrij-vermogen",
+    "opgezocht": "2026-11-02",
+    "omschrijving": "Forfaitaire rendementen 2026 voor banktegoeden en schulden zijn voorlopig; ze worden begin 2027 definitief vastgesteld.",
+    "heffingsvrijVermogen": 59357,
+    "drempelSchulden": 3800,
+    "rendementBank": 0.0128,
+    "rendementOverig": 0.06,
+    "rendementSchulden": 0.027,
+    "tarief": 0.36
+  },
+  "schenkErf": {
+    "bronTarieven": "https://www.belastingdienst.nl/wps/wcm/connect/nl/erfbelasting/content/tarieven-erfbelasting",
+    "bronTarievenSchenk": "https://www.belastingdienst.nl/wps/wcm/connect/nl/schenken/content/tarieven-schenkbelasting",
+    "bronVrijstellingErf": "https://www.belastingdienst.nl/wps/wcm/connect/nl/erfbelasting/content/vrijstelling-erfbelasting",
+    "bronVrijstellingSchenk": "https://www.belastingdienst.nl/wps/wcm/connect/nl/schenken/content/tot-welk-bedrag-belastingvrij-schenken",
+    "bronSchenkKind": "https://www.belastingdienst.nl/wps/wcm/connect/nl/schenken/content/hoeveel-mag-ik-mijn-kind-belastingvrij-schenken",
+    "opgezocht": "2026-11-02",
+    "schijfGrens": 158669,
+    "tarieven": {
+      "partnerKind": [
+        0.1,
+        0.2
+      ],
+      "kleinkind": [
+        0.18,
+        0.36
+      ],
+      "overig": [
+        0.3,
+        0.4
+      ]
+    },
+    "vrijstellingErf": {
+      "partner": 828035,
+      "kind": 26230,
+      "kindBeperking": 78671,
+      "kleinkind": 26230,
+      "achterkleinkind": 2769,
+      "ouder": 62110,
+      "overig": 2769
+    },
+    "vrijstellingSchenk": {
+      "kind": 6908,
+      "kindEenmalig": 33129,
+      "kindEenmaligStudie": 69009,
+      "overig": 2769
+    }
+  },
+  "eigenWoning": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/eigen_woning_en_restschuld_vroegere",
+    "bronAftrek": "https://www.rijksoverheid.nl/onderwerpen/huis-kopen/vraag-en-antwoord/hypotheekrenteaftrek",
+    "opgezocht": "2026-11-02",
+    "omschrijving": "Eigenwoningforfait voor WOZ-waarden vanaf € 75.000. Hypotheekrenteaftrek maximaal tegen 37,56%.",
+    "forfaitVanaf": 75000,
+    "forfaitPercentage": 0.0035,
+    "forfaitVillaGrens": 1350000,
+    "forfaitVillaBasis": 4725,
+    "forfaitVillaPercentage": 0.0235,
+    "maxAftrekTarief": 0.3756
+  },
+  "reiskosten": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/auto_en_vervoer/u_reist_naar_uw_werk/eigen_vervoer/u_reist_met_eigen_vervoer_naar_uw_werk",
+    "bronNieuws": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/berichten/nieuws/verhoging-onbelaste-kilometervergoeding-hoe-verwerkt-u-dit-in-de-loonaangifte",
+    "opgezocht": "2026-11-02",
+    "omschrijving": "Maximale onbelaste vergoeding per kilometer in 2026 (met terugwerkende kracht vanaf 1 januari 2026). Vaste vergoeding: maximaal 214 reisdagen per jaar bij een vijfdaagse werkweek.",
+    "onbelastPerKm": 0.25,
+    "vasteVergoedingDagenFulltime": 214
   }
 }
