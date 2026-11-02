@@ -1,0 +1,96 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const faq = [
+  { vraag: 'Hoe reken ik mijn uurloon om naar een maandsalaris?', antwoord: 'Vermenigvuldig je uurloon met je uren per week en met 52 weken. Dan heb je je jaarloon. Deel dat door 12 voor je maandloon. Bij € 15 per uur en 40 uur is dat € 15 × 40 × 52 / 12 = € 2.600 per maand.' },
+  { vraag: 'Waarom 52 weken en niet 4 weken per maand?', antwoord: 'Een maand heeft gemiddeld 4,33 weken (52 / 12), niet precies 4. Reken je met 4 weken, dan kom je per jaar vier weken loon tekort. Loonstroken en cao’s rekenen daarom met 52 weken per jaar.' },
+  { vraag: 'Zit vakantiegeld in mijn uurloon?', antwoord: 'Meestal niet. Het uurloon in je contract is doorgaans exclusief 8% vakantiegeld. Bij uitzendwerk en oproepcontracten wordt het vakantiegeld soms per uur meebetaald. Op je loonstrook staat dan een aparte regel ‘vakantiebijslag’.' },
+  { vraag: 'Hoe hoog is het netto uurloon?', antwoord: 'Dat hangt af van je jaarinkomen, want belasting werkt met schijven en kortingen. Deze rekenhulp rekent je bruto maandloon om naar netto met de belastingregels van 2026, met loonheffingskorting. Deel het netto maandloon door je uren per maand (uren per week × 52 / 12) voor een netto uurloon.' },
+];
+---
+<CalculatorPage
+  slug="bruto-netto-uurloon"
+  title="Uurloon naar maandsalaris berekenen (en terug)"
+  description="Reken je bruto uurloon om naar week-, maand- en jaarsalaris, of je maandsalaris naar uurloon. Inclusief netto-indicatie 2026."
+  h1="Uurloon omrekenen naar maandsalaris"
+  intro="Kies of je vanaf je uurloon of vanaf je maandsalaris rekent. Je ziet meteen je week-, maand- en jaarloon en een netto-indicatie."
+  faq={faq}
+  bron={tarieven.box1.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label" id="r-label">Bruto per maand</p>
+      <p class="result-main" id="r-main">–</p>
+      <p class="result-sub">Netto per maand (indicatie): <strong id="r-netto">–</strong></p>
+      <dl>
+        <dt>Uurloon</dt><dd id="r-uur">–</dd>
+        <dt>Per week</dt><dd id="r-week">–</dd>
+        <dt>Per maand</dt><dd id="r-maand">–</dd>
+        <dt>Per jaar</dt><dd id="r-jaar">–</dd>
+        <dt>Per jaar incl. 8% vakantiegeld</dt><dd id="r-jaarvg">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <fieldset class="seg">
+        <legend>Ik weet mijn</legend>
+        <label><input type="radio" name="richting" value="uur" checked /><span>Uurloon</span></label>
+        <label><input type="radio" name="richting" value="maand" /><span>Maandsalaris</span></label>
+      </fieldset>
+      <div class="row-2 stack">
+        <Field id="bedrag" label="Bruto bedrag" value="18,50" prefix="€" hint="Per uur of per maand, zonder vakantiegeld" />
+        <Field id="uren" label="Uren per week" value="36" suffix="uur" />
+      </div>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo reken je uurloon om</h2>
+    <p>De formule is eenvoudig: <strong>uurloon × uren per week × 52 = jaarloon</strong>. Deel je jaarloon door 12, dan heb je je maandloon. Omgekeerd deel je je maandloon door het aantal uren per maand: uren per week × 52 / 12. Bij 40 uur per week is dat ruim 173 uur per maand, bij 36 uur 156 uur en bij 32 uur bijna 139 uur.</p>
+    <p>Veel mensen rekenen met vier weken per maand. Daarmee schat je je maandloon ongeveer 8% te laag, omdat een jaar 52 weken heeft en geen 48. Cao’s en loonadministraties rekenen daarom bijna altijd met de factor 52 / 12 = 4,33.</p>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je verdient <strong>€ 18,50 bruto per uur</strong> en werkt <strong>36 uur per week</strong>.</p>
+      <ul>
+        <li>Per week: € 18,50 × 36 = € 666</li>
+        <li>Per jaar: € 666 × 52 = € 34.632</li>
+        <li>Per maand: € 34.632 / 12 = <strong>€ 2.886</strong></li>
+        <li>Met 8% vakantiegeld per jaar: € 37.402,56</li>
+      </ul>
+      <p>Met de belastingregels van 2026 en loonheffingskorting houd je hiervan ongeveer <strong>€ 2.543,68 netto per maand</strong> over, zonder het vakantiegeld.</p>
+      <p>Andersom: verdien je <strong>€ 3.200 per maand bij 40 uur</strong>? Dan is je uurloon € 3.200 × 12 / 52 / 40 = <strong>€ 18,46</strong>.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Waar je op moet letten</h2>
+    <ul>
+      <li><strong>Vakantiegeld.</strong> Het wettelijke minimum is 8% van je brutoloon. Dat bedrag komt bovenop je uurloon, tenzij je contract zegt dat het per uur wordt uitbetaald. Gebruik voor het netto bedrag de rekenhulp <a href="../vakantiegeld-berekenen/">vakantiegeld berekenen</a>.</li>
+      <li><strong>Toeslagen.</strong> Avond-, weekend- en overwerktoeslagen tellen niet mee in je basisuurloon. Werk je onregelmatig, reken dan met je gemiddelde uurloon.</li>
+      <li><strong>Minimumloon.</strong> Sinds 2024 geldt in Nederland een wettelijk minimumloon per uur, voor elke werkweek gelijk. Kijk op rijksoverheid.nl voor het bedrag dat nu geldt.</li>
+      <li><strong>Vergelijken met zzp.</strong> Een werknemer krijgt vakantiegeld, betaalde vakantiedagen, pensioenopbouw en loondoorbetaling bij ziekte. Een zzp-tarief moet die kosten zelf dekken en ligt daarom veel hoger. Gebruik de rekenhulp <a href="../zzp-uurtarief-berekenen/">zzp-uurtarief berekenen</a>.</li>
+    </ul>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { maandloonNaarUurloon, uurloonNaarSalaris } from '../lib/calculators/uurloon';
+  import { berekenNettoSalaris } from '../lib/calculators/nettoSalaris';
+  import { euro, getal, live, radio, zet } from '../lib/ui';
+  live('f', () => {
+    const naarMaand = radio('richting') !== 'maand';
+    const bedrag = getal('bedrag');
+    const uren = getal('uren');
+    const r = naarMaand ? uurloonNaarSalaris(bedrag, uren) : maandloonNaarUurloon(bedrag, uren);
+    const n = berekenNettoSalaris({ brutoMaand: r.maandloon, loonheffingskorting: true, vakantiegeld: false });
+    zet('r-label', naarMaand ? 'Bruto per maand' : 'Bruto uurloon');
+    zet('r-main', naarMaand ? euro(r.maandloon) : euro(r.uurloon));
+    zet('r-netto', euro(n.nettoMaand));
+    zet('r-uur', euro(r.uurloon));
+    zet('r-week', euro(r.weekloon));
+    zet('r-maand', euro(r.maandloon));
+    zet('r-jaar', euro(r.jaarloon));
+    zet('r-jaarvg', euro(r.jaarloonMetVakantiegeld));
+  });
+</script>
