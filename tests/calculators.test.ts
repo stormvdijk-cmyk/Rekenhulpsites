@@ -155,11 +155,11 @@ describe('zzp-uurtarief', () => {
     // aftrek 1.200, mkb 12,7% × 48.800 = 6.197,60, belastbaar 42.602,40
     // box1 13.900,67 + 3.719,40 × 37,56% = 15.297,64
     // AHK 3.115 − 6,398% × 12.866,40 = 2.291,80; AK 5.685 − 6,51% × 4.408 = 5.398,04
-    // IB 7.607,80; Zvw 4,85% × 42.602,40 = 2.066,22; netto 40.325,98
+    // IB 7.607,83; Zvw 4,85% × 42.602,40 = 2.066,22; netto 40.325,95
     const f = nettoUitWinst(50000, true, false);
     expect(f.belastbaar).toBeCloseTo(42602.4, 1);
-    expect(f.inkomstenbelasting).toBeCloseTo(7607.8, 0);
-    expect(f.netto).toBeCloseTo(40325.98, 0);
+    expect(f.inkomstenbelasting).toBeCloseTo(7607.83, 1);
+    expect(f.netto).toBeCloseTo(40325.95, 1);
   });
   it('terugrekenen geeft dezelfde winst', () => {
     const r = berekenZzpUurtarief({ nettoPerMaand: 40325.98 / 12, kostenPerJaar: 0, reserveringPerMaand: 0, werkwekenPerJaar: 46, urenPerWeek: 40, declarabelPct: 100, urencriterium: true, starter: false });

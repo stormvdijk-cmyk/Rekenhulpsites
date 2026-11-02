@@ -1,0 +1,107 @@
+---
+import Base from '../layouts/Base.astro';
+import AdSlot from '../components/AdSlot.astro';
+import { tarieven as t, TARIEF_JAAR } from '../data/tarieven';
+import { AD_SLOTS, SITE, url } from '../data/site';
+
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const pct = (n: number, d = 3) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: d }) + '%';
+const datum = (iso: string) => new Date(iso).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+const pageUrl = new URL(url(`belastingtarieven-${TARIEF_JAAR}/`), Astro.site).href;
+const home = new URL(url(''), Astro.site).href;
+const s = t.box1.schijven, as = t.aow.schijven;
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'Article', headline: `Belastingtarieven ${TARIEF_JAAR}`, inLanguage: 'nl-NL', url: pageUrl, dateModified: t.opgezocht, author: { '@type': 'Organization', name: SITE.naam } },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: SITE.naam, item: home },
+    { '@type': 'ListItem', position: 2, name: `Belastingtarieven ${TARIEF_JAAR}`, item: pageUrl } ] },
+];
+const link = (slug: string, tekst: string) => `<a href="${url(slug + '/')}">${tekst}</a>`;
+---
+<Base title={`Belastingtarieven ${TARIEF_JAAR}: alle bedragen`} description={`Alle belastingtarieven van ${TARIEF_JAAR}: box 1-schijven, heffingskortingen, box 3, btw, bijtelling, schenk- en erfbelasting, overdrachtsbelasting. Met bronnen.`} jsonLd={jsonLd}>
+  <nav class="breadcrumbs" aria-label="Kruimelpad"><ol><li><a href={url('')}>{SITE.naam}</a></li><li aria-current="page">Belastingtarieven {TARIEF_JAAR}</li></ol></nav>
+  <article class="prose" style="margin-top:0">
+    <h1>Belastingtarieven {TARIEF_JAAR}</h1>
+    <p class="lead">Alle bedragen en percentages die onze rekenhulpen gebruiken, op één pagina. Bij elk onderdeel staat de officiële bron. Opgezocht op {datum(t.opgezocht)}.</p>
+
+    <h2 id="box-1">Box 1: inkomstenbelasting</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Belastbaar inkomen</th><th>Jonger dan AOW-leeftijd</th><th>AOW-leeftijd</th></tr></thead>
+      <tbody>
+        <tr><td>tot {eur(s[0].tot!)}</td><td>{pct(s[0].tarief)}</td><td>{pct(as[0].tarief)}</td></tr>
+        <tr><td>{eur(s[0].tot!)} – {eur(s[1].tot!)}</td><td>{pct(s[1].tarief)}</td><td>{pct(as[1].tarief)}</td></tr>
+        <tr><td>boven {eur(s[1].tot!)}</td><td>{pct(s[2].tarief)}</td><td>{pct(as[2].tarief)}</td></tr>
+      </tbody></table></div>
+    <p class="hint">Bron: <a href={t.box1.bron} rel="noopener" target="_blank">Belastingdienst, box 1</a>. Reken het uit: <Fragment set:html={link('inkomstenbelasting-berekenen', 'inkomstenbelasting berekenen')} />, <Fragment set:html={link('netto-salaris-berekenen', 'netto salaris berekenen')} />.</p>
+
+    <h2 id="heffingskortingen">Heffingskortingen</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Korting</th><th>Maximaal</th><th>Afbouw</th></tr></thead>
+      <tbody>
+        <tr><td>Algemene heffingskorting</td><td>{eur(t.algemeneHeffingskorting.maximum)}</td><td>{pct(t.algemeneHeffingskorting.afbouwPercentage)} boven {eur(t.algemeneHeffingskorting.afbouwVanaf)}, nul vanaf {eur(t.algemeneHeffingskorting.nulVanaf)}</td></tr>
+        <tr><td>Algemene heffingskorting (AOW)</td><td>{eur(t.aow.algemeneHeffingskorting.maximum)}</td><td>{pct(t.aow.algemeneHeffingskorting.afbouwPercentage)} boven {eur(t.aow.algemeneHeffingskorting.afbouwVanaf)}</td></tr>
+        <tr><td>Arbeidskorting</td><td>{eur(t.arbeidskorting.maximum)}</td><td>{pct(-t.arbeidskorting.schijven[3].percentage)} boven {eur(t.arbeidskorting.schijven[3].vanaf)}, nul vanaf {eur(t.arbeidskorting.schijven[3].tot!)}</td></tr>
+        <tr><td>Arbeidskorting (AOW)</td><td>{eur(t.aow.arbeidskorting.maximum)}</td><td>{pct(-t.aow.arbeidskorting.schijven[3].percentage)} boven {eur(t.aow.arbeidskorting.schijven[3].vanaf)}</td></tr>
+        <tr><td>Ouderenkorting</td><td>{eur(t.aow.ouderenkorting.maximum)}</td><td>{pct(t.aow.ouderenkorting.afbouwPercentage)} boven {eur(t.aow.ouderenkorting.afbouwVanaf)}</td></tr>
+        <tr><td>Alleenstaande-ouderenkorting</td><td>{eur(t.aow.alleenstaandeOuderenkorting)}</td><td>–</td></tr>
+      </tbody></table></div>
+    <p class="hint">Bronnen: <a href={t.algemeneHeffingskorting.bron} rel="noopener" target="_blank">algemene heffingskorting</a>, <a href={t.arbeidskorting.bron} rel="noopener" target="_blank">arbeidskorting</a>, <a href={t.aow.bronKortingen} rel="noopener" target="_blank">kortingen voor AOW'ers</a>.</p>
+
+    <h2 id="box-3">Box 3: sparen en beleggen</h2>
+    <div class="table-wrap"><table><tbody>
+      <tr><td>Heffingsvrij vermogen</td><td>{eur(t.box3.heffingsvrijVermogen)} per persoon</td></tr>
+      <tr><td>Forfaitair rendement banktegoeden</td><td>{pct(t.box3.rendementBank)} (voorlopig)</td></tr>
+      <tr><td>Forfaitair rendement overige bezittingen</td><td>{pct(t.box3.rendementOverig)}</td></tr>
+      <tr><td>Forfaitair rendement schulden</td><td>{pct(t.box3.rendementSchulden)} (voorlopig)</td></tr>
+      <tr><td>Drempel schulden</td><td>{eur(t.box3.drempelSchulden)} per persoon</td></tr>
+      <tr><td>Tarief</td><td>{pct(t.box3.tarief)}</td></tr>
+    </tbody></table></div>
+    <p class="hint">Bron: <a href={t.box3.bron} rel="noopener" target="_blank">Belastingdienst, box 3 2026</a>. Reken het uit: <Fragment set:html={link('box-3-belasting-berekenen', 'box 3-belasting berekenen')} />.</p>
+
+    <AdSlot slot={AD_SLOTS.midden} minHeight={280} />
+
+    <h2 id="ondernemers">Ondernemers</h2>
+    <div class="table-wrap"><table><tbody>
+      <tr><td>Zelfstandigenaftrek</td><td>{eur(t.ondernemer.zelfstandigenaftrek)}</td></tr>
+      <tr><td>Startersaftrek</td><td>{eur(t.ondernemer.startersaftrek)}</td></tr>
+      <tr><td>Mkb-winstvrijstelling</td><td>{pct(t.ondernemer.mkbWinstvrijstelling)}</td></tr>
+      <tr><td>Maximaal tarief aftrekposten</td><td>{pct(t.ondernemer.aftrekTariefMaximum)}</td></tr>
+      <tr><td>Inkomensafhankelijke bijdrage Zvw</td><td>{pct(t.ondernemer.zvwPercentage)} tot {eur(t.ondernemer.zvwMaximumInkomen)}</td></tr>
+    </tbody></table></div>
+    <p class="hint">Bronnen: <a href={t.ondernemer.bron} rel="noopener" target="_blank">zelfstandigenaftrek</a>, <a href={t.ondernemer.bronMkb} rel="noopener" target="_blank">mkb-winstvrijstelling</a>, <a href={t.ondernemer.bronZvw} rel="noopener" target="_blank">bijdrage Zvw</a>. Reken het uit: <Fragment set:html={link('zzp-netto-inkomen-berekenen', 'zzp netto inkomen')} />.</p>
+
+    <h2 id="btw">Btw</h2>
+    <p>Algemeen tarief {pct(t.btw.algemeen)}, verlaagd tarief {pct(t.btw.verlaagd)}, nultarief 0%. Bron: <a href={t.btw.bron} rel="noopener" target="_blank">Belastingdienst, btw-tarieven</a>. Reken het uit: <Fragment set:html={link('btw-berekenen', 'btw berekenen')} />.</p>
+
+    <h2 id="bijtelling">Bijtelling auto van de zaak</h2>
+    <p>{pct(t.bijtelling.standaard)} van de cataloguswaarde. Volledig elektrisch: {pct(t.bijtelling.elektrischVerlaagd)} tot {eur(t.bijtelling.elektrischGrens)}, daarboven {pct(t.bijtelling.standaard)}. Waterstof en zonnecel: {pct(t.bijtelling.waterstofZonnecel)}. Geldt voor een datum eerste toelating in {TARIEF_JAAR}. Bron: <a href={t.bijtelling.bron} rel="noopener" target="_blank">Belastingdienst, bijtelling 2026</a>.</p>
+
+    <h2 id="wonen">Wonen</h2>
+    <div class="table-wrap"><table><tbody>
+      <tr><td>Overdrachtsbelasting starter (18 t/m 34 jaar)</td><td>0% tot {eur(t.overdrachtsbelasting.starterWoningwaardegrens)}</td></tr>
+      <tr><td>Overdrachtsbelasting eigen woning</td><td>{pct(t.overdrachtsbelasting.eigenWoning)}</td></tr>
+      <tr><td>Overdrachtsbelasting woning, niet zelf bewonen</td><td>{pct(t.overdrachtsbelasting.woningNietZelfBewonen)}</td></tr>
+      <tr><td>Overdrachtsbelasting overige onroerende zaken</td><td>{pct(t.overdrachtsbelasting.overig)}</td></tr>
+      <tr><td>Eigenwoningforfait (WOZ {eur(t.eigenWoning.forfaitVanaf)} – {eur(t.eigenWoning.forfaitVillaGrens)})</td><td>{pct(t.eigenWoning.forfaitPercentage)}</td></tr>
+      <tr><td>Maximaal aftrektarief hypotheekrente</td><td>{pct(t.eigenWoning.maxAftrekTarief)}</td></tr>
+    </tbody></table></div>
+    <p class="hint">Bronnen: <a href={t.overdrachtsbelasting.bron} rel="noopener" target="_blank">overdrachtsbelasting</a>, <a href={t.eigenWoning.bron} rel="noopener" target="_blank">eigen woning</a>.</p>
+
+    <h2 id="schenken-erven">Schenk- en erfbelasting</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Ontvanger</th><th>Tot {eur(t.schenkErf.schijfGrens)}</th><th>Daarboven</th></tr></thead>
+      <tbody>
+        <tr><td>Partner en kinderen</td><td>{pct(t.schenkErf.tarieven.partnerKind[0])}</td><td>{pct(t.schenkErf.tarieven.partnerKind[1])}</td></tr>
+        <tr><td>Kleinkinderen</td><td>{pct(t.schenkErf.tarieven.kleinkind[0])}</td><td>{pct(t.schenkErf.tarieven.kleinkind[1])}</td></tr>
+        <tr><td>Overigen</td><td>{pct(t.schenkErf.tarieven.overig[0])}</td><td>{pct(t.schenkErf.tarieven.overig[1])}</td></tr>
+      </tbody></table></div>
+    <p>Vrijstelling schenken aan een kind: {eur(t.schenkErf.vrijstellingSchenk.kind)} per jaar (eenmalig {eur(t.schenkErf.vrijstellingSchenk.kindEenmalig)}); aan anderen {eur(t.schenkErf.vrijstellingSchenk.overig)}. Vrijstelling erfenis: partner {eur(t.schenkErf.vrijstellingErf.partner)}, kind {eur(t.schenkErf.vrijstellingErf.kind)}, ouder {eur(t.schenkErf.vrijstellingErf.ouder)}, anderen {eur(t.schenkErf.vrijstellingErf.overig)}.</p>
+    <p class="hint">Bronnen: <a href={t.schenkErf.bronTarievenSchenk} rel="noopener" target="_blank">schenkbelasting</a>, <a href={t.schenkErf.bronVrijstellingErf} rel="noopener" target="_blank">erfbelasting</a>.</p>
+
+    <h2 id="werk">Werk en reizen</h2>
+    <p>Minimaal vakantiegeld: {pct(t.vakantiegeld.minimumPercentage)} van het brutoloon. Onbelaste reiskostenvergoeding: € {t.reiskosten.onbelastPerKm.toLocaleString('nl-NL', { minimumFractionDigits: 2 })} per kilometer. Bronnen: <a href={t.vakantiegeld.bron} rel="noopener" target="_blank">vakantiegeld</a>, <a href={t.reiskosten.bron} rel="noopener" target="_blank">reiskosten</a>.</p>
+
+    <p class="disclaimer">We zoeken alle tarieven op bij officiële bronnen en werken ze elk jaar bij. Toch kunnen er tussentijds wijzigingen zijn. Controleer bij belangrijke beslissingen de actuele cijfers bij de Belastingdienst. Zie ook de <a href={url('disclaimer/')}>disclaimer</a>.</p>
+  </article>
+  <AdSlot slot={AD_SLOTS.onder} minHeight={250} />
+</Base>

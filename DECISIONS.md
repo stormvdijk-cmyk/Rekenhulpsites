@@ -38,3 +38,12 @@ Datum: 2 november 2026.
 - **Hypotheek:** bruto via de bestaande leningslogica; netto = bruto − (rente − forfait/12) × aftrektarief (schijftarief, max 37,56%). Wet Hillen niet berekend (dan nul voordeel). Eigenwoningforfait alleen voor WOZ ≥ € 75.000 (lagere schijven niet bevestigd).
 - **Kilometervergoeding:** € 0,25/km (2026, terugwerkende kracht), vaste vergoeding 214 dagen bij 5 dagen per week, naar rato.
 - **Niet gebouwd:** minimumloon (bedragen per halfjaar niet bevestigd).
+
+## Fiscaal fase 1 (november 2026)
+- **AOW-tarieven** toegevoegd (`aow` in de JSON): eerste schijf 17,85% (hele jaar AOW, geboren vanaf 1946), AHK € 1.556 (afbouw 3,195%), arbeidskorting-tabel AOW (max € 2.840), ouderenkorting € 2.067 (15% afbouw boven € 46.002), alleenstaande-ouderenkorting € 540. AOW in de loop van het jaar en geboren vóór 1946 worden niet berekend (staat op de pagina).
+- **`belastingOverLoon` heeft opties** `{ aow, alleenstaand }`; bestaande uitkomsten zijn ongewijzigd (alle oude tests groen).
+- **Netto salaris:** pensioenpremie (werknemersdeel) verlaagt het belastbaar loon; AOW-optie.
+- **Inkomstenbelasting:** arbeidskorting over loon + winst, AHK en schijven over belastbaar inkomen na aftrekposten. Teruggave = ingehouden loonheffing − verschuldigde belasting. Box 2/3 in het verzamelinkomen en IACK zitten er niet in.
+- **Zzp netto inkomen:** hergebruikt `nettoUitWinst` uit de uurtariefrekenhulp.
+- **Belastingtarieven 2026-pagina:** leest alles uit de JSON, zodat een jaarupdate deze pagina automatisch bijwerkt. Het jaartal staat in de slug; bij 2027 komt er een nieuwe pagina bij.
+- **Zorgtoeslag niet gebouwd:** de standaardpremie 2026 en het normpremie-percentage boven het drempelinkomen konden niet met een officiële bron worden bevestigd.
