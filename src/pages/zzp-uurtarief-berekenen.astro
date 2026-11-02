@@ -1,0 +1,109 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const o = tarieven.ondernemer;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 2 }) + '%';
+const faq = [
+  { vraag: 'Hoeveel declarabele uren maakt een zzp’er per jaar?', antwoord: 'Veel zzp’ers rekenen met 1.000 tot 1.400 declarabele uren per jaar. Van een werkweek van 40 uur gaat tijd op aan administratie, acquisitie, reizen en bijscholing. Ook vakantie, feestdagen en ziekte tellen mee. 60 tot 75% declarabel is een gangbaar uitgangspunt.' },
+  { vraag: 'Wat moet ik reserveren als zzp’er?', antwoord: 'Naast belasting reserveer je zelf voor je pensioen en eventueel een arbeidsongeschiktheidsverzekering (AOV). Een buffer voor stille maanden is ook verstandig. Veel zzp’ers reserveren 10 tot 20% van hun winst voor pensioen en AOV samen. Vul dat bedrag in bij reservering.' },
+  { vraag: 'Is het uurtarief inclusief of exclusief btw?', antwoord: 'Het uurtarief in de uitkomst is exclusief btw. Dat is wat je zelf verdient. Bij de meeste diensten reken je daar 21% btw bovenop, die je afdraagt aan de Belastingdienst. Particulieren betalen het bedrag inclusief btw. Daarom staat dat er ook bij.' },
+  { vraag: 'Wat is het urencriterium?', antwoord: 'Je voldoet aan het urencriterium als je minstens 1.225 uur per jaar aan je onderneming besteedt. Dat zijn alle uren, ook de niet-declarabele. Alleen dan heb je recht op de zelfstandigenaftrek en de startersaftrek.' },
+  { vraag: 'Rekent deze rekenhulp met alle aftrekposten?', antwoord: 'Nee. Hij rekent met de zelfstandigenaftrek, de startersaftrek, de mkb-winstvrijstelling, de algemene heffingskorting, de arbeidskorting en de inkomensafhankelijke bijdrage Zvw. Andere aftrekposten, zoals de kleinschaligheidsinvesteringsaftrek of lijfrentepremie, en inkomen van een partner zitten er niet in.' },
+];
+---
+<CalculatorPage
+  slug="zzp-uurtarief-berekenen"
+  title="Zzp-uurtarief berekenen 2026"
+  description="Bereken je minimale uurtarief als zzp’er vanaf je gewenste netto inkomen. Met declarabele uren, kosten, reserveringen en de belastingregels van 2026."
+  h1="Zzp-uurtarief berekenen"
+  intro="Begin bij wat je netto per maand wilt overhouden. De rekenhulp rekent terug welke winst, omzet en welk uurtarief je daarvoor minimaal nodig hebt."
+  faq={faq}
+  bron={o.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Minimaal uurtarief (exclusief btw)</p>
+      <p class="result-main" id="r-tarief">–</p>
+      <p class="result-sub">Inclusief 21% btw: <strong id="r-btw">–</strong></p>
+      <dl>
+        <dt>Declarabele uren per jaar</dt><dd id="r-uren">–</dd>
+        <dt>Benodigde omzet per jaar</dt><dd id="r-omzet">–</dd>
+        <dt>Benodigde winst per jaar</dt><dd id="r-winst">–</dd>
+        <dt>Inkomstenbelasting</dt><dd id="r-ib">–</dd>
+        <dt>Bijdrage Zvw</dt><dd id="r-zvw">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <div class="row-2 stack">
+        <Field id="netto" label="Gewenst netto per maand" value="3000" prefix="€" hint="Wat je vrij wilt besteden" />
+        <Field id="reserve" label="Reservering per maand" value="600" prefix="€" hint="Pensioen, AOV en buffer" />
+      </div>
+      <Field id="kosten" label="Zakelijke kosten per jaar" value="6000" prefix="€" hint="Bijv. laptop, software, verzekeringen, werkplek" />
+      <div class="row-2">
+        <Field id="weken" label="Werkweken per jaar" value="46" inputmode="numeric" hint="52 min vakantie en ziekte" />
+        <Field id="uren" label="Uren per week" value="40" suffix="uur" />
+      </div>
+      <Field id="decl" label="Declarabel deel van je uren" value="70" suffix="%" hint="Gangbaar: 60–75%" />
+      <label class="check"><input type="checkbox" id="urencrit" name="urencrit" checked /> Ik voldoe aan het urencriterium (1.225 uur per jaar)</label>
+      <label class="check"><input type="checkbox" id="starter" name="starter" /> Ik heb recht op startersaftrek</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo kom je van netto inkomen naar uurtarief</h2>
+    <p>Als zzp’er betaal je zelf alles wat een werkgever normaal regelt: je pensioen, je verzekering bij arbeidsongeschiktheid, je vakantie en je ziektedagen. Daarom kun je je uurtarief niet vergelijken met het uurloon van een werknemer. Deze rekenhulp rekent in vier stappen terug:</p>
+    <ol>
+      <li><strong>Netto per jaar:</strong> (gewenst netto + reservering) × 12.</li>
+      <li><strong>Benodigde winst:</strong> de winst waarbij je na inkomstenbelasting en de bijdrage Zvw precies dat netto bedrag overhoudt. De rekenhulp rekent met de regels van 2026: zelfstandigenaftrek {eur(o.zelfstandigenaftrek)}, startersaftrek {eur(o.startersaftrek)}, mkb-winstvrijstelling {pct(o.mkbWinstvrijstelling)}, de heffingskortingen en een bijdrage Zvw van {pct(o.zvwPercentage)} tot een inkomen van {eur(o.zvwMaximumInkomen)}. Aftrekposten leveren in 2026 maximaal {pct(o.aftrekTariefMaximum)} belastingvoordeel op.</li>
+      <li><strong>Benodigde omzet:</strong> winst + zakelijke kosten.</li>
+      <li><strong>Uurtarief:</strong> omzet / declarabele uren. Declarabele uren = werkweken × uren per week × declarabel percentage.</li>
+    </ol>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je wilt <strong>€ 3.000 netto per maand</strong> vrij besteden en € 600 per maand reserveren voor pensioen en AOV. Je kosten zijn € 6.000 per jaar. Je werkt 46 weken van 40 uur, waarvan 70% declarabel. Je voldoet aan het urencriterium.</p>
+      <ul>
+        <li>Netto nodig: € 3.600 × 12 = € 43.200 per jaar</li>
+        <li>Benodigde winst: ongeveer € 55.649 (inkomstenbelasting € 10.143, Zvw € 2.305)</li>
+        <li>Benodigde omzet: € 55.649 + € 6.000 = € 61.649</li>
+        <li>Declarabele uren: 46 × 40 × 70% = 1.288 uur</li>
+        <li>Minimaal uurtarief: € 61.649 / 1.288 = <strong>€ 47,86 exclusief btw</strong> (€ 57,92 inclusief 21% btw)</li>
+      </ul>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Minimaal is niet hetzelfde als marktconform</h2>
+    <p>De uitkomst is je ondergrens: het tarief waaronder je structureel te weinig verdient. Wat je echt kunt vragen, hangt af van je vak, je ervaring en wat klanten gewend zijn te betalen. Vraag collega’s in je branche naar hun tarief, of bekijk opdrachten op platforms. Ligt de markt ver boven je minimum, dan is dat ruimte voor extra reservering of minder uren.</p>
+    <h3>Let op deze punten</h3>
+    <ul>
+      <li><strong>Te optimistische uren.</strong> Wie met 1.800 declarabele uren rekent, komt bij de eerste stille maand in de problemen. Reken liever voorzichtig.</li>
+      <li><strong>Kosten vergeten.</strong> Denk aan je beroepsaansprakelijkheidsverzekering, je boekhouder, je telefoon, opleidingen en de afschrijving van je laptop.</li>
+      <li><strong>Btw.</strong> Btw is geen inkomen. Je int het bedrag voor de Belastingdienst. Reken het na met <a href="../btw-berekenen/">btw berekenen</a>.</li>
+      <li><strong>Pensioen en AOV.</strong> Lijfrentepremie en AOV-premie zijn onder voorwaarden aftrekbaar. Daardoor kan je werkelijke belasting iets lager uitvallen.</li>
+    </ul>
+    <p>Vergelijk je met een baan in loondienst? Met <a href="../bruto-netto-uurloon/">uurloon omrekenen</a> en <a href="../netto-salaris-berekenen/">netto salaris berekenen</a> zie je wat een werknemer met hetzelfde netto inkomen bruto verdient.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenZzpUurtarief } from '../lib/calculators/zzpUurtarief';
+  import { formatGetal } from '../lib/calculators/format';
+  import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenZzpUurtarief({
+      nettoPerMaand: getal('netto'), reserveringPerMaand: getal('reserve'), kostenPerJaar: getal('kosten'),
+      werkwekenPerJaar: getal('weken'), urenPerWeek: getal('uren'), declarabelPct: getal('decl'),
+      urencriterium: vinkje('urencrit'), starter: vinkje('starter'),
+    });
+    zet('r-tarief', euro(r.uurtarief));
+    zet('r-btw', euro(r.uurtariefInclBtw));
+    zet('r-uren', formatGetal(r.declarabeleUren));
+    zet('r-omzet', euro(r.benodigdeOmzet));
+    zet('r-winst', euro(r.benodigdeWinst));
+    zet('r-ib', euro(r.inkomstenbelasting));
+    zet('r-zvw', euro(r.zvw));
+  });
+</script>

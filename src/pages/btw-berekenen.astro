@@ -1,0 +1,86 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const faq = [
+  { vraag: 'Hoe reken ik btw terug uit een bedrag inclusief btw?', antwoord: 'Deel het bedrag inclusief btw door 1,21 (bij 21%) of door 1,09 (bij 9%). Dan heb je het bedrag exclusief btw. Het verschil is de btw. Uit € 121 haal je zo € 100 exclusief en € 21 btw.' },
+  { vraag: 'Waarom is 21% van het bedrag inclusief btw fout?', antwoord: 'Het btw-percentage geldt over het bedrag exclusief btw. Neem je 21% van € 121, dan kom je op € 25,41 uit. Dat is te veel, want de btw is € 21. Het juiste aandeel btw in een bedrag inclusief 21% btw is 21/121, ongeveer 17,36%.' },
+  { vraag: 'Wanneer geldt 9% btw?', antwoord: 'Het verlaagde tarief van 9% geldt onder meer voor voedingsmiddelen, niet-alcoholische dranken, boeken, geneesmiddelen, personenvervoer en sommige arbeidsintensieve diensten. Sinds 1 januari 2026 geldt voor overnachtingen (logies) 21% in plaats van 9%. Kijk bij twijfel in de lijsten van de Belastingdienst.' },
+  { vraag: 'Wanneer reken ik 0% btw?', antwoord: 'Het 0%-tarief geldt vooral bij export buiten de EU en bij leveringen aan ondernemers in andere EU-landen (intracommunautaire leveringen), onder voorwaarden. Het is iets anders dan een vrijstelling: bij 0% mag je de btw op je kosten nog wel aftrekken.' },
+];
+const pct = (n: number) => `${Math.round(n * 100)}%`;
+---
+<CalculatorPage
+  slug="btw-berekenen"
+  title="Btw berekenen: 21% en 9%, in- en exclusief"
+  description="Bereken btw over een bedrag of haal btw uit een bedrag inclusief btw. Met het hoge tarief van 21% en het lage tarief van 9%."
+  h1="Btw berekenen"
+  intro="Vul een bedrag in en kies of het inclusief of exclusief btw is. Je ziet direct het btw-bedrag en het andere totaal."
+  faq={faq}
+  bron={tarieven.btw.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Btw-bedrag</p>
+      <p class="result-main" id="r-btw">–</p>
+      <dl>
+        <dt>Exclusief btw</dt><dd id="r-ex">–</dd>
+        <dt>Btw (<span id="r-pct">21%</span>)</dt><dd id="r-btw2">–</dd>
+        <dt>Inclusief btw</dt><dd id="r-in">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="bedrag" label="Bedrag" value="100" prefix="€" />
+      <fieldset class="seg">
+        <legend>Het bedrag is</legend>
+        <label><input type="radio" name="soort" value="ex" checked /><span>Exclusief btw</span></label>
+        <label><input type="radio" name="soort" value="in" /><span>Inclusief btw</span></label>
+      </fieldset>
+      <fieldset class="seg">
+        <legend>Btw-tarief</legend>
+        <label><input type="radio" name="tarief" value={String(tarieven.btw.algemeen)} checked /><span>{pct(tarieven.btw.algemeen)} (hoog)</span></label>
+        <label><input type="radio" name="tarief" value={String(tarieven.btw.verlaagd)} /><span>{pct(tarieven.btw.verlaagd)} (laag)</span></label>
+        <label><input type="radio" name="tarief" value="0" /><span>0%</span></label>
+      </fieldset>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Btw erbij optellen of eruit halen</h2>
+    <p>Btw (omzetbelasting) reken je altijd over het bedrag <strong>exclusief</strong> btw. Daarom werkt het optellen anders dan het terugrekenen:</p>
+    <ul>
+      <li><strong>Exclusief → inclusief:</strong> bedrag × 1,21 (of × 1,09). De btw is bedrag × 0,21 (of × 0,09).</li>
+      <li><strong>Inclusief → exclusief:</strong> bedrag / 1,21 (of / 1,09). De btw is het verschil tussen beide bedragen.</li>
+    </ul>
+    <p>Een veelgemaakte fout is 21% nemen van een bedrag waar de btw al in zit. Dan reken je te veel btw. In een bedrag inclusief 21% btw is het aandeel btw 21/121 = 17,36%. Bij 9% is het 9/109 = 8,26%.</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Factuur maken:</strong> je rekent € 250 exclusief btw voor een dienst met 9% btw. De btw is € 250 × 0,09 = € 22,50. Het totaal inclusief btw is <strong>€ 272,50</strong>.</p>
+      <p><strong>Bonnetje terugrekenen:</strong> je betaalt € 121 inclusief 21% btw. Exclusief btw is dat € 121 / 1,21 = <strong>€ 100</strong>. De btw is € 21.</p>
+      <p><strong>Boodschappen:</strong> een bon van € 54,50 inclusief 9% btw bevat € 50 exclusief btw en € 4,50 btw.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>De btw-tarieven in Nederland</h2>
+    <p>Nederland heeft drie btw-tarieven: het algemene tarief van {pct(tarieven.btw.algemeen)}, het verlaagde tarief van {pct(tarieven.btw.verlaagd)} en het nultarief. Het algemene tarief is de standaard. Alles wat niet onder 9%, 0% of een vrijstelling valt, krijgt 21%. Het lage tarief geldt voor een vaste lijst goederen en diensten, waaronder eten en drinken zonder alcohol, boeken en tijdschriften, medicijnen, kappers en fietsreparaties. Alcohol, kleding, elektronica, de meeste diensten en sinds 2026 ook hotelovernachtingen vallen onder 21%.</p>
+    <p>Sommige prestaties zijn <strong>vrijgesteld</strong> van btw, zoals de meeste zorg, onderwijs en financiële diensten. Dan reken je geen btw, maar mag je de btw op je inkopen ook niet aftrekken. Gebruik je de kleineondernemersregeling (KOR)? Dan reken je ook geen btw op je facturen.</p>
+    <p>Ben je ondernemer? Op je factuur moeten het bedrag exclusief btw, het btw-percentage, het btw-bedrag en het totaal apart staan. Wil je weten welk uurtarief je nodig hebt, vóór btw? Gebruik dan de rekenhulp <a href="../zzp-uurtarief-berekenen/">zzp-uurtarief berekenen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { btwVanExclusief, btwVanInclusief } from '../lib/calculators/btw';
+  import { euro, getal, live, radio, zet } from '../lib/ui';
+  live('f', () => {
+    const tarief = Number(radio('tarief'));
+    const bedrag = getal('bedrag');
+    const r = radio('soort') === 'in' ? btwVanInclusief(bedrag, tarief) : btwVanExclusief(bedrag, tarief);
+    zet('r-btw', euro(r.btw));
+    zet('r-btw2', euro(r.btw));
+    zet('r-ex', euro(r.exclusief));
+    zet('r-in', euro(r.inclusief));
+    zet('r-pct', `${Math.round(tarief * 100)}%`);
+  });
+</script>

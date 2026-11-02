@@ -1,0 +1,16 @@
+---
+import Page from '../components/Page.astro';
+import { SITE } from '../data/site';
+---
+<Page title="Contact" description="Neem contact op met Rekenhulp voor vragen, fouten in een berekening of suggesties voor nieuwe rekenhulpen." h1="Contact">
+  <p>Heb je een vraag, een fout gevonden in een berekening, of een idee voor een nieuwe rekenhulp? Stuur ons een e-mail.</p>
+  {SITE.contactEmail ? (
+    <p><strong>E-mail:</strong> <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a></p>
+  ) : (
+    <p><strong>E-mail:</strong> het contactadres wordt binnenkort hier geplaatst.</p>
+  )}
+  <h2>Wat je kunt verwachten</h2>
+  <p>We lezen alle berichten en reageren meestal binnen enkele werkdagen. Meld je een fout in een berekening? Zet dan de link naar de rekenhulp in je bericht. Na het invullen staat je invoer in de adresbalk. Vertel er ook bij welke uitkomst je verwachtte. Dan kunnen we het snel nakijken.</p>
+  <h2>Geen persoonlijk advies</h2>
+  <p>We kunnen geen persoonlijk financieel of fiscaal advies geven. Voor vragen over je eigen belastingaangifte kun je terecht bij de BelastingTelefoon (0800-0543) of bij een belastingadviseur.</p>
+</Page>

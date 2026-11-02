@@ -1,0 +1,97 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const b = tarieven.bijtelling;
+const s = tarieven.box1.schijven;
+const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 2 }) + '%';
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Wat is de bijtelling voor een elektrische auto in 2026?', antwoord: `Voor een volledig elektrische auto met datum eerste toelating in 2026 is de bijtelling ${pct(b.elektrischVerlaagd)} over de eerste ${eur(b.elektrischGrens)} van de cataloguswaarde. Over het deel daarboven geldt ${pct(b.standaard)}. Voor auto’s op waterstof of met zonnecellen geldt ${pct(b.waterstofZonnecel)} over de hele cataloguswaarde.` },
+  { vraag: 'Is de bijtelling het bedrag dat ik moet betalen?', antwoord: 'Nee. De bijtelling wordt bij je brutoloon opgeteld. Je betaalt er loonbelasting over tegen je eigen tarief. Wat het je netto kost, is dus de bijtelling maal je belastingtarief. Dat ligt in 2026 tussen 35,75% en 49,50%.' },
+  { vraag: 'Hoe lang blijft mijn bijtellingspercentage gelijk?', antwoord: 'Het percentage dat geldt in het jaar van de eerste toelating blijft 60 maanden gelden. Daarna geldt het percentage van dat moment. Een auto uit een eerder jaar kan dus een ander percentage of een andere grens hebben dan de auto’s uit 2026.' },
+  { vraag: 'Kan ik bijtelling voorkomen?', antwoord: 'Ja, als je aantoonbaar niet meer dan 500 kilometer per jaar privé rijdt. Dat moet je bewijzen met een sluitende rittenadministratie, en je vraagt een ‘Verklaring geen privégebruik auto’ aan bij de Belastingdienst.' },
+  { vraag: 'Telt een eigen bijdrage mee?', antwoord: 'Ja. Een eigen bijdrage die je werkgever inhoudt op je nettoloon en die je betaalt voor privégebruik, mag van de bijtelling af. De bijtelling wordt nooit lager dan nul.' },
+];
+---
+<CalculatorPage
+  slug="bijtelling-auto-van-de-zaak"
+  title="Bijtelling auto van de zaak 2026 berekenen"
+  description="Bereken de bijtelling van je leaseauto of auto van de zaak in 2026, en wat die je netto per maand kost in elke belastingschijf."
+  h1="Bijtelling auto van de zaak berekenen"
+  intro="Vul de cataloguswaarde in en kies het type auto. Je ziet de bijtelling per maand en wat die je netto kost in elke belastingschijf."
+  faq={faq}
+  bron={b.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Bijtelling per maand</p>
+      <p class="result-main" id="r-maand">–</p>
+      <p class="result-sub">Per jaar <strong id="r-jaar">–</strong> · effectief <span id="r-pct">–</span> van de cataloguswaarde</p>
+      <dl>
+        <dt>Netto kosten bij {pct(s[0].tarief)}</dt><dd id="r-s1">–</dd>
+        <dt>Netto kosten bij {pct(s[1].tarief)}</dt><dd id="r-s2">–</dd>
+        <dt>Netto kosten bij {pct(s[2].tarief)}</dt><dd id="r-s3">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="waarde" label="Cataloguswaarde" value="45000" prefix="€" hint="Inclusief btw en bpm, exclusief kenteken- en leveringskosten" />
+      <fieldset class="seg">
+        <legend>Aandrijving</legend>
+        <label><input type="radio" name="type" value="elektrisch" checked /><span>Elektrisch</span></label>
+        <label><input type="radio" name="type" value="brandstof" /><span>Benzine, diesel, hybride</span></label>
+        <label><input type="radio" name="type" value="waterstof" /><span>Waterstof / zonnecel</span></label>
+      </fieldset>
+      <Field id="eigen" label="Eigen bijdrage per maand" value="0" prefix="€" hint="Ingehouden op je nettoloon, voor privégebruik" />
+      <p class="hint">Uitgangspunt: datum eerste toelating in 2026. Wat bij je in welke schijf valt, zie je op je loonstrook of met <a href="../netto-salaris-berekenen/">netto salaris berekenen</a>.</p>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Hoe werkt de bijtelling?</h2>
+    <p>Rijd je privé in een auto van de zaak, dan ziet de Belastingdienst dat als loon in natura. Je werkgever telt daarom elke maand een bedrag bij je brutoloon op: de bijtelling. Die is een percentage van de <strong>cataloguswaarde</strong>, de nieuwprijs inclusief btw en bpm, en ook inclusief opties en accessoires die de fabrikant of dealer heeft ingebouwd. De korting die de leasemaatschappij krijgt, telt niet mee.</p>
+    <p>In 2026 gelden deze percentages voor nieuwe auto’s:</p>
+    <ul>
+      <li><strong>Benzine, diesel en hybride:</strong> {pct(b.standaard)} van de cataloguswaarde.</li>
+      <li><strong>Volledig elektrisch:</strong> {pct(b.elektrischVerlaagd)} over de eerste {eur(b.elektrischGrens)}, {pct(b.standaard)} over de rest.</li>
+      <li><strong>Waterstof of zonnecellen:</strong> {pct(b.waterstofZonnecel)} over de hele cataloguswaarde.</li>
+    </ul>
+    <p>Over de bijtelling betaal je loonheffing tegen je eigen tarief. Daarom staan in de uitkomst de netto kosten voor elke schijf. Verdien je inclusief bijtelling minder dan {eur(s[0].tot!)} per jaar, dan geldt {pct(s[0].tarief)}. Tot {eur(s[1].tot!)} is het {pct(s[1].tarief)}, en daarboven {pct(s[2].tarief)}.</p>
+
+    <h2>Rekenvoorbeeld: elektrische auto van € 45.000</h2>
+    <div class="voorbeeld">
+      <ul>
+        <li>18% × € 30.000 = € 5.400</li>
+        <li>22% × € 15.000 = € 3.300</li>
+        <li>Bijtelling per jaar: € 8.700, per maand <strong>€ 725</strong></li>
+        <li>Netto kosten in schijf 2 (37,56%): ongeveer <strong>€ 272,31 per maand</strong></li>
+        <li>Netto kosten in schijf 3 (49,50%): ongeveer € 358,88 per maand</li>
+      </ul>
+      <p>Een benzineauto met dezelfde cataloguswaarde heeft een bijtelling van 22% × € 45.000 = € 9.900 per jaar (€ 825 per maand). In schijf 2 kost die je netto ongeveer € 309,87 per maand.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Wat de rekenhulp niet meeneemt</h2>
+    <p>De netto kosten per schijf zijn een benadering: bijtelling × schijftarief. De bijtelling verhoogt je inkomen, en daardoor kunnen ook je algemene heffingskorting en arbeidskorting dalen. Zit je in het afbouwgebied van die kortingen, dan valt het netto effect een paar procent hoger uit. Bereken voor een exacte vergelijking je netto salaris één keer met en één keer zonder bijtelling erbij opgeteld.</p>
+    <ul>
+      <li><strong>Oudere auto’s.</strong> Voor auto’s met een eerste toelating vóór 2026 kunnen andere percentages en grenzen gelden. Het percentage staat vast voor 60 maanden.</li>
+      <li><strong>Youngtimers.</strong> Voor auto’s ouder dan 16 jaar geldt 35% van de waarde in het economisch verkeer in plaats van de cataloguswaarde.</li>
+      <li><strong>Ondernemers.</strong> Voor een ondernemer met een auto op de zaak gelden dezelfde percentages, maar die telt de bijtelling op bij de winst.</li>
+      <li><strong>Vanaf 2027.</strong> Het kabinet heeft maatregelen aangekondigd voor nieuwe benzine- en dieselauto’s van de zaak. Controleer vóór je een nieuw leasecontract tekent de actuele regels bij de Belastingdienst.</li>
+    </ul>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenBijtelling, type Aandrijving } from '../lib/calculators/bijtelling';
+  import { formatProcent } from '../lib/calculators/format';
+  import { euro, getal, live, radio, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenBijtelling({ cataloguswaarde: getal('waarde'), aandrijving: (radio('type') || 'elektrisch') as Aandrijving, eigenBijdrageMaand: getal('eigen') });
+    zet('r-maand', euro(r.bijtellingMaand));
+    zet('r-jaar', euro(r.bijtellingJaar));
+    zet('r-pct', formatProcent(r.effectiefPercentage, 1));
+    r.perSchijf.forEach((p, i) => zet(`r-s${i + 1}`, `${euro(p.nettoPerMaand)} p/m`));
+  });
+</script>

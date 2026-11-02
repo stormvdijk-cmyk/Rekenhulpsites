@@ -1,0 +1,24 @@
+---
+import Page from '../components/Page.astro';
+import { url } from '../data/site';
+---
+<Page title="Cookiebeleid" description="Welke cookies en vergelijkbare technieken Rekenhulp en Google gebruiken, en hoe je je toestemming beheert." h1="Cookiebeleid" bijgewerkt="2 november 2026">
+  <p>Cookies zijn kleine bestanden die een website op je apparaat opslaat. Vergelijkbare technieken zijn bijvoorbeeld de lokale opslag van je browser. Hieronder lees je wat deze site gebruikt.</p>
+
+  <h2>Functioneel (geen toestemming nodig)</h2>
+  <ul>
+    <li><strong>Themavoorkeur</strong>: als je kiest voor een licht of donker thema, onthouden we dat in de lokale opslag van je browser (sleutel <code>theme</code>).</li>
+    <li><strong>Offline gebruik</strong>: een service worker bewaart de pagina’s van de site op je apparaat, zodat de rekenhulpen ook zonder internet werken. Daar staan geen persoonsgegevens in.</li>
+  </ul>
+
+  <h2>Statistieken (geen toestemming nodig)</h2>
+  <p>Als we bezoekers tellen, gebruiken we een dienst die geen cookies plaatst en geen IP-adressen bewaart, zoals Cloudflare Web Analytics of GoatCounter.</p>
+
+  <h2>Advertenties (alleen met toestemming)</h2>
+  <p>Google AdSense kan cookies plaatsen en lezen, bijvoorbeeld <code>__gads</code>, <code>__gpi</code> en <code>IDE</code>. Die dienen om advertenties te tonen, te meten en te personaliseren. Bezoekers in de EER, het VK en Zwitserland zien eerst een toestemmingsmelding van Google. Tot je een keuze maakt, staan alle toestemmingssignalen op ‘geweigerd’ (Google Consent Mode v2). Geef je geen toestemming, dan kan Google wel niet-gepersonaliseerde advertenties tonen. Daarbij gebruikt Google alleen cookies of lokale opslag die nodig zijn voor fraudebestrijding en het tellen van vertoningen, voor zover de wet dat toestaat.</p>
+
+  <h2>Je keuze wijzigen</h2>
+  <p>Je kunt je keuze altijd aanpassen via de knop ‘Privacy- en cookie-instellingen’ die de toestemmingsmelding van Google onderaan de pagina toont. Je kunt cookies ook verwijderen of blokkeren in de instellingen van je browser. De rekenhulpen blijven dan gewoon werken.</p>
+
+  <p>Meer over hoe we met gegevens omgaan, lees je in ons <a href={url('privacy/')}>privacybeleid</a>.</p>
+</Page>

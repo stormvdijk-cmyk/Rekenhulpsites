@@ -1,0 +1,22 @@
+---
+import Page from '../components/Page.astro';
+import ContactLink from '../components/ContactLink.astro';
+import { TARIEF_JAAR } from '../data/tarieven';
+import { SITE } from '../data/site';
+---
+<Page title="Disclaimer" description="De uitkomsten van Rekenhulp zijn een indicatie en geen financieel advies. Lees hier wat dat betekent." h1="Disclaimer" bijgewerkt="2 november 2026">
+  <p>We maken de rekenhulpen van {SITE.naam} met zorg. We gebruiken de officiële tarieven voor {TARIEF_JAAR} van de Belastingdienst, de Rijksoverheid en het CBS. Toch blijven de uitkomsten een <strong>indicatie</strong>. Ze zijn <strong>geen financieel, fiscaal of juridisch advies</strong>.</p>
+  <h2>Waarom uitkomsten kunnen afwijken</h2>
+  <ul>
+    <li>Rekenhulpen werken met vereenvoudigingen. Ze rekenen bijvoorbeeld niet met pensioenpremie, toeslagen, partnerinkomen, box 2 en box 3, of specifieke aftrekposten.</li>
+    <li>Werkgevers en de Belastingdienst gebruiken officiële tabellen en afrondingsregels per periode. Die kunnen enkele euro’s afwijken van een jaarberekening.</li>
+    <li>Tarieven en regels veranderen. Tussentijdse wijzigingen verwerken we zo snel mogelijk, maar we kunnen niet garanderen dat alles op elk moment actueel is.</li>
+    <li>Rendementen en rentes in de spaar- en leenrekenhulpen zijn aannames. Rendement in het verleden is geen garantie voor de toekomst.</li>
+  </ul>
+  <h2>Aansprakelijkheid</h2>
+  <p>{SITE.naam} is niet aansprakelijk voor schade die ontstaat door het gebruik van de rekenhulpen of door beslissingen op basis van de uitkomsten. Neem je een belangrijke financiële beslissing, zoals een lening, een hypotheek of de keuze om als zzp’er te gaan werken? Laat je dan adviseren door een erkend adviseur, of controleer de cijfers bij de Belastingdienst.</p>
+  <h2>Externe links en advertenties</h2>
+  <p>We linken naar externe bronnen, zoals de Belastingdienst en het CBS. Voor de inhoud van externe sites zijn we niet verantwoordelijk. Advertenties komen van Google AdSense. Dat ze op deze site staan, betekent niet dat wij het product aanbevelen.</p>
+  <h2>Fouten melden</h2>
+  <p>Zie je een fout? Meld het via <ContactLink />. Dan passen we het zo snel mogelijk aan.</p>
+</Page>

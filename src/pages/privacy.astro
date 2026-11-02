@@ -1,0 +1,35 @@
+---
+import Page from '../components/Page.astro';
+import ContactLink from '../components/ContactLink.astro';
+import { ADSENSE_CLIENT, ANALYTICS, SITE, url } from '../data/site';
+---
+<Page title="Privacybeleid" description="Welke gegevens Rekenhulp verwerkt, waarom, en welke rechten je hebt onder de AVG." h1="Privacybeleid" bijgewerkt="2 november 2026">
+  <p>{SITE.naam} vindt je privacy belangrijk. In dit beleid lees je welke gegevens we verwerken als je de site gebruikt, waarom, en welke rechten je hebt volgens de Algemene verordening gegevensbescherming (AVG).</p>
+
+  <h2>Wat je invult in de rekenhulpen</h2>
+  <p>Alle berekeningen gebeuren in je eigen browser. Bedragen en andere gegevens die je invult, sturen we niet naar een server en we slaan ze niet op. Je invoer komt wel in de adresbalk te staan, zodat je een berekening kunt delen of later terug kunt vinden. Die link blijft op je eigen apparaat, tenzij je hem zelf deelt. We onthouden je keuze voor een licht of donker thema in de lokale opslag van je browser.</p>
+
+  <h2>Bezoekersstatistieken</h2>
+  <p>{ANALYTICS.cloudflareToken || ANALYTICS.goatcounter
+    ? 'We tellen bezoeken met een privacyvriendelijke dienst zonder cookies. Die dienst slaat geen IP-adressen op en maakt geen profielen. We zien alleen totalen, zoals het aantal bezoeken per pagina en het type apparaat. Hiervoor is geen toestemming nodig.'
+    : 'Op dit moment houden we geen bezoekersstatistieken bij. Gaan we dat doen, dan gebruiken we een privacyvriendelijke dienst zonder cookies die geen IP-adressen bewaart en geen profielen maakt.'}</p>
+
+  <h2>Advertenties van Google</h2>
+  <p>{ADSENSE_CLIENT ? 'We tonen' : 'We gaan'} advertenties van Google AdSense{ADSENSE_CLIENT ? '' : ' tonen'}. Google is daarbij een zelfstandige verwerkingsverantwoordelijke. Google kan cookies en vergelijkbare technieken gebruiken om advertenties te tonen, het aantal vertoningen te meten en fraude te voorkomen. Met je toestemming kunnen advertenties ook worden gepersonaliseerd op basis van je eerdere bezoeken aan deze en andere websites.</p>
+  <ul>
+    <li><strong>Toestemming:</strong> bezoekers uit de Europese Economische Ruimte, het Verenigd Koninkrijk en Zwitserland krijgen een toestemmingsmelding van Google (een gecertificeerd toestemmingsplatform). Zonder je toestemming worden geen cookies voor gepersonaliseerde advertenties geplaatst. Er kunnen dan wel niet-gepersonaliseerde advertenties worden getoond.</li>
+    <li><strong>Toestemming intrekken:</strong> via de link ‘Privacy- en cookie-instellingen’ in de toestemmingsmelding, of door cookies in je browser te verwijderen.</li>
+    <li><strong>Meer informatie:</strong> lees <a href="https://policies.google.com/technologies/partner-sites?hl=nl" rel="noopener" target="_blank">hoe Google gegevens gebruikt van sites die gebruikmaken van zijn diensten</a>. Personalisatie kun je uitzetten via <a href="https://adssettings.google.com" rel="noopener" target="_blank">Google Advertentie-instellingen</a>.</li>
+  </ul>
+
+  <h2>Hosting</h2>
+  <p>De site wordt gehost door een externe partij (GitHub Pages of Cloudflare Pages). Zoals elke webserver verwerkt de hostingpartij technische gegevens, zoals je IP-adres, om de pagina’s af te leveren en de dienst te beveiligen. Wij hebben geen toegang tot die serverlogs.</p>
+
+  <h2>E-mail</h2>
+  <p>Stuur je ons een e-mail, dan gebruiken we je adres en bericht alleen om te antwoorden. We bewaren de correspondentie niet langer dan nodig, en uiterlijk een jaar na het laatste contact.</p>
+
+  <h2>Je rechten</h2>
+  <p>Je hebt het recht om je gegevens in te zien, te laten corrigeren of te laten verwijderen. Je mag ook bezwaar maken tegen het gebruik ervan. Omdat we zelf vrijwel geen persoonsgegevens verwerken, kunnen we meestal weinig laten zien. Voor gegevens die Google verwerkt, kun je terecht bij Google. Neem voor vragen contact op via <ContactLink />. Ben je het niet eens met hoe we met je gegevens omgaan? Dan kun je een klacht indienen bij de <a href="https://autoriteitpersoonsgegevens.nl" rel="noopener" target="_blank">Autoriteit Persoonsgegevens</a>.</p>
+
+  <p>Zie ook ons <a href={url('cookies/')}>cookiebeleid</a>.</p>
+</Page>

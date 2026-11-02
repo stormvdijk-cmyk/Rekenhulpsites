@@ -1,0 +1,106 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+const faq = [
+  { vraag: 'Hoe bereken ik een percentage van een bedrag?', antwoord: 'Deel het percentage door 100 en vermenigvuldig met het bedrag. 15% van € 80 is 0,15 × 80 = € 12. Je kunt ook eerst 1% uitrekenen (€ 0,80) en dat keer 15 doen.' },
+  { vraag: 'Hoe bereken ik een procentuele stijging?', antwoord: 'Trek de oude waarde af van de nieuwe, deel door de oude waarde en vermenigvuldig met 100. Van 80 naar 100 is (100 − 80) / 80 × 100 = 25% stijging.' },
+  { vraag: 'Waarom is 20% erbij en 20% eraf niet hetzelfde?', antwoord: 'Omdat het percentage steeds over een ander startbedrag gaat. € 100 plus 20% is € 120. Gaat daar 20% af, dan haal je € 24 weg en hou je € 96 over. Om van € 120 terug te gaan naar € 100 heb je 16,67% daling nodig.' },
+  { vraag: 'Wat is het verschil tussen procent en procentpunt?', antwoord: 'Een procentpunt is het verschil tussen twee percentages. Stijgt de rente van 2% naar 3%, dan is dat 1 procentpunt hoger. In procenten is dat een stijging van 50%, want 3 is de helft meer dan 2.' },
+];
+---
+<CalculatorPage
+  slug="procenten-berekenen"
+  title="Procenten berekenen: stijging en korting"
+  description="Bereken snel een percentage van een bedrag, hoeveel procent iets is, de procentuele stijging of daling, en de prijs na korting."
+  h1="Procenten berekenen"
+  intro="Vier rekenhulpen voor procenten op één plek. Vul in wat je weet; de uitkomst verschijnt direct."
+  faq={faq}
+>
+  <div slot="calculator" style="display:grid;gap:1rem">
+    <form class="calc" id="f1" novalidate>
+      <div class="result" aria-live="polite" style="min-height:auto">
+        <p class="result-label">Percentage van een bedrag</p>
+        <p class="result-main" id="r1">–</p>
+      </div>
+      <div class="form row-2">
+        <Field id="p1" label="Percentage" value="15" suffix="%" />
+        <Field id="x1" label="van bedrag" value="80" />
+      </div>
+    </form>
+    <form class="calc" id="f2" novalidate>
+      <div class="result" aria-live="polite" style="min-height:auto">
+        <p class="result-label">Hoeveel procent is het?</p>
+        <p class="result-main" id="r2">–</p>
+      </div>
+      <div class="form row-2">
+        <Field id="d2" label="Deel" value="30" />
+        <Field id="g2" label="van totaal" value="120" />
+      </div>
+    </form>
+    <form class="calc" id="f3" novalidate>
+      <div class="result" aria-live="polite" style="min-height:auto">
+        <p class="result-label">Stijging of daling</p>
+        <p class="result-main" id="r3">–</p>
+        <p class="result-sub" id="r3b"></p>
+      </div>
+      <div class="form row-2">
+        <Field id="o3" label="Oude waarde" value="80" />
+        <Field id="n3" label="Nieuwe waarde" value="100" />
+      </div>
+    </form>
+    <form class="calc" id="f4" novalidate>
+      <div class="result" aria-live="polite" style="min-height:auto">
+        <p class="result-label">Prijs na korting</p>
+        <p class="result-main" id="r4">–</p>
+        <p class="result-sub">Je bespaart <strong id="r4b">–</strong></p>
+      </div>
+      <div class="form row-2">
+        <Field id="x4" label="Prijs" value="60" prefix="€" />
+        <Field id="p4" label="Korting" value="25" suffix="%" />
+      </div>
+    </form>
+  </div>
+
+  <Fragment slot="uitleg-1">
+    <h2>Procenten rekenen in drie stappen</h2>
+    <p>Procent betekent ‘per honderd’. 15% is dus 15/100 = 0,15. Bijna elke procentensom komt neer op een van deze formules:</p>
+    <ul>
+      <li><strong>Percentage van een bedrag:</strong> bedrag × percentage / 100</li>
+      <li><strong>Hoeveel procent:</strong> deel / totaal × 100</li>
+      <li><strong>Stijging of daling:</strong> (nieuw − oud) / oud × 100</li>
+      <li><strong>Prijs na korting:</strong> prijs × (1 − korting / 100)</li>
+    </ul>
+    <p>Bij het uit je hoofd rekenen helpt het om eerst 10% of 1% uit te rekenen. 10% van € 80 is € 8. 5% is daar de helft van, € 4. Samen is 15% dan € 12.</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Fooi:</strong> 15% van een rekening van € 80 is <strong>€ 12</strong>.</p>
+      <p><strong>Toetsscore:</strong> je hebt 30 van de 120 punten. Dat is 30 / 120 × 100 = <strong>25%</strong>.</p>
+      <p><strong>Huurverhoging:</strong> je huur gaat van € 80 naar € 100 per week. Dat is (100 − 80) / 80 × 100 = <strong>25% stijging</strong>. Gaat iets van € 100 naar € 80, dan is dat 20% daling.</p>
+      <p><strong>Uitverkoop:</strong> een jas van € 60 met 25% korting kost € 60 × 0,75 = <strong>€ 45</strong>. Je bespaart € 15.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Valkuilen bij procenten</h2>
+    <p><strong>Kortingen stapelen.</strong> ‘20% korting plus 10% extra’ is geen 30% korting. De tweede korting gaat over de al verlaagde prijs. Je betaalt 0,8 × 0,9 = 72% van de prijs, dus 28% korting.</p>
+    <p><strong>Terugrekenen naar de oude prijs.</strong> Betaal je € 45 na 25% korting? Dan was de oude prijs niet € 45 + 25%, maar € 45 / 0,75 = € 60.</p>
+    <p><strong>Btw.</strong> Btw gaat over het bedrag exclusief btw. Haal je btw uit een bedrag inclusief btw, dan deel je door 1,21 of 1,09. Gebruik daarvoor de rekenhulp <a href="../btw-berekenen/">btw berekenen</a>.</p>
+    <p><strong>Groei over meerdere jaren.</strong> 5% per jaar gedurende tien jaar is geen 50%, maar ruim 62%, omdat de groei steeds over een hoger bedrag gaat. Dat heet rente op rente. Je ziet het effect in de rekenhulp <a href="../samengestelde-rente/">samengestelde rente</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { korting, procentVan, procentueleVerandering, welkProcent } from '../lib/calculators/procenten';
+  import { formatGetal, formatProcent } from '../lib/calculators/format';
+  import { euro, getal, live, zet } from '../lib/ui';
+  const g = (n: number) => (Number.isFinite(n) ? formatGetal(n) : '–');
+  live('f1', () => zet('r1', g(procentVan(getal('p1'), getal('x1')))));
+  live('f2', () => { const n = welkProcent(getal('d2'), getal('g2')); zet('r2', Number.isFinite(n) ? formatProcent(n) : '–'); });
+  live('f3', () => {
+    const n = procentueleVerandering(getal('o3'), getal('n3'));
+    zet('r3', Number.isFinite(n) ? (n > 0 ? '+' : '') + formatProcent(n) : '–');
+    zet('r3b', !Number.isFinite(n) ? '' : n > 0 ? 'Stijging' : n < 0 ? 'Daling' : 'Geen verandering');
+  });
+  live('f4', () => { const r = korting(getal('x4'), getal('p4')); zet('r4', euro(r.nieuwePrijs)); zet('r4b', euro(r.korting)); });
+</script>
