@@ -1,0 +1,55 @@
+---
+import Base from '../layouts/Base.astro';
+import { CATEGORIEEN, REKENHULPEN } from '../data/calculators';
+import { SITE, url } from '../data/site';
+
+const home = new URL(url(''), Astro.site).href;
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.naam, url: home, inLanguage: 'nl-NL' },
+  {
+    '@context': 'https://schema.org', '@type': 'ItemList',
+    itemListElement: REKENHULPEN.map((r, i) => ({ '@type': 'ListItem', position: i + 1, name: r.titel, url: new URL(url(`${r.slug}/`), Astro.site).href })),
+  },
+];
+const anker = (c: string) => c.toLowerCase().replace(/[^a-z]+/g, '-');
+---
+<Base title="Rekenhulp – gratis financiële rekenhulpen" description="Gratis Nederlandse rekenhulpen: netto salaris, btw, vakantiegeld, rente, lening, inflatie, zzp-uurtarief en bijtelling. Snel, ook offline." jsonLd={jsonLd}>
+  <h1>Financiële rekenhulpen</h1>
+  <p class="lead">Gratis rekenhulpen voor salaris, belasting, sparen en lenen. Je vult in, de uitkomst staat er meteen. Werkt ook offline als je de app installeert.</p>
+
+  <div class="search field">
+    <label for="zoek">Zoek een rekenhulp</label>
+    <input type="search" id="zoek" placeholder="Bijvoorbeeld: btw, netto, rente" autocomplete="off" />
+  </div>
+
+  {CATEGORIEEN.map((c) => (
+    <section class="cat" id={anker(c)} data-cat>
+      <h2>{c}</h2>
+      <ul class="cards">
+        {REKENHULPEN.filter((r) => r.categorie === c).map((r) => (
+          <li data-zoek={`${r.titel} ${r.kort} ${r.trefwoorden}`.toLowerCase()}>
+            <a class="card" href={url(`${r.slug}/`)}><strong>{r.titel}</strong><span>{r.kort}</span></a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+  <p class="no-results" id="geen" hidden>Geen rekenhulp gevonden. Probeer een ander woord.</p>
+
+  <h2>Waarom deze rekenhulpen?</h2>
+  <p>Elke rekenhulp laat zien hoe de uitkomst tot stand komt. Bij de rekenhulpen met belastingregels staat welke tarieven we gebruiken en waar die vandaan komen: de Belastingdienst, de Rijksoverheid of het CBS. We werken de tarieven elk jaar bij. Je invoer blijft in je eigen browser. We slaan niets op een server op.</p>
+
+  <script>
+    const zoek = document.getElementById('zoek') as HTMLInputElement;
+    const items = [...document.querySelectorAll<HTMLElement>('[data-zoek]')];
+    const secties = [...document.querySelectorAll<HTMLElement>('[data-cat]')];
+    const geen = document.getElementById('geen')!;
+    zoek.addEventListener('input', () => {
+      const q = zoek.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      let n = 0;
+      items.forEach((li) => { const ok = q.every((w) => li.dataset.zoek!.includes(w)); li.hidden = !ok; if (ok) n++; });
+      secties.forEach((s) => { s.hidden = !s.querySelector('[data-zoek]:not([hidden])'); });
+      geen.hidden = n > 0;
+    });
+  </script>
+</Base>

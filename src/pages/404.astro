@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import { REKENHULPEN } from '../data/calculators';
+import { url } from '../data/site';
+const populair = ['netto-salaris-berekenen', 'btw-berekenen', 'vakantiegeld-berekenen', 'procenten-berekenen', 'samengestelde-rente', 'zzp-uurtarief-berekenen'].map((s) => REKENHULPEN.find((r) => r.slug === s)!);
+---
+<Base title="Pagina niet gevonden" description="Deze pagina bestaat niet (meer). Bekijk onze populairste rekenhulpen." noindex>
+  <h1>Pagina niet gevonden</h1>
+  <p class="lead">Deze pagina bestaat niet (meer). Misschien zoek je een van deze rekenhulpen:</p>
+  <ul class="cards">
+    {populair.map((r) => <li><a class="card" href={url(`${r.slug}/`)}><strong>{r.titel}</strong><span>{r.kort}</span></a></li>)}
+  </ul>
+  <p style="margin-top:1.5rem"><a href={url('')}>Naar alle rekenhulpen</a></p>
+</Base>

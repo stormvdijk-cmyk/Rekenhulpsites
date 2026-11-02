@@ -1,0 +1,21 @@
+---
+interface Props {
+  id: string;
+  label: string;
+  value: string | number;
+  prefix?: string;
+  suffix?: string;
+  hint?: string;
+  inputmode?: 'decimal' | 'numeric';
+}
+const { id, label, value, prefix, suffix, hint, inputmode = 'decimal' } = Astro.props;
+---
+<div class="field">
+  <label for={id}>{label}</label>
+  <div class="input-wrap">
+    {prefix && <span class="prefix" aria-hidden="true">{prefix}</span>}
+    <input type="text" id={id} name={id} value={String(value)} inputmode={inputmode} autocomplete="off" aria-describedby={hint ? `${id}-hint` : undefined} />
+    {suffix && <span class="suffix" aria-hidden="true">{suffix}</span>}
+  </div>
+  {hint && <span class="hint" id={`${id}-hint`}>{hint}</span>}
+</div>

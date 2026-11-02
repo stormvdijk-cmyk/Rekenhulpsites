@@ -1,0 +1,100 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const t = tarieven;
+const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 3 }) + '%';
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Wat is het verschil tussen bruto en netto salaris?', antwoord: 'Bruto is het loon dat in je contract staat. Netto is wat er op je rekening komt, nadat je werkgever loonheffing heeft ingehouden. Loonheffing bestaat uit loonbelasting en premies volksverzekeringen (AOW, Anw en Wlz). Heffingskortingen verlagen dat bedrag weer.' },
+  { vraag: 'Moet ik de loonheffingskorting aanzetten?', antwoord: 'Bij je hoofdbaan meestal wel. Je mag de loonheffingskorting maar bij één werkgever of uitkeringsinstantie tegelijk laten toepassen. Bij een tweede baan zet je hem uit, anders moet je achteraf vaak bijbetalen.' },
+  { vraag: 'Waarom is mijn netto vakantiegeld relatief laag?', antwoord: 'Vakantiegeld komt bovenop je gewone loon. Daardoor valt het in je hoogste tariefschijf, en daarnaast worden de algemene heffingskorting en de arbeidskorting afgebouwd naarmate je meer verdient. Het belastingpercentage over vakantiegeld ligt daardoor vaak rond de 40%.' },
+  { vraag: 'Rekent deze rekenhulp met pensioenpremie?', antwoord: 'Nee. Pensioenpremie die je werkgever inhoudt, verlaagt het loon waarover je belasting betaalt en dus ook je netto loon. Die premie verschilt per pensioenfonds en ontbreekt hier. Je loonstrook kan daardoor lager uitkomen.' },
+  { vraag: 'Klopt de uitkomst precies met mijn loonstrook?', antwoord: 'Meestal zit je binnen enkele tientallen euro’s per maand. Werkgevers rekenen met de officiële loonbelastingtabellen per periode en houden soms ook pensioenpremie, een eigen bijdrage of andere posten in. Dit is een jaarberekening die gelijk wordt verdeeld over twaalf maanden.' },
+];
+---
+<CalculatorPage
+  slug="netto-salaris-berekenen"
+  title="Netto salaris berekenen 2026 – bruto netto"
+  description="Bereken je netto salaris per maand en per jaar met de tarieven van 2026. Met of zonder loonheffingskorting en vakantiegeld."
+  h1="Netto salaris berekenen"
+  intro="Vul je bruto maandsalaris in. Je ziet direct wat je netto per maand en per jaar overhoudt volgens de belastingregels van 2026."
+  faq={faq}
+  bron={t.box1.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Netto per maand (zonder vakantiegeld)</p>
+      <p class="result-main" id="r-maand">–</p>
+      <p class="result-sub">Netto per jaar <strong id="r-jaar">–</strong> · gemiddeld <span id="r-gem">–</span> per maand</p>
+      <dl>
+        <dt>Bruto per jaar</dt><dd id="r-bruto">–</dd>
+        <dt>Vakantiegeld bruto / netto</dt><dd id="r-vg">–</dd>
+        <dt>Loonheffing per jaar</dt><dd id="r-lh">–</dd>
+        <dt>Algemene heffingskorting</dt><dd id="r-ahk">–</dd>
+        <dt>Arbeidskorting</dt><dd id="r-ak">–</dd>
+        <dt>Gemiddeld / marginaal tarief</dt><dd id="r-tarief">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="bruto" label="Bruto maandsalaris" value="3500" prefix="€" hint="Zonder vakantiegeld, bij een fulltime of parttime baan" />
+      <label class="check"><input type="checkbox" id="lhk" name="lhk" checked /> Loonheffingskorting toepassen (hoofdbaan)</label>
+      <label class="check"><input type="checkbox" id="vg" name="vg" checked /> Vakantiegeld (8%) meerekenen</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo reken je bruto om naar netto</h2>
+    <p>Van je brutoloon houdt je werkgever loonheffing in. Die bestaat uit loonbelasting en premies volksverzekeringen. In 2026 gelden voor wie jonger is dan de AOW-leeftijd drie schijven:</p>
+    <ul>
+      <li>tot {eur(t.box1.schijven[0].tot!)}: {pct(t.box1.schijven[0].tarief)}</li>
+      <li>van {eur(t.box1.schijven[0].tot!)} tot {eur(t.box1.schijven[1].tot!)}: {pct(t.box1.schijven[1].tarief)}</li>
+      <li>boven {eur(t.box1.schijven[1].tot!)}: {pct(t.box1.schijven[2].tarief)}</li>
+    </ul>
+    <p>Van die belasting gaan twee heffingskortingen af. Iedereen heeft recht op de <strong>algemene heffingskorting</strong>: maximaal {eur(t.algemeneHeffingskorting.maximum)}. Boven {eur(t.algemeneHeffingskorting.afbouwVanaf)} daalt die met {pct(t.algemeneHeffingskorting.afbouwPercentage)} van het meerdere. Vanaf {eur(t.algemeneHeffingskorting.nulVanaf)} blijft er niets van over. Wie werkt, krijgt ook de <strong>arbeidskorting</strong>. Die loopt eerst op tot maximaal {eur(t.arbeidskorting.maximum)} en daalt daarna weer bij hogere inkomens. Samen heten deze kortingen bij je werkgever de loonheffingskorting.</p>
+    <p>De rekenhulp telt je jaarsalaris en eventueel je vakantiegeld op. Daarover berekent hij de belasting per schijf en trekt hij de kortingen af. Wat overblijft is je netto jaarinkomen. Het bedrag per maand zonder vakantiegeld is wat je normaal maandelijks op je rekening ziet. Het vakantiegeld komt daar meestal in mei of juni één keer bij.</p>
+
+    <h2>Rekenvoorbeeld: € 3.500 bruto per maand</h2>
+    <div class="voorbeeld">
+      <p>Je verdient € 3.500 bruto per maand en je krijgt 8% vakantiegeld. Je jaarloon is dan € 42.000 + € 3.360 vakantiegeld = <strong>€ 45.360</strong>.</p>
+      <ul>
+        <li>Belasting schijf 1: € 38.883 × 35,75% = € 13.900,67</li>
+        <li>Belasting schijf 2: € 6.477 × 37,56% = € 2.432,76</li>
+        <li>Algemene heffingskorting: € 3.115 − 6,398% × (€ 45.360 − € 29.736) = € 2.115,38</li>
+        <li>Arbeidskorting: € 5.300 + 1,95% × (€ 45.360 − € 25.845) = € 5.680,54</li>
+        <li>Te betalen: € 16.333,43 − € 7.795,92 = <strong>€ 8.537,51</strong></li>
+      </ul>
+      <p>Netto per jaar is dat <strong>€ 36.822,49</strong>. Zonder vakantiegeld houd je per maand ongeveer <strong>€ 2.906,16</strong> over. Van de € 3.360 bruto vakantiegeld blijft netto ongeveer € 1.948 over.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Wanneer wijkt je loonstrook af?</h2>
+    <p>Deze berekening gaat uit van een jaarsalaris dat gelijk over twaalf maanden is verdeeld. Op je echte loonstrook kunnen andere posten staan:</p>
+    <ul>
+      <li><strong>Pensioenpremie.</strong> Het werknemersdeel verlaagt je belastbaar loon. Je netto loon wordt daardoor lager, maar je betaalt ook iets minder belasting.</li>
+      <li><strong>Bijtelling.</strong> Heb je een auto van de zaak, dan telt de bijtelling als loon. Bereken het effect met de rekenhulp <a href="../bijtelling-auto-van-de-zaak/">bijtelling auto van de zaak</a>.</li>
+      <li><strong>Dertiende maand of bonus.</strong> Werkgevers houden daarover het tarief voor bijzondere beloningen in. Dat ligt vaak hoger dan het tarief op je gewone loon.</li>
+      <li><strong>AOW-leeftijd.</strong> Heb je de AOW-leeftijd bereikt, dan gelden een lager tarief in de eerste schijf en lagere kortingen. Deze rekenhulp rekent alleen voor wie jonger is dan de AOW-leeftijd.</li>
+    </ul>
+    <p>Bij je aangifte inkomstenbelasting rekent de Belastingdienst alles definitief af. Heb je meerdere banen of een groot verschil tussen maanden? Dan kun je dus geld terugkrijgen of moeten bijbetalen.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenNettoSalaris } from '../lib/calculators/nettoSalaris';
+  import { formatProcent } from '../lib/calculators/format';
+  import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenNettoSalaris({ brutoMaand: getal('bruto'), loonheffingskorting: vinkje('lhk'), vakantiegeld: vinkje('vg') });
+    zet('r-maand', euro(r.nettoMaand));
+    zet('r-jaar', euro(r.nettoJaar));
+    zet('r-gem', euro(r.nettoMaandGemiddeld));
+    zet('r-bruto', euro(r.belastbaarJaar));
+    zet('r-vg', `${euro(r.vakantiegeldBruto)} / ${euro(r.vakantiegeldNetto)}`);
+    zet('r-lh', euro(r.loonheffingJaar));
+    zet('r-ahk', euro(r.algemeneHeffingskorting));
+    zet('r-ak', euro(r.arbeidskorting));
+    zet('r-tarief', `${formatProcent(r.gemiddeldTarief, 1)} / ${formatProcent(r.marginaalTarief)}`);
+  });
+</script>
