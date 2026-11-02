@@ -5,7 +5,8 @@ import { AstroPWAIntegration as AstroPWA } from '@vite-pwa/astro';
 
 // SITE_URL en BASE_PATH worden in de GitHub Actions-workflow gezet (actions/configure-pages).
 // Lokaal en op Cloudflare Pages/eigen domein: BASE_PATH leeg laten.
-const site = process.env.SITE_URL || 'https://uwrekenhulp.nl';
+// Altijd https: GitHub Pages geeft het eigen domein door als http:// zolang 'Enforce HTTPS' uit staat.
+const site = (process.env.SITE_URL || 'https://uwrekenhulp.nl').replace(/^http:\/\//, 'https://');
 const base = process.env.BASE_PATH || '/';
 
 export default defineConfig({
