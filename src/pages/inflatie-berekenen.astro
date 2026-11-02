@@ -1,0 +1,91 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import { tarieven } from '../data/tarieven';
+import { EERSTE_JAAR, LAATSTE_JAAR } from '../lib/calculators/inflatie';
+import Field from '../components/Field.astro';
+const jaren = Array.from({ length: LAATSTE_JAAR - EERSTE_JAAR + 1 }, (_, i) => EERSTE_JAAR + i);
+const reeks = Object.entries(tarieven.inflatie.jaarmutatie as Record<string, number>).reverse();
+const faq = [
+  { vraag: 'Waar komen de inflatiecijfers vandaan?', antwoord: `Van het CBS: de jaarmutatie van de consumentenprijsindex (CPI). Dat is de gemiddelde prijsstijging van wat huishoudens kopen, vergeleken met het jaar ervoor. De rekenhulp gebruikt de jaarcijfers van ${EERSTE_JAAR + 1} tot en met ${LAATSTE_JAAR}.` },
+  { vraag: 'Wat betekent koopkrachtverlies?', antwoord: 'Hoeveel minder je met hetzelfde bedrag kunt kopen. Zijn de prijzen 25% gestegen, dan koop je met hetzelfde bedrag 1 / 1,25 = 80% van wat je eerst kon kopen. Je koopkrachtverlies is dan 20%.' },
+  { vraag: 'Waarom was de inflatie in 2022 zo hoog?', antwoord: 'In 2022 stegen vooral de energieprijzen sterk, en daarna ook de prijzen van voedsel. Het CBS mat over heel 2022 een inflatie van 10,0%. Dat was de hoogste in vijftig jaar.' },
+  { vraag: 'Kan ik ook een bedrag terugrekenen naar vroeger?', antwoord: 'Ja. Kies een eerder jaar als doeljaar. Je ziet dan wat een bedrag van nu waard was in de prijzen van dat jaar. € 100 in 2025 kwam qua koopkracht ongeveer overeen met € 74 in 2015.' },
+];
+---
+<CalculatorPage
+  slug="inflatie-berekenen"
+  title="Inflatie berekenen – koopkracht met CBS-cijfers"
+  description={`Bereken wat een bedrag uit het verleden nu waard is, of andersom. Met de officiële CBS-inflatiecijfers van ${EERSTE_JAAR + 1} tot en met ${LAATSTE_JAAR}.`}
+  h1="Inflatie berekenen"
+  intro="Vul een bedrag in en kies twee jaartallen. Je ziet wat dat bedrag in het andere jaar waard is, op basis van de inflatiecijfers van het CBS."
+  faq={faq}
+  bron={tarieven.inflatie.bron}
+  bronNaam="CBS, jaarmutatie consumentenprijsindex"
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label" id="r-label">Waarde in {LAATSTE_JAAR}</p>
+      <p class="result-main" id="r-waarde">–</p>
+      <dl>
+        <dt>Prijsstijging in de periode</dt><dd id="r-totaal">–</dd>
+        <dt>Gemiddeld per jaar</dt><dd id="r-gem">–</dd>
+        <dt>Koopkrachtverlies</dt><dd id="r-kk">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="bedrag" label="Bedrag" value="1000" prefix="€" />
+      <div class="row-2">
+        <div class="field">
+          <label for="van">Van jaar</label>
+          <select id="van" name="van">{jaren.map((j) => <option value={j} selected={j === 2015}>{j}</option>)}</select>
+        </div>
+        <div class="field">
+          <label for="naar">Naar jaar</label>
+          <select id="naar" name="naar">{jaren.map((j) => <option value={j} selected={j === LAATSTE_JAAR}>{j}</option>)}</select>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Hoe reken je met inflatie?</h2>
+    <p>Inflatie is de stijging van het algemene prijsniveau. Het CBS meet die met de consumentenprijsindex (CPI). Daarin zit een vaste mand met boodschappen, energie, huur, kleding, vervoer en andere uitgaven van huishoudens. De jaarmutatie is hoeveel duurder die mand gemiddeld is geworden vergeleken met het jaar ervoor.</p>
+    <p>Om een bedrag van het ene naar het andere jaar om te rekenen, vermenigvuldig je de jaarmutaties van alle tussenliggende jaren. Van 2020 naar 2022 is dat bijvoorbeeld 1,027 (2021) × 1,100 (2022) = 1,130. € 100 uit 2020 komt dan overeen met € 113 in 2022. Rekenen tussen twee willekeurige jaren gaat met dezelfde prijsindex. Zo kun je ook terugrekenen: deel door de factor in plaats van te vermenigvuldigen.</p>
+
+    <h2>Rekenvoorbeeld: € 1.000 uit 2015</h2>
+    <div class="voorbeeld">
+      <p>Tussen 2015 en 2025 stegen de prijzen volgens het CBS in totaal met ongeveer <strong>34,5%</strong>. Om hetzelfde te kunnen kopen als met € 1.000 in 2015, had je in 2025 <strong>€ 1.345,17</strong> nodig.</p>
+      <p>Andersom: lag je € 1.000 in 2015 in een la, dan kon je daar in 2025 nog maar zoveel mee kopen als met ongeveer € 743 in 2015. Je verloor ongeveer 25,7% koopkracht. Gemiddeld was de inflatie in die periode 3,0% per jaar.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Inflatie per jaar volgens het CBS</h2>
+    <p>De jaarcijfers die deze rekenhulp gebruikt. Het lopende jaar ontbreekt, omdat het CBS het jaarcijfer pas na afloop van het jaar publiceert.</p>
+    <div class="table-wrap" style="max-height:20rem">
+      <table>
+        <thead><tr><th>Jaar</th><th>Inflatie (CPI)</th></tr></thead>
+        <tbody>{reeks.map(([j, v]) => <tr><td>{j}</td><td>{v.toLocaleString('nl-NL', { minimumFractionDigits: 1 })}%</td></tr>)}</tbody>
+      </table>
+    </div>
+    <h3>Beperkingen</h3>
+    <p>De CPI is een gemiddelde. Je eigen inflatie kan hoger of lager zijn, afhankelijk van waar je je geld aan uitgeeft. Huurders, huiseigenaren met een vaste hypotheek en mensen met een hoge energierekening ervaren prijsstijgingen heel verschillend. Ook loonstijgingen zitten niet in deze berekening. Stijgt je salaris net zo hard als de prijzen, dan blijft je koopkracht gelijk.</p>
+    <p>Wil je zien hoeveel rendement je nodig hebt om de inflatie bij te houden? Gebruik de rekenhulp <a href="../samengestelde-rente/">samengestelde rente</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenInflatie } from '../lib/calculators/inflatie';
+  import { formatProcent } from '../lib/calculators/format';
+  import { $, euro, getal, live, zet } from '../lib/ui';
+  live('f', () => {
+    const van = Number(($('van') as HTMLSelectElement).value);
+    const naar = Number(($('naar') as HTMLSelectElement).value);
+    const r = berekenInflatie(getal('bedrag'), van, naar);
+    zet('r-label', `Waarde van ${euro(r.bedrag)} uit ${van} in ${naar}`);
+    zet('r-waarde', euro(r.gecorrigeerd));
+    zet('r-totaal', formatProcent(r.totaleInflatie, 1));
+    zet('r-gem', formatProcent(r.gemiddeldPerJaar, 1));
+    zet('r-kk', formatProcent(Math.max(0, r.koopkrachtVerlies), 1));
+  });
+</script>
