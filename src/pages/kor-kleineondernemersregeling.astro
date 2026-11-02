@@ -1,0 +1,85 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const k = tarieven.kor;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Wat is de kleineondernemersregeling?', antwoord: `Met de KOR reken je geen btw aan je klanten en doe je geen btw-aangifte. Je mag meedoen als je omzet in Nederland niet hoger is dan ${eur(k.omzetgrens)} per jaar, in het jaar van aanmelden en het jaar ervoor. Daar staat tegenover dat je de btw op je eigen kosten niet meer terugkrijgt.` },
+  { vraag: 'Voor wie is de KOR voordelig?', antwoord: 'Vooral als je veel aan particulieren verkoopt en weinig zakelijke kosten met btw hebt, bijvoorbeeld een coach, fotograaf of bijlesdocent. Particulieren kunnen de btw niet aftrekken, dus jouw prijs kan gelijk blijven terwijl je de btw niet hoeft af te dragen.' },
+  { vraag: 'Wanneer is de KOR niet voordelig?', antwoord: 'Als je vooral zakelijke klanten hebt en grote investeringen doet. Zakelijke klanten kunnen de btw toch aftrekken, dus die betalen jou alleen het bedrag exclusief btw. En de btw op je eigen inkopen, zoals een nieuwe laptop of bus, krijg je niet meer terug.' },
+  { vraag: 'Wat gebeurt er als ik boven € 20.000 kom?', antwoord: 'Dan stopt de KOR direct, vanaf de levering waarmee je de grens overschrijdt. Over die levering reken je al btw. Je moet je meteen afmelden en daarna weer btw-aangifte doen.' },
+];
+---
+<CalculatorPage
+  slug="kor-kleineondernemersregeling"
+  title="Kleineondernemersregeling (KOR) berekenen"
+  description={`Bereken of de kleineondernemersregeling (KOR) je iets oplevert. Omzetgrens ${eur(k.omzetgrens)}. Vergelijk geen btw rekenen met de gemiste aftrek van voorbelasting.`}
+  h1="Kleineondernemersregeling (KOR) berekenen"
+  intro="Vul je omzet, de btw op je kosten en het deel particuliere klanten in. Je ziet direct of de KOR je per jaar iets oplevert."
+  faq={faq}
+  bron={k.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label" id="r-label">Voordeel van de KOR per jaar</p>
+      <p class="result-main" id="r-voordeel">–</p>
+      <p class="result-sub" id="r-mag"></p>
+      <dl>
+        <dt>Btw die je anders zou afdragen</dt><dd id="r-afdragen">–</dd>
+        <dt>Extra opbrengst van particulieren</dt><dd id="r-extra">–</dd>
+        <dt>Btw op kosten die je niet terugkrijgt</dt><dd id="r-gemist">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="omzet" label="Omzet per jaar (excl. btw)" value="18000" prefix="€" />
+      <Field id="vb" label="Btw op je zakelijke kosten per jaar" value="500" prefix="€" hint="De voorbelasting die je nu terugvraagt" />
+      <Field id="part" label="Deel van je omzet aan particulieren" value="100" suffix="%" />
+      <fieldset class="seg">
+        <legend>Btw-tarief op je omzet</legend>
+        <label><input type="radio" name="tarief" value="0.21" checked /><span>21%</span></label>
+        <label><input type="radio" name="tarief" value="0.09" /><span>9%</span></label>
+      </fieldset>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Hoe de KOR je geld oplevert (of kost)</h2>
+    <p>Met de KOR reken je geen btw. Wat dat oplevert, hangt af van je klanten:</p>
+    <ul>
+      <li><strong>Particulieren</strong> letten op de prijs inclusief btw. Vraag je dezelfde prijs, dan houd je het btw-deel zelf. Dat is je voordeel.</li>
+      <li><strong>Zakelijke klanten</strong> trekken de btw toch af. Zij betalen je met KOR gewoon het bedrag exclusief btw, dus daar verdien je niets extra aan.</li>
+    </ul>
+    <p>Daar staat tegenover dat je de <strong>btw op je eigen kosten</strong> niet meer terugkrijgt. Het voordeel is dus: btw over je particuliere omzet min de btw op je kosten. Daarnaast bespaar je de tijd van de btw-aangifte, en zet je geen btw meer op je facturen.</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Coach met particuliere klanten:</strong> € 18.000 omzet, € 500 btw op kosten. Zonder KOR draag je € 3.780 − € 500 = € 3.280 af. Met KOR houd je bij gelijke prijzen € 3.780 en mis je € 500 aftrek. Voordeel: <strong>€ 3.280 per jaar</strong>.</p>
+      <p><strong>Freelancer met alleen zakelijke klanten:</strong> zelfde omzet en kosten. De klanten betalen het bedrag exclusief btw. Je mist alleen de € 500 aftrek. Nadeel: <strong>€ 500 per jaar</strong>.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Voorwaarden en aanmelden</h2>
+    <ul>
+      <li>Je bent in Nederland gevestigd en je omzet in Nederland is in het jaar van aanmelden én het jaar ervoor maximaal {eur(k.omzetgrens)}.</li>
+      <li>Je meldt je minstens 4 weken voor het begin van een kwartaal aan via Mijn Belastingdienst Zakelijk.</li>
+      <li>Investeer je in de jaren na aanmelding, dan kun je de btw daarop niet terugvragen. Plan grote aankopen dus vóór je deelname.</li>
+    </ul>
+    <p>Voor ondernemers die ook in andere EU-landen verkopen, bestaat sinds 2025 de EU-KOR met een eigen grens. Reken btw op je facturen uit met <a href="../btw-berekenen/">btw berekenen</a>, of bekijk je netto inkomen met <a href="../zzp-netto-inkomen-berekenen/">zzp netto inkomen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenKor } from '../lib/calculators/kor';
+  import { euro, getal, live, radio, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenKor({ omzet: getal('omzet'), voorbelasting: getal('vb'), particulierPct: getal('part'), tarief: Number(radio('tarief') || 0.21) });
+    zet('r-label', r.voordeel >= 0 ? 'Voordeel van de KOR per jaar' : 'De KOR kost je per jaar');
+    zet('r-voordeel', euro(Math.abs(r.voordeel)));
+    zet('r-mag', r.magKor ? 'Je omzet valt onder de grens: je mag de KOR gebruiken.' : 'Je omzet is hoger dan € 20.000: je mag de KOR niet gebruiken.');
+    zet('r-afdragen', euro(r.btwAfdragenZonderKor));
+    zet('r-extra', euro(r.extraVanParticulieren));
+    zet('r-gemist', euro(r.gemisteVoorbelasting));
+  });
+</script>

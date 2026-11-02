@@ -1,0 +1,83 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const v = tarieven.vpb, b = tarieven.box2;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 2 }) + '%';
+const faq = [
+  { vraag: 'Hoeveel vennootschapsbelasting betaalt een bv in 2026?', antwoord: `${pct(v.tariefLaag)} over de winst tot en met ${eur(v.grens)} en ${pct(v.tariefHoog)} over het deel daarboven. De tarieven zijn in 2026 niet veranderd ten opzichte van 2025.` },
+  { vraag: 'Wat is de totale belastingdruk als ik alles uitkeer?', antwoord: 'Bij een winst van € 100.000 die je volledig als dividend uitkeert, is de druk ongeveer 39,6%: 19% vennootschapsbelasting en daarna box 2 over het dividend. Met een fiscale partner die meedeelt in de aandelen ligt dat lager, omdat jullie ieder de lage box 2-schijf kunnen gebruiken.' },
+  { vraag: 'Moet ik als DGA ook salaris uit mijn bv halen?', antwoord: 'Ja. Werk je in je eigen bv, dan moet je jezelf een gebruikelijk loon betalen. Dat salaris is voor de bv een kostenpost en voor jou belast in box 1. Deze rekenhulp gaat over de winst die daarna overblijft.' },
+  { vraag: 'Wat is dividendbelasting?', antwoord: 'Bij een dividenduitkering houdt de bv 15% dividendbelasting in en draagt die af. Dat is een voorheffing: je verrekent hem in je aangifte inkomstenbelasting met de box 2-belasting. Per saldo betaal je dus het box 2-tarief.' },
+];
+---
+<CalculatorPage
+  slug="vennootschapsbelasting-berekenen"
+  title="Vennootschapsbelasting en dividend 2026"
+  description="Bereken de vennootschapsbelasting over de winst van je bv in 2026 en wat je als DGA netto overhoudt van het dividend na box 2."
+  h1="Vennootschapsbelasting en netto dividend"
+  intro="Vul de winst van je bv in en hoeveel je wilt uitkeren. Je ziet direct de vennootschapsbelasting, de box 2-belasting en wat je netto overhoudt."
+  faq={faq}
+  bron={v.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Netto dividend</p>
+      <p class="result-main" id="r-netto">–</p>
+      <p class="result-sub">Totale belastingdruk <strong id="r-druk">–</strong></p>
+      <dl>
+        <dt>Vennootschapsbelasting</dt><dd id="r-vpb">–</dd>
+        <dt>Winst na Vpb</dt><dd id="r-na">–</dd>
+        <dt>Dividend</dt><dd id="r-div">–</dd>
+        <dt>Box 2-belasting</dt><dd id="r-box2">–</dd>
+        <dt>Blijft in de bv</dt><dd id="r-blijft">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="winst" label="Winst van de bv vóór belasting" value="100000" prefix="€" hint="Na aftrek van je eigen salaris (gebruikelijk loon)" />
+      <Field id="uitkeer" label="Deel dat je als dividend uitkeert" value="100" suffix="%" />
+      <label class="check"><input type="checkbox" id="partner" name="partner" /> Mijn fiscale partner deelt mee in box 2 (twee lage schijven)</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Twee keer belasting: Vpb en box 2</h2>
+    <p>Winst van een bv wordt in twee stappen belast. Eerst betaalt de bv <strong>vennootschapsbelasting</strong>: {pct(v.tariefLaag)} tot {eur(v.grens)} en {pct(v.tariefHoog)} daarboven. Wat overblijft, kan de bv uitkeren als dividend. Daarover betaal je als aanmerkelijkbelanghouder <strong>box 2-belasting</strong>: {pct(b.tariefLaag)} tot {eur(b.grens)} per persoon en {pct(b.tariefHoog)} daarboven.</p>
+    <p>Je hoeft niet alles uit te keren. Winst die in de bv blijft, wordt pas in box 2 belast als je hem later uitkeert. Zo kun je uitkeringen over jaren spreiden en vaker de lage box 2-schijf gebruiken.</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Alles uitkeren:</strong> je bv maakt € 100.000 winst. De Vpb is 19% = € 19.000. Het dividend is € 81.000. Box 2: € 68.843 × 24,5% + € 12.157 × 31% = € 20.635,21. Netto houd je <strong>€ 60.364,79</strong> over; de totale druk is 39,6%.</p>
+      <p><strong>Met fiscale partner:</strong> jullie kunnen samen € 137.686 in de lage schijf laten vallen. Box 2 is dan 24,5% × € 81.000 = € 19.845, en netto blijft <strong>€ 61.155</strong> over (druk 38,85%).</p>
+      <p><strong>De helft uitkeren:</strong> € 40.500 dividend valt helemaal in de lage schijf: € 9.922,50 box 2, netto € 30.577,50. De andere € 40.500 blijft in de bv.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Waar je verder rekening mee houdt</h2>
+    <ul>
+      <li><strong>Gebruikelijk loon.</strong> Als DGA moet je jezelf een marktconform salaris betalen. Dat verlaagt de winst van de bv en is belast in box 1.</li>
+      <li><strong>Dividendbelasting.</strong> Bij de uitkering houdt de bv 15% in. Die verreken je in je aangifte met de box 2-belasting.</li>
+      <li><strong>Uitkeringstoets.</strong> De bv mag alleen dividend uitkeren als ze daarna haar schulden kan blijven betalen. Het bestuur moet dat vooraf toetsen.</li>
+      <li><strong>Box 3 of box 2?</strong> Geld dat je uit de bv haalt en spaart, valt daarna in box 3.</li>
+    </ul>
+    <p>Alleen de box 2-belasting over een bedrag uitrekenen? Gebruik <a href="../box-2-belasting-berekenen/">box 2-belasting berekenen</a>. Twijfel je tussen eenmanszaak en bv, vergelijk dan met <a href="../zzp-netto-inkomen-berekenen/">zzp netto inkomen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenDga } from '../lib/calculators/dga';
+  import { formatProcent } from '../lib/calculators/format';
+  import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenDga({ winstVoorBelasting: getal('winst'), uitkeerPct: getal('uitkeer', 100), partner: vinkje('partner') });
+    zet('r-netto', euro(r.nettoDividend));
+    zet('r-druk', formatProcent(r.totaleDruk, 1));
+    zet('r-vpb', euro(r.vpb));
+    zet('r-na', euro(r.winstNaVpb));
+    zet('r-div', euro(r.dividend));
+    zet('r-box2', euro(r.box2));
+    zet('r-blijft', euro(r.ingehouden));
+  });
+</script>

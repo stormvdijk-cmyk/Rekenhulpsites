@@ -29,6 +29,7 @@ const faq = [
       <p class="result-main" id="r-maand">–</p>
       <p class="result-sub">Per jaar <strong id="r-jaar">–</strong> · effectief <span id="r-pct">–</span> van de cataloguswaarde</p>
       <dl>
+        <dt id="r-exact-l" hidden>Netto kosten bij jouw salaris</dt><dd id="r-exact" hidden>–</dd>
         <dt>Netto kosten bij {pct(s[0].tarief)}</dt><dd id="r-s1">–</dd>
         <dt>Netto kosten bij {pct(s[1].tarief)}</dt><dd id="r-s2">–</dd>
         <dt>Netto kosten bij {pct(s[2].tarief)}</dt><dd id="r-s3">–</dd>
@@ -43,6 +44,7 @@ const faq = [
         <label><input type="radio" name="type" value="waterstof" /><span>Waterstof / zonnecel</span></label>
       </fieldset>
       <Field id="eigen" label="Eigen bijdrage per maand" value="0" prefix="€" hint="Ingehouden op je nettoloon, voor privégebruik" />
+      <Field id="salaris" label="Je bruto maandsalaris (optioneel)" value="" prefix="€" hint="Voor het exacte netto effect bij jouw inkomen, inclusief de afbouw van je heffingskortingen" />
       <p class="hint">Uitgangspunt: datum eerste toelating in 2026. Wat bij je in welke schijf valt, zie je op je loonstrook of met <a href="../netto-salaris-berekenen/">netto salaris berekenen</a>.</p>
     </div>
   </form>
@@ -73,7 +75,7 @@ const faq = [
 
   <Fragment slot="uitleg-2">
     <h2>Wat de rekenhulp niet meeneemt</h2>
-    <p>De netto kosten per schijf zijn een benadering: bijtelling × schijftarief. De bijtelling verhoogt je inkomen, en daardoor kunnen ook je algemene heffingskorting en arbeidskorting dalen. Zit je in het afbouwgebied van die kortingen, dan valt het netto effect een paar procent hoger uit. Bereken voor een exacte vergelijking je netto salaris één keer met en één keer zonder bijtelling erbij opgeteld.</p>
+    <p>De netto kosten per schijf zijn een benadering: bijtelling × schijftarief. De bijtelling verhoogt je inkomen, en daardoor dalen ook je algemene heffingskorting en arbeidskorting als je in het afbouwgebied zit. <strong>Vul je bruto maandsalaris in</strong>, dan rekent de rekenhulp het exacte effect uit: je netto jaarinkomen met en zonder bijtelling. Bij € 3.500 bruto per maand en een benzineauto van € 45.000 is dat € 414,73 per maand, ongeveer 50% van de bijtelling, in plaats van de € 309,87 die je met alleen het schijftarief zou verwachten.</p>
     <ul>
       <li><strong>Oudere auto’s.</strong> Voor auto’s met een eerste toelating vóór 2026 kunnen andere percentages en grenzen gelden. Het percentage staat vast voor 60 maanden.</li>
       <li><strong>Youngtimers.</strong> Voor auto’s ouder dan 16 jaar geldt 35% van de waarde in het economisch verkeer in plaats van de cataloguswaarde.</li>
@@ -85,6 +87,8 @@ const faq = [
 
 <script>
   import { berekenBijtelling, type Aandrijving } from '../lib/calculators/bijtelling';
+  import { bijtellingNettoEffect } from '../lib/calculators/bijtellingExact';
+  import { $ } from '../lib/ui';
   import { formatProcent } from '../lib/calculators/format';
   import { euro, getal, live, radio, zet } from '../lib/ui';
   live('f', () => {
@@ -93,5 +97,13 @@ const faq = [
     zet('r-jaar', euro(r.bijtellingJaar));
     zet('r-pct', formatProcent(r.effectiefPercentage, 1));
     r.perSchijf.forEach((p, i) => zet(`r-s${i + 1}`, `${euro(p.nettoPerMaand)} p/m`));
+    const salaris = getal('salaris');
+    const toon = salaris > 0;
+    $('r-exact-l').hidden = !toon;
+    $('r-exact').hidden = !toon;
+    if (toon) {
+      const x = bijtellingNettoEffect(salaris, r.bijtellingJaar);
+      zet('r-exact', `${euro(x.perMaand)} p/m (${formatProcent(x.effectiefTarief, 1)})`);
+    }
   });
 </script>

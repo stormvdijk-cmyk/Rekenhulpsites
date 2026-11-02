@@ -1,0 +1,82 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const faq = [
+  { vraag: 'Hoe reken ik netto terug naar bruto?', antwoord: 'Er is geen simpele formule, omdat belasting in schijven werkt en de heffingskortingen afhangen van je inkomen. De rekenhulp probeert daarom bruto bedragen uit tot het netto precies uitkomt op wat je wilt. Dat gaat in een fractie van een seconde.' },
+  { vraag: 'Is het gevonden bruto inclusief vakantiegeld?', antwoord: 'Nee. Het bruto maandsalaris is zonder vakantiegeld, zoals het meestal in een vacature of contract staat. Vink je vakantiegeld aan, dan rekent de rekenhulp ermee dat je daarbovenop nog 8% vakantiegeld krijgt.' },
+  { vraag: 'Waarom stijgt het bruto sneller dan het netto?', antwoord: 'Elke extra euro bruto valt in je hoogste schijf, en tegelijk worden de algemene heffingskorting en de arbeidskorting lager. Bij een modaal inkomen houd je van € 100 extra bruto vaak maar zo\'n € 50 netto over.' },
+  { vraag: 'Kan ik dit gebruiken bij een salarisonderhandeling?', antwoord: 'Ja. Weet je welk netto bedrag je per maand nodig hebt, dan zie je welk brutosalaris je moet vragen. Houd er rekening mee dat pensioenpremie je netto loon verlaagt; vul die in als je hem kent.' },
+];
+---
+<CalculatorPage
+  slug="netto-naar-bruto-berekenen"
+  title="Netto naar bruto berekenen 2026"
+  description="Reken je gewenste netto salaris terug naar bruto per maand, met de belastingregels van 2026. Handig bij een sollicitatie of onderhandeling."
+  h1="Netto naar bruto berekenen"
+  intro="Vul in hoeveel je netto per maand wilt verdienen. Je ziet direct welk bruto maandsalaris daarbij hoort."
+  faq={faq}
+  bron={tarieven.box1.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Bruto per maand nodig</p>
+      <p class="result-main" id="r-bruto">–</p>
+      <p class="result-sub">Bruto per jaar <strong id="r-jaar">–</strong> (incl. vakantiegeld)</p>
+      <dl>
+        <dt>Netto per maand</dt><dd id="r-netto">–</dd>
+        <dt>Loonheffing per jaar</dt><dd id="r-lh">–</dd>
+        <dt>Marginaal tarief</dt><dd id="r-marg">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="netto" label="Gewenst netto per maand" value="3000" prefix="€" hint="Zonder vakantiegeld" />
+      <Field id="pensioen" label="Pensioenpremie per maand (jouw deel)" value="0" prefix="€" />
+      <label class="check"><input type="checkbox" id="lhk" name="lhk" checked /> Loonheffingskorting toepassen (hoofdbaan)</label>
+      <label class="check"><input type="checkbox" id="vg" name="vg" checked /> Ik krijg 8% vakantiegeld</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo werkt terugrekenen</h2>
+    <p>Van bruto naar netto is een vaste berekening: belasting per schijf, min de heffingskortingen. Andersom kan dat niet in één formule, omdat het tarief en de kortingen zelf afhangen van het bruto bedrag. De rekenhulp zoekt daarom het brutosalaris op dat precies jouw netto oplevert. Hij gebruikt dezelfde regels als <a href="../netto-salaris-berekenen/">netto salaris berekenen</a>, zodat beide uitkomsten op elkaar aansluiten.</p>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je wilt <strong>€ 3.000 netto per maand</strong>, met loonheffingskorting en 8% vakantiegeld.</p>
+      <ul>
+        <li>Benodigd bruto maandsalaris: <strong>€ 3.661,80</strong></li>
+        <li>Bruto per jaar inclusief vakantiegeld: € 47.456,93</li>
+        <li>Loonheffing per jaar: € 9.576,23</li>
+      </ul>
+      <p>Ter vergelijking: voor <strong>€ 2.000 netto</strong> heb je ongeveer € 2.064,47 bruto nodig. Bij lagere inkomens ligt netto dicht bij bruto, omdat de heffingskortingen dan bijna alle belasting wegstrepen.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Wat het bruto bedrag kan veranderen</h2>
+    <ul>
+      <li><strong>Pensioenpremie.</strong> Houdt je werkgever premie in, dan heb je meer bruto nodig voor hetzelfde netto.</li>
+      <li><strong>Tweede baan.</strong> Zonder loonheffingskorting houdt je werkgever meer in. Dan is het benodigde bruto hoger.</li>
+      <li><strong>Bijtelling of reiskosten.</strong> Een auto van de zaak verlaagt je netto; een onbelaste reiskostenvergoeding verhoogt het. Die zitten hier niet in.</li>
+      <li><strong>AOW-leeftijd.</strong> Daarvoor gelden andere tarieven; gebruik dan netto salaris berekenen met de AOW-optie.</li>
+    </ul>
+    <h3>Bruto per jaar of per maand?</h3>
+    <p>Vacatures noemen soms een jaarsalaris, soms een maandsalaris. Een bruto jaarsalaris is meestal inclusief vakantiegeld en soms ook een dertiende maand. Deel je een jaarsalaris inclusief 8% vakantiegeld door 12,96, dan heb je het maandsalaris zonder vakantiegeld. Vraag bij twijfel altijd na wat er in het genoemde bedrag zit.</p>
+    <p>Wil je een uurloon? Reken het bruto maandsalaris om met <a href="../bruto-netto-uurloon/">uurloon omrekenen</a>. Twijfel je tussen een baan en zzp? Vergelijk het met <a href="../loondienst-of-zzp/">loondienst of zzp</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { nettoNaarBruto } from '../lib/calculators/nettoNaarBruto';
+  import { formatProcent } from '../lib/calculators/format';
+  import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const r = nettoNaarBruto({ nettoMaand: getal('netto'), loonheffingskorting: vinkje('lhk'), vakantiegeld: vinkje('vg'), pensioenpremieMaand: getal('pensioen') });
+    zet('r-bruto', euro(r.gevondenBruto));
+    zet('r-jaar', euro(r.belastbaarJaar + r.pensioenpremieJaar));
+    zet('r-netto', euro(r.nettoMaand));
+    zet('r-lh', euro(r.loonheffingJaar));
+    zet('r-marg', formatProcent(r.marginaalTarief));
+  });
+</script>

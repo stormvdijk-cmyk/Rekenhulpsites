@@ -59,3 +59,10 @@ Datum: 2 november 2026.
 - **Zeven onderwerpen** in plaats van vijf categorieën: Werk & salaris, Belastingen, Wonen, Sparen & lenen, Ondernemen, Schenken & erven, Handig rekenen. Breadcrumbs volgen automatisch.
 - **Opbouw:** zoekveld met snelknoppen per onderwerp, een compacte rij "Meest gebruikt" (op mobiel twee per rij, alleen titels), en per onderwerp een vak met icoon, uitleg en een lijst. Op desktop in twee kolommen (CSS columns), zodat er geen lege gaten ontstaan.
 - Binnen een onderwerp staan de meest gezochte rekenhulpen eerst (lijst VOORRANG in index.astro).
+
+## Fiscaal fase 3 (november 2026)
+- **Zonder nieuwe tarieven:** netto naar bruto (bisectie op de netto-salarisberekening), bonus/13e maand (verschil netto jaarinkomen met en zonder bonus), loondienst vs zzp (break-even tarief via `benodigdeWinst`), en het exacte netto effect van de bijtelling op de bijtellingpagina (optioneel salaris).
+- **Transitievergoeding:** 1/3 maandsalaris per dienstjaar, maanden naar rato; maximum € 102.000 of één jaarsalaris (Rijksoverheid/UWV 2026). Variabele beloning en inzetbaarheidskosten niet berekend.
+- **Vpb 2026** 19% tot € 200.000 / 25,8%; **box 2** 24,5% tot € 68.843 per persoon / 31% (Belastingdienst). Box 2 wordt afgerond op centen voordat het netto dividend wordt berekend. De voorgestelde multiplier voor lucratief belang is niet meegenomen.
+- **KOR:** omzetgrens € 20.000. Vereenvoudigd model: particulieren betalen dezelfde prijs incl. btw, zakelijke klanten de prijs excl. btw.
+- **Niet gebouwd (cijfers niet bevestigd):** AOW-bedragen en AOW-leeftijd na 2028, drempels voor giften en zorgkosten, lijfrente-jaarruimte, werkgeverspremies.

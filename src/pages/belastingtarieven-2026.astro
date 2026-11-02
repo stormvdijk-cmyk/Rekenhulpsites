@@ -70,8 +70,15 @@ const link = (slug: string, tekst: string) => `<a href="${url(slug + '/')}">${te
     </tbody></table></div>
     <p class="hint">Bronnen: <a href={t.ondernemer.bron} rel="noopener" target="_blank">zelfstandigenaftrek</a>, <a href={t.ondernemer.bronMkb} rel="noopener" target="_blank">mkb-winstvrijstelling</a>, <a href={t.ondernemer.bronZvw} rel="noopener" target="_blank">bijdrage Zvw</a>. Reken het uit: <Fragment set:html={link('zzp-netto-inkomen-berekenen', 'zzp netto inkomen')} />.</p>
 
+    <h2 id="bv">Bv en aanmerkelijk belang</h2>
+    <div class="table-wrap"><table><tbody>
+      <tr><td>Vennootschapsbelasting</td><td>{pct(t.vpb.tariefLaag)} tot {eur(t.vpb.grens)}, daarboven {pct(t.vpb.tariefHoog)}</td></tr>
+      <tr><td>Box 2 (aanmerkelijk belang)</td><td>{pct(t.box2.tariefLaag)} tot {eur(t.box2.grens)} per persoon, daarboven {pct(t.box2.tariefHoog)}</td></tr>
+    </tbody></table></div>
+    <p class="hint">Bronnen: <a href={t.vpb.bron} rel="noopener" target="_blank">vennootschapsbelasting</a>, <a href={t.box2.bron} rel="noopener" target="_blank">box 2</a>. Reken het uit: <Fragment set:html={link('vennootschapsbelasting-berekenen', 'vennootschapsbelasting en dividend')} />.</p>
+
     <h2 id="btw">Btw</h2>
-    <p>Algemeen tarief {pct(t.btw.algemeen)}, verlaagd tarief {pct(t.btw.verlaagd)}, nultarief 0%. Bron: <a href={t.btw.bron} rel="noopener" target="_blank">Belastingdienst, btw-tarieven</a>. Reken het uit: <Fragment set:html={link('btw-berekenen', 'btw berekenen')} />.</p>
+    <p>Algemeen tarief {pct(t.btw.algemeen)}, verlaagd tarief {pct(t.btw.verlaagd)}, nultarief 0%. Kleineondernemersregeling (KOR): omzet tot {eur(t.kor.omzetgrens)}. Bronnen: <a href={t.btw.bron} rel="noopener" target="_blank">btw-tarieven</a>, <a href={t.kor.bron} rel="noopener" target="_blank">KOR</a>. Reken het uit: <Fragment set:html={link('btw-berekenen', 'btw berekenen')} />, <Fragment set:html={link('kor-kleineondernemersregeling', 'KOR')} />.</p>
 
     <h2 id="bijtelling">Bijtelling auto van de zaak</h2>
     <p>{pct(t.bijtelling.standaard)} van de cataloguswaarde. Volledig elektrisch: {pct(t.bijtelling.elektrischVerlaagd)} tot {eur(t.bijtelling.elektrischGrens)}, daarboven {pct(t.bijtelling.standaard)}. Waterstof en zonnecel: {pct(t.bijtelling.waterstofZonnecel)}. Geldt voor een datum eerste toelating in {TARIEF_JAAR}. Bron: <a href={t.bijtelling.bron} rel="noopener" target="_blank">Belastingdienst, bijtelling 2026</a>.</p>
@@ -99,6 +106,7 @@ const link = (slug: string, tekst: string) => `<a href="${url(slug + '/')}">${te
     <p class="hint">Bronnen: <a href={t.schenkErf.bronTarievenSchenk} rel="noopener" target="_blank">schenkbelasting</a>, <a href={t.schenkErf.bronVrijstellingErf} rel="noopener" target="_blank">erfbelasting</a>.</p>
 
     <h2 id="werk">Werk en reizen</h2>
+    <p>Minimumloon (21+): € {t.minimumloon.perUur[1].bedrag.toLocaleString('nl-NL', { minimumFractionDigits: 2 })} per uur vanaf 1 juli 2026 (daarvoor € {t.minimumloon.perUur[0].bedrag.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}). WW: maximumdagloon € {t.ww.maximumDagloon.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}. Transitievergoeding: maximaal {eur(t.transitievergoeding.maximum)} of één jaarsalaris. Combinatiekorting: maximaal {eur(t.iack.maximum)}.</p>
     <p>Minimaal vakantiegeld: {pct(t.vakantiegeld.minimumPercentage)} van het brutoloon. Onbelaste reiskostenvergoeding: € {t.reiskosten.onbelastPerKm.toLocaleString('nl-NL', { minimumFractionDigits: 2 })} per kilometer. Bronnen: <a href={t.vakantiegeld.bron} rel="noopener" target="_blank">vakantiegeld</a>, <a href={t.reiskosten.bron} rel="noopener" target="_blank">reiskosten</a>.</p>
 
     <p class="disclaimer">We zoeken alle tarieven op bij officiële bronnen en werken ze elk jaar bij. Toch kunnen er tussentijds wijzigingen zijn. Controleer bij belangrijke beslissingen de actuele cijfers bij de Belastingdienst. Zie ook de <a href={url('disclaimer/')}>disclaimer</a>.</p>
