@@ -1,0 +1,88 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const m = tarieven.minimumloon;
+const eur2 = (n: number) => '€ ' + n.toLocaleString('nl-NL', { minimumFractionDigits: 2 });
+const [h1, h2] = m.perUur;
+const faq = [
+  { vraag: 'Hoe hoog is het minimumloon in 2026?', antwoord: `Voor werknemers van 21 jaar en ouder is het wettelijk minimumloon ${eur2(h2.bedrag)} bruto per uur vanaf 1 juli 2026. Van januari tot en met juni 2026 was het ${eur2(h1.bedrag)}. Het minimumloon wordt elk halfjaar aangepast, op 1 januari en 1 juli.` },
+  { vraag: 'Zit vakantiegeld in het minimumloon?', antwoord: 'Nee. Het minimumloon is exclusief vakantiegeld. Daarbovenop krijg je minstens 8% vakantiegeld over je brutoloon. Ook toeslagen voor overwerk of onregelmatige uren komen erbovenop als je cao dat regelt.' },
+  { vraag: 'Geldt het minimumloon per uur voor iedereen?', antwoord: 'Sinds 2024 geldt in Nederland één minimumloon per uur, ongeacht hoeveel uur je per week werkt. Voor werknemers jonger dan 21 jaar geldt een lager jeugdminimumloon, een percentage van het volwassen minimumloon. Kijk voor die bedragen op rijksoverheid.nl.' },
+  { vraag: 'Wat als mijn werkgever minder betaalt?', antwoord: 'Dat mag niet. Krijg je minder dan het minimumloon, bespreek het dan eerst met je werkgever. Lost dat niets op, dan kun je een melding doen bij de Nederlandse Arbeidsinspectie.' },
+];
+---
+<CalculatorPage
+  slug="minimumloon-berekenen"
+  title="Minimumloon 2026 per uur, maand en jaar"
+  description="Het minimumloon in 2026: € 14,99 per uur vanaf 1 juli (21+). Bereken je minimumloon per week, maand en jaar bij jouw aantal uren."
+  h1="Minimumloon 2026 berekenen"
+  intro="Vul in hoeveel uur je per week werkt. Je ziet direct het minimumloon per week, maand en jaar voor werknemers van 21 jaar en ouder."
+  faq={faq}
+  bron={m.bron}
+  bronNaam="Rijksoverheid"
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Minimumloon per maand (bruto)</p>
+      <p class="result-main" id="r-maand">–</p>
+      <p class="result-sub">Uurloon <strong id="r-uur">–</strong></p>
+      <dl>
+        <dt>Per week</dt><dd id="r-week">–</dd>
+        <dt>Per jaar</dt><dd id="r-jaar">–</dd>
+        <dt>Per jaar met 8% vakantiegeld</dt><dd id="r-jaarvg">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="uren" label="Uren per week" value="40" suffix="uur" />
+      <fieldset class="seg">
+        <legend>Periode</legend>
+        <label><input type="radio" name="periode" value="2026-01-01" /><span>jan – jun 2026</span></label>
+        <label><input type="radio" name="periode" value="2026-07-01" checked /><span>vanaf 1 jul 2026</span></label>
+      </fieldset>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Het minimumloon in 2026</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Periode</th><th>Per uur (21+)</th></tr></thead>
+        <tbody>
+          <tr><td>1 januari – 30 juni 2026</td><td>{eur2(h1.bedrag)}</td></tr>
+          <tr><td>vanaf 1 juli 2026</td><td>{eur2(h2.bedrag)}</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Het minimumloon geldt per uur. Je maandloon hangt dus af van het aantal uren dat je werkt: uurloon × uren per week × 52 / 12. De factor 52 / 12 = 4,33 is het gemiddelde aantal weken per maand.</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Fulltime, 40 uur:</strong> € 14,99 × 40 = € 599,60 per week. Per maand is dat € 599,60 × 52 / 12 = <strong>€ 2.598,27</strong>, per jaar € 31.179,20.</p>
+      <p><strong>36 uur:</strong> € 14,99 × 36 × 52 / 12 = <strong>€ 2.338,44</strong> per maand.</p>
+      <p><strong>Parttime, 24 uur:</strong> € 14,99 × 24 × 52 / 12 = <strong>€ 1.558,96</strong> per maand.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Minimumloon en uitkeringen</h2>
+    <p>Veel uitkeringen zijn gekoppeld aan het minimumloon, zoals de AOW, de bijstand en de Toeslagenwet. Stijgt het minimumloon, dan stijgen die uitkeringen mee. Ook het drempelinkomen voor de toeslagen is van het minimumloon afgeleid.</p>
+    <p>Werk je voor het minimumloon, dan betaal je weinig loonheffing. De algemene heffingskorting en de arbeidskorting zijn bij dit inkomen bijna maximaal. Bereken wat je netto overhoudt met <a href="../netto-salaris-berekenen/">netto salaris berekenen</a>, of reken een ander uurloon om met <a href="../bruto-netto-uurloon/">uurloon omrekenen</a>.</p>
+    <h3>Waarom er geen vast minimummaandloon meer is</h3>
+    <p>Tot 2024 stond het minimumloon vast per maand, en hing het uurloon af van de lengte van je werkweek. Wie 40 uur werkte, verdiende per uur minder dan iemand met een werkweek van 36 uur. Sinds 1 januari 2024 is dat omgedraaid: het uurloon staat vast, en je maandloon volgt uit het aantal uren. Werk je 36 uur, dan verdien je per maand dus minder dan met 40 uur, maar per uur precies hetzelfde.</p>
+    <p>Deze rekenhulp geldt voor werknemers van 21 jaar en ouder. Voor jongere werknemers gelden lagere jeugdminimumlonen.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenMinimumloon } from '../lib/calculators/minimumloon';
+  import { euro, getal, live, radio, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenMinimumloon(getal('uren'), radio('periode') || '2026-07-01');
+    zet('r-maand', euro(r.maand));
+    zet('r-uur', euro(r.uurloon));
+    zet('r-week', euro(r.week));
+    zet('r-jaar', euro(r.jaar));
+    zet('r-jaarvg', euro(r.jaarMetVakantiegeld));
+  });
+</script>

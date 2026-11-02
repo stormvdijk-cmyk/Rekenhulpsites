@@ -1,0 +1,74 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+const faq = [
+  { vraag: 'Hoeveel moet ik per maand sparen?', antwoord: 'Deel het bedrag dat je nog nodig hebt door het aantal maanden tot je doel. Spaar je met rente, dan heb je iets minder nodig, omdat de rente ook meetelt. Deze rekenhulp rekent dat precies uit.' },
+  { vraag: 'Hoeveel buffer heb ik nodig?', antwoord: 'Een veelgebruikte vuistregel is drie tot zes maanden aan vaste lasten. Het Nibud heeft een rekenhulp voor een buffer die past bij jouw situatie. Spaar je buffer apart, op een rekening die je direct kunt opnemen.' },
+  { vraag: 'Moet ik belasting betalen over mijn spaargeld?', antwoord: 'Alleen als je vermogen boven het heffingsvrij vermogen van box 3 uitkomt. In 2026 is dat € 59.357 per persoon. Reken het uit met de rekenhulp box 3-belasting.' },
+  { vraag: 'Waarom houdt deze rekenhulp geen rekening met inflatie?', antwoord: 'Omdat je doelbedrag meestal een bedrag in euro\'s van later is. Spaar je voor iets over vijf jaar, houd er dan rekening mee dat het door inflatie duurder kan worden. Tel bijvoorbeeld 2 tot 3% per jaar bij je doelbedrag op.' },
+];
+---
+<CalculatorPage
+  slug="spaardoel-berekenen"
+  title="Spaardoel berekenen: hoeveel per maand sparen?"
+  description="Bereken hoeveel je per maand moet sparen om je spaardoel te halen, met of zonder rente en startbedrag. Voor een huis, auto, buffer of vakantie."
+  h1="Spaardoel berekenen"
+  intro="Vul in hoeveel je wilt sparen en binnen hoeveel maanden. Je ziet direct hoeveel je per maand opzij moet zetten."
+  faq={faq}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Sparen per maand</p>
+      <p class="result-main" id="r-pm">–</p>
+      <p class="result-sub" id="r-sub"></p>
+      <dl>
+        <dt>Zelf ingelegd</dt><dd id="r-inleg">–</dd>
+        <dt>Rente</dt><dd id="r-rente">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="doel" label="Spaardoel" value="10000" prefix="€" />
+      <div class="row-2">
+        <Field id="start" label="Al gespaard" value="0" prefix="€" />
+        <Field id="maanden" label="Binnen" value="24" suffix="mnd" inputmode="numeric" />
+      </div>
+      <Field id="rente" label="Spaarrente per jaar" value="2" suffix="%" />
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo reken je je spaardoel uit</h2>
+    <p>Zonder rente is het eenvoudig: (doelbedrag − wat je al hebt) / aantal maanden. Met rente groeit je spaargeld onderweg, en heb je per maand iets minder nodig. De rekenhulp gaat ervan uit dat je aan het eind van elke maand inlegt, en rekent de jaarrente om naar een maandrente. Na twaalf maanden komt dat precies uit op het opgegeven jaarpercentage.</p>
+    <p>Heb je al een startbedrag? Dan groeit dat met rente mee. Is het startbedrag met rente al genoeg, dan hoef je niets meer in te leggen.</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Zonder rente:</strong> je wilt in 24 maanden € 10.000 sparen. Dat is € 10.000 / 24 = <strong>€ 416,67</strong> per maand.</p>
+      <p><strong>Met 5% rente:</strong> hetzelfde doel kost dan <strong>€ 397,48</strong> per maand. Je legt € 9.539,41 in; de rest is rente.</p>
+      <p><strong>Met een startbedrag:</strong> heb je al € 2.000 en krijg je 2% rente, dan heb je voor € 10.000 in 24 maanden <strong>€ 323,74</strong> per maand nodig.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Tips om je doel te halen</h2>
+    <ul>
+      <li><strong>Automatisch sparen.</strong> Zet direct na je salaris een vaste overboeking naar je spaarrekening. Wat je niet ziet, geef je niet uit.</li>
+      <li><strong>Aparte rekeningen.</strong> Veel banken laten je meerdere spaarrekeningen of potjes maken, bijvoorbeeld voor je buffer, je vakantie en een nieuwe auto.</li>
+      <li><strong>Lange termijn.</strong> Spaar je voor iets dat pas over meer dan tien jaar komt, zoals je pensioen, dan kan beleggen meer opleveren dan sparen, maar met meer risico. Zie <a href="../samengestelde-rente/">samengestelde rente</a>.</li>
+      <li><strong>Inflatie.</strong> Een doel over een paar jaar kost dan waarschijnlijk meer dan nu. Bekijk het effect met <a href="../inflatie-berekenen/">inflatie berekenen</a>.</li>
+    </ul>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenSpaardoel } from '../lib/calculators/spaardoel';
+  import { euro, getal, live, zet } from '../lib/ui';
+  live('f', () => {
+    const maanden = Math.min(600, Math.max(1, Math.round(getal('maanden', 12))));
+    const r = berekenSpaardoel({ doel: getal('doel'), startbedrag: getal('start'), rente: getal('rente'), maanden });
+    zet('r-pm', euro(r.perMaand));
+    zet('r-sub', r.haalbaarZonderInleg ? 'Je startbedrag groeit met rente al tot je doel.' : `${maanden} maanden lang`);
+    zet('r-inleg', euro(r.totaalInleg));
+    zet('r-rente', euro(r.renteOpbrengst));
+  });
+</script>
