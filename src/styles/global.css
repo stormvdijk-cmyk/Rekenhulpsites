@@ -148,14 +148,14 @@ thead th { position: sticky; top: 0; background: var(--surface-2); }
 .search { margin: var(--space-4) 0 var(--space-5); }
 .cat h2 { font-size: 1.15rem; margin-top: var(--space-5); }
 .no-results { color: var(--text-muted); }
-.chart { width: 100%; height: auto; display: block; margin: var(--space-3) 0; }
+.chart { width: 100%; height: 240px; display: block; margin: var(--space-3) 0; }
 .legend { display: flex; gap: var(--space-4); font-size: 0.85rem; color: var(--text-muted); flex-wrap: wrap; }
 .legend i { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 2px; margin-right: 0.35rem; vertical-align: -0.05rem; }
 .visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .input-wrap:has(.suffix) input { padding-right: 3.25rem; }
 .chart-wrap { position: relative; }
 .chart .grid { stroke: var(--border); stroke-width: 1; }
-.chart .axis { fill: var(--text-muted); font-size: 11px; font-family: var(--font); }
+.chart .axis { fill: var(--text-muted); font-size: 12px; font-family: var(--font); }
 .chart .inleg { fill: var(--chart-1); }
 .chart .rente { fill: var(--chart-2); }
 .chart .hit { fill: transparent; cursor: crosshair; }

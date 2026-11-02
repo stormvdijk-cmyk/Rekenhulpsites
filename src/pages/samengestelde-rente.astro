@@ -25,7 +25,7 @@ const faq = [
         <dt>Rente / rendement</dt><dd id="r-rente">–</dd>
       </dl>
       <div class="chart-wrap" id="chart-wrap">
-        <svg class="chart" id="chart" viewBox="0 0 640 260" role="img" aria-labelledby="chart-titel"><title id="chart-titel">Groei van het vermogen per jaar</title></svg>
+        <svg class="chart" id="chart" viewBox="0 0 640 240" width="100%" height="240" role="img" aria-labelledby="chart-titel"><title id="chart-titel">Groei van het vermogen per jaar</title></svg>
         <div class="tip" id="tip" hidden></div>
       </div>
       <div class="legend" aria-hidden="true"><span><i style="background:var(--chart-1)"></i>Ingelegd</span><span><i style="background:var(--chart-2)"></i>Rente</span></div>
@@ -81,7 +81,8 @@ const faq = [
   import { $, euro, getal, live, zet } from '../lib/ui';
 
   const NS = 'http://www.w3.org/2000/svg';
-  const W = 640, H = 260, L = 56, R = 8, T = 10, B = 26;
+  let W = 640;
+  const H = 240, L = 58, R = 8, T = 10, B = 26;
   const kort = (n: number) => (n >= 1e6 ? `€ ${(n / 1e6).toLocaleString('nl-NL', { maximumFractionDigits: 1 })} mln` : n >= 1000 ? `€ ${Math.round(n / 1000)}k` : `€ ${Math.round(n)}`);
   function el(tag: string, attrs: Record<string, string | number>, parent: Element) {
     const e = document.createElementNS(NS, tag);
@@ -98,6 +99,9 @@ const faq = [
     const svg = $('chart');
     svg.querySelectorAll(':scope > :not(title)').forEach((n) => n.remove());
     if (!data.length) return;
+    // Teken op de werkelijke breedte, zodat tekst niet meeschaalt
+    W = Math.max(280, Math.round($('chart-wrap').clientWidth || 640));
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     const max = nice(Math.max(...data.map((d) => d.saldo)));
     const ph = H - T - B, pw = W - L - R;
     const y = (v: number) => T + ph - (v / max) * ph;
@@ -130,7 +134,7 @@ const faq = [
         tip.hidden = false;
         tip.innerHTML = `<strong>Jaar ${d.jaar}</strong><br>Saldo ${formatEuro(d.saldo, false)}<br>Ingelegd ${formatEuro(d.ingelegd, false)}<br>Rente ${formatEuro(d.rente, false)}`;
         const box = wrap.getBoundingClientRect();
-        const sx = box.width / W;
+        const sx = 1; void box;
         const left = Math.min(Math.max((x + bw / 2) * sx, 70), box.width - 70);
         tip.style.left = `${left}px`;
         tip.style.top = `${Math.max(y(d.saldo) * sx - 6, 60)}px`;
@@ -147,6 +151,10 @@ const faq = [
     zet('r-inleg', euro(r.totaalIngelegd));
     zet('r-rente', euro(r.totaleRente));
     $('tabel').innerHTML = r.perJaar.map((j) => `<tr><td>${j.jaar}</td><td>${euro(j.ingelegd)}</td><td>${euro(j.rente)}</td><td>${euro(j.saldo)}</td></tr>`).join('');
+    laatste = r.perJaar;
     teken(r.perJaar);
   });
+  let laatste: RenteJaar[] = [];
+  let rt: number | undefined;
+  addEventListener('resize', () => { clearTimeout(rt); rt = window.setTimeout(() => teken(laatste), 150); });
 </script>
