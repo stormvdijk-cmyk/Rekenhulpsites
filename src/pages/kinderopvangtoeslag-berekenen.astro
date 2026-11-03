@@ -1,0 +1,128 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const o = tarieven.kinderopvangtoeslag;
+const eur2 = (n: number) => '€ ' + n.toLocaleString('nl-NL', { minimumFractionDigits: 2 });
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const pc = (n: number) => (n * 100).toLocaleString('nl-NL', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
+const kinderen = [
+  { n: 1, soort: 'dagopvang', uren: 122, tarief: '10,50', aan: true },
+  { n: 2, soort: 'bso', uren: 65, tarief: '9,98', aan: false },
+  { n: 3, soort: 'bso', uren: 40, tarief: '9,98', aan: false },
+];
+const kort = o.tabel.filter((_, i) => i % 8 === 0 || i === o.tabel.length - 1);
+const faq = [
+  { vraag: 'Wie krijgt kinderopvangtoeslag?', antwoord: 'Ouders die werken, studeren of een traject naar werk volgen, met een kind dat naar geregistreerde kinderopvang gaat: dagopvang, buitenschoolse opvang (bso) of een gastouder. Heb je een toeslagpartner, dan moet die ook werken of studeren.' },
+  { vraag: 'Wat als mijn opvang duurder is dan het maximum?', antwoord: `De toeslag gaat uit van maximaal ${eur2(o.maxUurprijsDagopvang)} per uur voor dagopvang, ${eur2(o.maxUurprijsBso)} voor bso en ${eur2(o.maxUurprijsGastouder)} voor een gastouder. Betaal je meer, dan betaal je het verschil volledig zelf.` },
+  { vraag: 'Waarom krijg ik voor mijn tweede kind een hoger percentage?', antwoord: 'Het kind met de meeste opvanguren telt als eerste kind. Voor de andere kinderen geldt bij hogere inkomens een hoger vergoedingspercentage, omdat de kosten met meerdere kinderen snel oplopen. Tot een inkomen van ongeveer € 56.400 krijg je voor alle kinderen 96%.' },
+  { vraag: 'Hoeveel uren worden vergoed?', antwoord: `Maximaal ${o.maxUrenPerMaand} uur per kind per maand, en alleen in de maanden dat je werkt. Werken jullie allebei, dan telt het aantal gewerkte maanden van de ouder die het minst werkt.` },
+];
+---
+<CalculatorPage
+  slug="kinderopvangtoeslag-berekenen"
+  title="Kinderopvangtoeslag berekenen 2026"
+  description="Bereken je kinderopvangtoeslag in 2026 voor dagopvang, bso of gastouder, met de officiële tabel en maximum uurprijzen van de Belastingdienst."
+  h1="Kinderopvangtoeslag berekenen"
+  intro="Vul per kind het soort opvang, de uren per maand en het uurtarief in, plus jullie inkomen. Je ziet direct je kinderopvangtoeslag en je eigen bijdrage."
+  faq={faq}
+  bron={o.bron}
+  bronNaam="Belastingdienst, berekening kinderopvangtoeslag 2026"
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Kinderopvangtoeslag per maand</p>
+      <p class="result-main" id="r-maand">–</p>
+      <p class="result-sub">Opvangkosten <strong id="r-kosten">–</strong> · eigen bijdrage <strong id="r-eigen">–</strong></p>
+      <dl id="r-kinderen"></dl>
+    </div>
+    <div class="form">
+      <Field id="ink" label="Gezamenlijk toetsingsinkomen per jaar" value="60000" prefix="€" />
+      {kinderen.map((k) => (
+        <fieldset class="kot-kind" style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem;display:grid;gap:0.75rem">
+          <legend style="font-weight:600;padding:0 0.25rem">
+            {k.n === 1 ? 'Kind 1' : <label class="check" style="display:inline-flex"><input type="checkbox" id={`aan${k.n}`} name={`aan${k.n}`} checked={k.aan} /> Kind {k.n}</label>}
+          </legend>
+          <div class="field">
+            <label for={`soort${k.n}`}>Soort opvang</label>
+            <select id={`soort${k.n}`} name={`soort${k.n}`}>
+              <option value="dagopvang" selected={k.soort === 'dagopvang'}>Dagopvang (kinderdagverblijf)</option>
+              <option value="bso" selected={k.soort === 'bso'}>Buitenschoolse opvang (bso)</option>
+              <option value="gastouder">Gastouder</option>
+            </select>
+          </div>
+          <div class="row-2">
+            <Field id={`uren${k.n}`} label="Uren per maand" value={k.uren} inputmode="numeric" />
+            <Field id={`tarief${k.n}`} label="Uurtarief" value={k.tarief} prefix="€" />
+          </div>
+        </fieldset>
+      ))}
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo wordt de kinderopvangtoeslag berekend</h2>
+    <ol>
+      <li><strong>Uurprijs:</strong> je echte uurtarief, maar niet meer dan het maximum: {eur2(o.maxUurprijsDagopvang)} (dagopvang), {eur2(o.maxUurprijsBso)} (bso) of {eur2(o.maxUurprijsGastouder)} (gastouder).</li>
+      <li><strong>Uren:</strong> de uren uit je contract, maximaal {o.maxUrenPerMaand} per kind per maand.</li>
+      <li><strong>Kosten:</strong> uren × uurprijs, per kind.</li>
+      <li><strong>Percentage:</strong> afhankelijk van jullie gezamenlijke toetsingsinkomen. Het kind met de meeste uren is het eerste kind; voor de andere kinderen geldt een apart percentage.</li>
+    </ol>
+    <div class="table-wrap" style="max-height:20rem">
+      <table>
+        <thead><tr><th>Inkomen vanaf</th><th>1e kind</th><th>2e en volgende</th></tr></thead>
+        <tbody>{kort.map((r) => <tr><td>{eur(r.van)}</td><td>{pc(r.eerste)}</td><td>{pc(r.volgende)}</td></tr>)}</tbody>
+      </table>
+    </div>
+    <p class="hint">Een selectie uit de officiële tabel met {o.tabel.length} inkomensgroepen; de rekenhulp gebruikt de volledige tabel.</p>
+
+    <h2>Rekenvoorbeelden van de Belastingdienst</h2>
+    <div class="voorbeeld">
+      <p><strong>Eén kind op de dagopvang:</strong> 122 uur × € 10,50 = € 1.281 per maand. Bij een gezamenlijk inkomen van € 60.000 is het percentage 93,9%. Kinderopvangtoeslag: <strong>€ 1.202 per maand</strong>.</p>
+      <p><strong>Twee kinderen, inkomen € 120.000:</strong> het jongste kind gaat 87 uur naar de dagopvang (€ 12,45, maximum € 11,23) en is het eerste kind: 60,6% van € 977,01 = € 592,07. Het oudste gaat 65 uur naar de bso (€ 10,10, maximum € 9,98): 87,9% van € 648,70 = € 570,21. Totaal <strong>€ 1.162 per maand</strong>.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Waar je op let</h2>
+    <ul>
+      <li><strong>Geregistreerde opvang.</strong> De opvang moet in het Landelijk Register Kinderopvang staan. Vraag het registratienummer na.</li>
+      <li><strong>Gewerkte uren.</strong> Er is geen koppeling meer met het aantal uren dat je werkt, wel met de maanden waarin je werkt.</li>
+      <li><strong>Voorschot.</strong> Je krijgt een voorschot per maand. Geef wijzigingen in uren, uurtarief of inkomen meteen door, anders moet je achteraf terugbetalen.</li>
+      <li><strong>Plannen voor later.</strong> Het kabinet wil het stelsel van kinderopvang de komende jaren hervormen, met betaling direct aan de opvang. Voor 2026 geldt de toeslag zoals hierboven.</li>
+    </ul>
+    <p>Bereken ook je <a href="../kindgebonden-budget-berekenen/">kindgebonden budget</a> en, als je kind jonger is dan 12, je <a href="../combinatiekorting-berekenen/">combinatiekorting</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenKinderopvangtoeslag, type Opvangsoort } from '../lib/calculators/toeslagen';
+  import { formatProcent } from '../lib/calculators/format';
+  import { $, euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    [2, 3].forEach((n) => {
+      const fs = $(`soort${n}`).closest('fieldset')!;
+      fs.querySelectorAll<HTMLElement>(':scope > :not(legend)').forEach((el) => (el.hidden = !vinkje(`aan${n}`)));
+    });
+    const kinderen = [1, 2, 3].filter((n) => n === 1 || vinkje(`aan${n}`)).map((n) => ({
+      soort: ($(`soort${n}`) as HTMLSelectElement).value as Opvangsoort,
+      urenPerMaand: getal(`uren${n}`),
+      uurtarief: getal(`tarief${n}`),
+      n,
+    }));
+    const r = berekenKinderopvangtoeslag(kinderen, getal('ink'));
+    const kosten = r.perKind.reduce((s, k) => s + k.urenPerMaand * k.uurtarief, 0);
+    zet('r-maand', euro(r.perMaand, false));
+    zet('r-kosten', euro(kosten));
+    zet('r-eigen', euro(Math.max(0, kosten - r.perMaand)));
+    const dl = $('r-kinderen');
+    dl.replaceChildren();
+    r.perKind.forEach((k, i) => {
+      const dt = document.createElement('dt');
+      dt.textContent = `Kind ${kinderen[i].n}${k.eersteKind && r.perKind.length > 1 ? ' (1e kind)' : ''}: ${formatProcent(k.percentage * 100, 1)} van ${euro(k.kosten)}`;
+      const dd = document.createElement('dd');
+      dd.textContent = euro(k.toeslag);
+      dl.append(dt, dd);
+    });
+  });
+</script>

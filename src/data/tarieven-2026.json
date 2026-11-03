@@ -394,5 +394,480 @@
   "gecontroleerd": {
     "datum": "2026-11-03",
     "werkwijze": "Elk getal automatisch vergeleken met de tekst van de officiële bronpagina's en pdf's (Belastingdienst Fiscale informatie 2026, cijferbijlage loonheffingen 2026, CBS-databank 70936ned). Alle waarden komen overeen."
+  },
+  "zorgtoeslag": {
+    "bron": "https://download.belastingdienst.nl/toeslagen/docs/berekening_zorgtoeslag_tg0821z62fd.pdf",
+    "opgezocht": "2026-11-03",
+    "standaardpremie": 2119,
+    "drempelinkomen": 29736,
+    "normpremieAlleen": 0.01912,
+    "normpremiePartner": 0.04289,
+    "normpremieBoven": 0.1373,
+    "inkomensgrensAlleen": 40857,
+    "inkomensgrensPartner": 51142,
+    "vermogensgrensAlleen": 146011,
+    "vermogensgrensPartner": 184633,
+    "maximumAlleen": 1550,
+    "maximumPartner": 2963
+  },
+  "huurtoeslag": {
+    "bron": "https://download.belastingdienst.nl/toeslagen/docs/berekening_huurtoeslag_tg0831z62fd.pdf",
+    "opgezocht": "2026-11-03",
+    "omschrijving": "Nieuwe berekening vanaf 2026: vaste basishuur per huishoudtype en een inkomensafhankelijke correctie boven het inkomensijkpunt.",
+    "huurgrensJong": 498.2,
+    "huurgrens": 932.93,
+    "basishuurEen": 202.52,
+    "basishuurMeer": 200.71,
+    "kwaliteitskortingsgrens": 498.2,
+    "aftoppingsgrensKlein": 713.02,
+    "aftoppingsgrensGroot": 764.14,
+    "vergoedingB": 0.65,
+    "vergoedingC": 0.4,
+    "ijkpuntEen": 23425,
+    "ijkpuntMeer": 31500,
+    "afbouwEen": 0.27,
+    "afbouwMeer": 0.22,
+    "vrijstellingKind": 6218,
+    "vermogensgrensPerPersoon": 38479
+  },
+  "kindgebondenBudget": {
+    "bron": "https://download.belastingdienst.nl/toeslagen/docs/berekening_kindgebonden_budget_tg0811z61fd.pdf",
+    "opgezocht": "2026-11-03",
+    "perKind": 2580,
+    "verhoging12tot15": 724,
+    "verhoging16en17": 964,
+    "drempelAlleen": 29736,
+    "drempelPartner": 39141,
+    "afbouwPercentage": 0.076,
+    "vermogensgrensAlleen": 146011,
+    "vermogensgrensPartner": 184633,
+    "maxEenKindAlleen": 5996,
+    "maxEenKindPartner": 2580,
+    "maxTweeKinderenAlleen": 8576,
+    "maxTweeKinderenPartner": 5160
+  },
+  "kinderopvangtoeslag": {
+    "bron": "https://download.belastingdienst.nl/toeslagen/docs/berekening_kinderopvangtoeslag_tg0801z61fd.pdf",
+    "opgezocht": "2026-11-03",
+    "maxUurprijsDagopvang": 11.23,
+    "maxUurprijsBso": 9.98,
+    "maxUurprijsGastouder": 8.49,
+    "maxUrenPerMaand": 230,
+    "tabel": [
+      {
+        "van": 0,
+        "tot": 24149,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 24150,
+        "tot": 25756,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 25757,
+        "tot": 27363,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 27364,
+        "tot": 28973,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 28974,
+        "tot": 30579,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 30580,
+        "tot": 32189,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 32190,
+        "tot": 33795,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 33796,
+        "tot": 35400,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 35401,
+        "tot": 37129,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 37130,
+        "tot": 38855,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 38856,
+        "tot": 40586,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 40587,
+        "tot": 42313,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 42314,
+        "tot": 44046,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 44047,
+        "tot": 45776,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 45777,
+        "tot": 47546,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 47547,
+        "tot": 49318,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 49319,
+        "tot": 51092,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 51093,
+        "tot": 52864,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 52865,
+        "tot": 54641,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 54642,
+        "tot": 56412,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 56413,
+        "tot": 58184,
+        "eerste": 0.955,
+        "volgende": 0.956
+      },
+      {
+        "van": 58185,
+        "tot": 59957,
+        "eerste": 0.948,
+        "volgende": 0.956
+      },
+      {
+        "van": 59958,
+        "tot": 61895,
+        "eerste": 0.939,
+        "volgende": 0.956
+      },
+      {
+        "van": 61896,
+        "tot": 65695,
+        "eerste": 0.924,
+        "volgende": 0.956
+      },
+      {
+        "van": 65696,
+        "tot": 69492,
+        "eerste": 0.916,
+        "volgende": 0.952
+      },
+      {
+        "van": 69493,
+        "tot": 73292,
+        "eerste": 0.905,
+        "volgende": 0.946
+      },
+      {
+        "van": 73293,
+        "tot": 77094,
+        "eerste": 0.882,
+        "volgende": 0.942
+      },
+      {
+        "van": 77095,
+        "tot": 80891,
+        "eerste": 0.859,
+        "volgende": 0.939
+      },
+      {
+        "van": 80892,
+        "tot": 84693,
+        "eerste": 0.837,
+        "volgende": 0.932
+      },
+      {
+        "van": 84694,
+        "tot": 88491,
+        "eerste": 0.812,
+        "volgende": 0.927
+      },
+      {
+        "van": 88492,
+        "tot": 92291,
+        "eerste": 0.789,
+        "volgende": 0.922
+      },
+      {
+        "van": 92292,
+        "tot": 96091,
+        "eerste": 0.767,
+        "volgende": 0.915
+      },
+      {
+        "van": 96092,
+        "tot": 99889,
+        "eerste": 0.743,
+        "volgende": 0.909
+      },
+      {
+        "van": 99890,
+        "tot": 103694,
+        "eerste": 0.721,
+        "volgende": 0.905
+      },
+      {
+        "van": 103695,
+        "tot": 107492,
+        "eerste": 0.696,
+        "volgende": 0.902
+      },
+      {
+        "van": 107493,
+        "tot": 111290,
+        "eerste": 0.673,
+        "volgende": 0.895
+      },
+      {
+        "van": 111291,
+        "tot": 115090,
+        "eerste": 0.651,
+        "volgende": 0.891
+      },
+      {
+        "van": 115091,
+        "tot": 118963,
+        "eerste": 0.627,
+        "volgende": 0.886
+      },
+      {
+        "van": 118964,
+        "tot": 122857,
+        "eerste": 0.606,
+        "volgende": 0.879
+      },
+      {
+        "van": 122858,
+        "tot": 126747,
+        "eerste": 0.585,
+        "volgende": 0.874
+      },
+      {
+        "van": 126748,
+        "tot": 130638,
+        "eerste": 0.564,
+        "volgende": 0.87
+      },
+      {
+        "van": 130639,
+        "tot": 134527,
+        "eerste": 0.542,
+        "volgende": 0.867
+      },
+      {
+        "van": 134528,
+        "tot": 138420,
+        "eerste": 0.523,
+        "volgende": 0.86
+      },
+      {
+        "van": 138421,
+        "tot": 142312,
+        "eerste": 0.504,
+        "volgende": 0.854
+      },
+      {
+        "van": 142313,
+        "tot": 146205,
+        "eerste": 0.485,
+        "volgende": 0.85
+      },
+      {
+        "van": 146206,
+        "tot": 150092,
+        "eerste": 0.465,
+        "volgende": 0.844
+      },
+      {
+        "van": 150093,
+        "tot": 153982,
+        "eerste": 0.445,
+        "volgende": 0.84
+      },
+      {
+        "van": 153983,
+        "tot": 157877,
+        "eerste": 0.425,
+        "volgende": 0.833
+      },
+      {
+        "van": 157878,
+        "tot": 161766,
+        "eerste": 0.405,
+        "volgende": 0.827
+      },
+      {
+        "van": 161767,
+        "tot": 165657,
+        "eerste": 0.385,
+        "volgende": 0.817
+      },
+      {
+        "van": 165658,
+        "tot": 169547,
+        "eerste": 0.365,
+        "volgende": 0.814
+      },
+      {
+        "van": 169548,
+        "tot": 173440,
+        "eerste": 0.365,
+        "volgende": 0.806
+      },
+      {
+        "van": 173441,
+        "tot": 177335,
+        "eerste": 0.365,
+        "volgende": 0.797
+      },
+      {
+        "van": 177336,
+        "tot": 181223,
+        "eerste": 0.365,
+        "volgende": 0.791
+      },
+      {
+        "van": 181224,
+        "tot": 185114,
+        "eerste": 0.365,
+        "volgende": 0.782
+      },
+      {
+        "van": 185115,
+        "tot": 189002,
+        "eerste": 0.365,
+        "volgende": 0.777
+      },
+      {
+        "van": 189003,
+        "tot": 192896,
+        "eerste": 0.365,
+        "volgende": 0.769
+      },
+      {
+        "van": 192897,
+        "tot": 196789,
+        "eerste": 0.365,
+        "volgende": 0.762
+      },
+      {
+        "van": 196790,
+        "tot": 200681,
+        "eerste": 0.365,
+        "volgende": 0.755
+      },
+      {
+        "van": 200682,
+        "tot": 204571,
+        "eerste": 0.365,
+        "volgende": 0.745
+      },
+      {
+        "van": 204572,
+        "tot": 208458,
+        "eerste": 0.365,
+        "volgende": 0.74
+      },
+      {
+        "van": 208459,
+        "tot": 212353,
+        "eerste": 0.365,
+        "volgende": 0.733
+      },
+      {
+        "van": 212354,
+        "tot": 216242,
+        "eerste": 0.365,
+        "volgende": 0.725
+      },
+      {
+        "van": 216243,
+        "tot": 220134,
+        "eerste": 0.365,
+        "volgende": 0.718
+      },
+      {
+        "van": 220135,
+        "tot": 224026,
+        "eerste": 0.365,
+        "volgende": 0.712
+      },
+      {
+        "van": 224027,
+        "tot": 227915,
+        "eerste": 0.365,
+        "volgende": 0.704
+      },
+      {
+        "van": 227916,
+        "tot": 231807,
+        "eerste": 0.365,
+        "volgende": 0.696
+      },
+      {
+        "van": 231808,
+        "tot": 235697,
+        "eerste": 0.365,
+        "volgende": 0.691
+      },
+      {
+        "van": 235698,
+        "tot": 99999999,
+        "eerste": 0.365,
+        "volgende": 0.682
+      }
+    ]
   }
 }

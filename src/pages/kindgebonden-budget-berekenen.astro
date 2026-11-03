@@ -1,0 +1,81 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const k = tarieven.kindgebondenBudget;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Wie krijgt kindgebonden budget?', antwoord: 'Ouders die kinderbijslag krijgen voor een kind jonger dan 18 jaar, of die een kind van 16 of 17 jaar grotendeels onderhouden. Je inkomen en vermogen mogen niet te hoog zijn. Je hoeft het meestal niet zelf aan te vragen: krijg je kinderbijslag, dan kijkt de Belastingdienst automatisch of je recht hebt.' },
+  { vraag: 'Hoeveel krijg ik als alleenstaande ouder?', antwoord: `Meer dan ouders met een partner. Een alleenstaande ouder met één kind krijgt in 2026 maximaal ${eur(k.maxEenKindAlleen)} per jaar, met twee kinderen ${eur(k.maxTweeKinderenAlleen)}. De afbouw begint al bij een inkomen van ${eur(k.drempelAlleen)}.` },
+  { vraag: 'Krijg ik meer voor oudere kinderen?', antwoord: `Ja. Voor elk kind van 12 tot en met 15 jaar komt er ${eur(k.verhoging12tot15)} per jaar bij, voor een kind van 16 of 17 jaar ${eur(k.verhoging16en17)}. Dat is een tegemoetkoming in de schoolkosten.` },
+  { vraag: 'Wat is het verschil met kinderbijslag?', antwoord: 'Kinderbijslag krijgt iedere ouder, ongeacht het inkomen, via de SVB. Kindgebonden budget is een extra toeslag van de Belastingdienst voor ouders met een lager of middeninkomen.' },
+];
+---
+<CalculatorPage
+  slug="kindgebonden-budget-berekenen"
+  title="Kindgebonden budget berekenen 2026"
+  description={`Bereken je kindgebonden budget in 2026: ${eur(k.perKind)} per kind, extra voor alleenstaande ouders en oudere kinderen. Met de officiële berekening.`}
+  h1="Kindgebonden budget berekenen"
+  intro="Vul de leeftijden van je kinderen en jullie inkomen in. Je ziet direct hoeveel kindgebonden budget je per maand krijgt."
+  faq={faq}
+  bron={k.bron}
+  bronNaam="Belastingdienst, berekening kindgebonden budget 2026"
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Kindgebonden budget per maand</p>
+      <p class="result-main" id="r-maand">–</p>
+      <p class="result-sub" id="r-reden"></p>
+      <dl>
+        <dt>Per jaar</dt><dd id="r-jaar">–</dd>
+        <dt>Maximaal bedrag</dt><dd id="r-max">–</dd>
+        <dt>Verhoging oudere kinderen</dt><dd id="r-verh">–</dd>
+        <dt>Vermindering door inkomen</dt><dd id="r-verm">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="leeftijden" label="Leeftijden van je kinderen" value="5, 13" hint="Gescheiden door komma's, bijv. 3, 8, 15" />
+      <Field id="ink" label="Toetsingsinkomen per jaar" value="45000" prefix="€" hint="Met partner: jullie inkomens samen" />
+      <label class="check"><input type="checkbox" id="partner" name="partner" checked /> Ik heb een toeslagpartner</label>
+      <Field id="vermogen" label="Vermogen op 1 januari 2026" value="0" prefix="€" />
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo wordt het kindgebonden budget berekend</h2>
+    <ol>
+      <li><strong>Maximaal bedrag:</strong> {eur(k.perKind)} per kind per jaar. Ben je alleenstaande ouder, dan komt er een vast bedrag bij: met één kind is het maximum {eur(k.maxEenKindAlleen)}, met twee kinderen {eur(k.maxTweeKinderenAlleen)}.</li>
+      <li><strong>Verhoging:</strong> {eur(k.verhoging12tot15)} voor elk kind van 12 tot en met 15 jaar en {eur(k.verhoging16en17)} voor elk kind van 16 of 17.</li>
+      <li><strong>Vermindering:</strong> verdien je meer dan {eur(k.drempelAlleen)} (alleenstaand) of {eur(k.drempelPartner)} (met partner), dan gaat er {(k.afbouwPercentage * 100).toLocaleString('nl-NL')}% van het inkomen boven die grens af.</li>
+    </ol>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Ouders met twee kinderen (5 en 13), samen € 45.000:</strong> maximaal € 5.160 + € 724 verhoging = € 5.884. Vermindering: 7,6% × (€ 45.000 − € 39.141) = € 445,28. Kindgebonden budget: <strong>€ 5.438,72 per jaar</strong>, ongeveer € 453 per maand.</p>
+      <p><strong>Alleenstaande ouder met één kind, € 25.000:</strong> onder de drempel, dus het maximum van <strong>€ 5.996 per jaar</strong>, bijna € 500 per maand.</p>
+      <p><strong>Ouders met drie kinderen (3, 12 en 16), € 30.000:</strong> 3 × € 2.580 + € 724 + € 964 = <strong>€ 9.428 per jaar</strong>.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Vermogen en voorwaarden</h2>
+    <p>Je vermogen op 1 januari mag niet hoger zijn dan {eur(k.vermogensgrensAlleen)} zonder toeslagpartner of {eur(k.vermogensgrensPartner)} met toeslagpartner. Ook groene beleggingen tellen mee. Woont je kind buiten de EU, de EER of Zwitserland, dan kan een woonlandfactor gelden.</p>
+    <p>Het kindgebonden budget wordt elke maand als voorschot betaald. Verandert je inkomen, geef dat dan door via Mijn toeslagen, zodat je achteraf niet hoeft terug te betalen.</p>
+    <p>Gaan je kinderen naar de opvang? Bereken dan je <a href="../kinderopvangtoeslag-berekenen/">kinderopvangtoeslag</a>. Werk je en is je kind jonger dan 12, kijk dan ook naar de <a href="../combinatiekorting-berekenen/">combinatiekorting</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenKindgebondenBudget } from '../lib/calculators/toeslagen';
+  import { $, euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const leeftijden = ($('leeftijden') as HTMLInputElement).value.split(/[,;\s]+/).map(Number).filter((n) => Number.isFinite(n) && n >= 0);
+    const r = berekenKindgebondenBudget({ leeftijden, partner: vinkje('partner'), toetsingsinkomen: getal('ink'), vermogen: getal('vermogen') });
+    zet('r-maand', euro(r.perMaand));
+    zet('r-reden', r.reden);
+    zet('r-jaar', euro(r.perJaar));
+    zet('r-max', euro(r.maximum));
+    zet('r-verh', euro(r.verhoging));
+    zet('r-verm', '− ' + euro(r.vermindering));
+  });
+</script>

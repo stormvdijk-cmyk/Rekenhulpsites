@@ -1,0 +1,83 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const z = tarieven.zorgtoeslag;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 3 }) + '%';
+const faq = [
+  { vraag: 'Hoeveel zorgtoeslag krijg ik maximaal in 2026?', antwoord: `Zonder toeslagpartner maximaal ${eur(z.maximumAlleen)} per jaar, ongeveer € 129 per maand. Met een toeslagpartner maximaal ${eur(z.maximumPartner)} per jaar. Dat maximum krijg je als je toetsingsinkomen niet hoger is dan ${eur(z.drempelinkomen)}.` },
+  { vraag: 'Wat is het toetsingsinkomen?', antwoord: 'Ongeveer je bruto jaarinkomen, inclusief vakantiegeld, bonussen en een uitkering. Heb je een eigen bedrijf, dan is het je winst na aftrekposten. Met een toeslagpartner tellen jullie inkomens samen.' },
+  { vraag: 'Wie is mijn toeslagpartner?', antwoord: 'Je echtgenoot of geregistreerd partner, of iemand met wie je samenwoont en bijvoorbeeld een kind hebt, een koophuis deelt of samen een pensioenregeling hebt. Ook een fiscale partner voor de inkomstenbelasting is meestal je toeslagpartner.' },
+  { vraag: 'Hoe vraag ik zorgtoeslag aan?', antwoord: 'Via Mijn toeslagen op toeslagen.nl, met je DigiD. Je krijgt het voorschot elke maand. Na afloop van het jaar wordt de toeslag definitief berekend met je echte inkomen; geef wijzigingen in je inkomen daarom op tijd door.' },
+];
+---
+<CalculatorPage
+  slug="zorgtoeslag-berekenen"
+  title="Zorgtoeslag berekenen 2026"
+  description={`Bereken hoeveel zorgtoeslag je krijgt in 2026. Maximaal ${eur(z.maximumAlleen)} per jaar alleenstaand, inkomensgrens ${eur(z.inkomensgrensAlleen)}. Met de officiële formule.`}
+  h1="Zorgtoeslag berekenen"
+  intro="Vul je toetsingsinkomen in en geef aan of je een toeslagpartner hebt. Je ziet direct hoeveel zorgtoeslag je per maand krijgt."
+  faq={faq}
+  bron={z.bron}
+  bronNaam="Belastingdienst, berekening zorgtoeslag 2026"
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Zorgtoeslag per maand</p>
+      <p class="result-main" id="r-maand">–</p>
+      <p class="result-sub" id="r-reden"></p>
+      <dl>
+        <dt>Per jaar</dt><dd id="r-jaar">–</dd>
+        <dt>Standaardpremie</dt><dd id="r-std">–</dd>
+        <dt>Normpremie (eigen bijdrage)</dt><dd id="r-norm">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="ink" label="Toetsingsinkomen per jaar" value="25000" prefix="€" hint="Met partner: jullie inkomens samen" />
+      <label class="check"><input type="checkbox" id="partner" name="partner" /> Ik heb een toeslagpartner</label>
+      <Field id="verm" label="Vermogen op 1 januari 2026" value="0" prefix="€" hint="Spaargeld en beleggingen, samen met je partner" />
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo wordt de zorgtoeslag berekend</h2>
+    <p>De zorgtoeslag is het verschil tussen de <strong>standaardpremie</strong> en de <strong>normpremie</strong>. De standaardpremie is in 2026 {eur(z.standaardpremie)} per persoon. De normpremie is het deel dat je zelf moet kunnen betalen:</p>
+    <ul>
+      <li>zonder toeslagpartner: {pct(z.normpremieAlleen)} × {eur(z.drempelinkomen)} + {pct(z.normpremieBoven)} × (toetsingsinkomen − {eur(z.drempelinkomen)})</li>
+      <li>met toeslagpartner: {pct(z.normpremiePartner)} × {eur(z.drempelinkomen)} + {pct(z.normpremieBoven)} × (gezamenlijk inkomen − {eur(z.drempelinkomen)})</li>
+    </ul>
+    <p>Is je inkomen lager dan het drempelinkomen, dan telt alleen het eerste deel. Met een partner geldt twee keer de standaardpremie. Je hebt geen recht meer bij een inkomen boven {eur(z.inkomensgrensAlleen)} (met partner {eur(z.inkomensgrensPartner)}) of een vermogen boven {eur(z.vermogensgrensAlleen)} (met partner {eur(z.vermogensgrensPartner)}).</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Alleenstaand, € 19.000:</strong> de normpremie is 1,912% × € 29.736 = € 568,55. De zorgtoeslag is € 2.119 − € 568,55 = <strong>€ 1.550,45 per jaar</strong>, € 129 per maand. Dit is het voorbeeld uit de officiële berekening van de Belastingdienst.</p>
+      <p><strong>Alleenstaand, € 35.000:</strong> de normpremie is € 568,55 + 13,73% × € 5.264 = € 1.291,30. De zorgtoeslag is € 827,70 per jaar, <strong>€ 68 per maand</strong>.</p>
+      <p><strong>Met partner, samen € 45.000:</strong> normpremie 4,289% × € 29.736 + 13,73% × € 15.264 = € 3.371,12. Zorgtoeslag € 4.238 − € 3.371,12 = <strong>€ 866,88 per jaar</strong>, € 72 per maand.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Waar je op let</h2>
+    <ul>
+      <li><strong>Voorschot en definitieve berekening.</strong> De Belastingdienst betaalt een voorschot op basis van je geschatte inkomen. Verdien je meer, dan moet je terugbetalen. Schat je inkomen liever iets te hoog dan te laag.</li>
+      <li><strong>Zorgverzekering.</strong> Je moet een Nederlandse zorgverzekering hebben. Is je partner niet verzekerd, dan krijg je de helft.</li>
+      <li><strong>Groene beleggingen</strong> tellen voor de zorgtoeslag wél mee als vermogen, ook al zijn ze in box 3 deels vrijgesteld.</li>
+      <li><strong>Wonen in het buitenland.</strong> Dan geldt een woonlandfactor. Die zit niet in deze rekenhulp.</li>
+    </ul>
+    <p>Huur je een woning? Kijk dan ook bij <a href="../huurtoeslag-berekenen/">huurtoeslag berekenen</a>. Heb je kinderen, dan kun je recht hebben op <a href="../kindgebonden-budget-berekenen/">kindgebonden budget</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenZorgtoeslag } from '../lib/calculators/toeslagen';
+  import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenZorgtoeslag(getal('ink'), vinkje('partner'), getal('verm'));
+    zet('r-maand', euro(r.perMaand, false));
+    zet('r-reden', r.reden);
+    zet('r-jaar', euro(r.perJaar));
+    zet('r-std', euro(r.standaardpremie));
+    zet('r-norm', euro(r.normpremie));
+  });
+</script>
