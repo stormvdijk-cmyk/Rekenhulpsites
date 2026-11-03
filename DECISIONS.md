@@ -66,3 +66,8 @@ Datum: 2 november 2026.
 - **Vpb 2026** 19% tot € 200.000 / 25,8%; **box 2** 24,5% tot € 68.843 per persoon / 31% (Belastingdienst). Box 2 wordt afgerond op centen voordat het netto dividend wordt berekend. De voorgestelde multiplier voor lucratief belang is niet meegenomen.
 - **KOR:** omzetgrens € 20.000. Vereenvoudigd model: particulieren betalen dezelfde prijs incl. btw, zakelijke klanten de prijs excl. btw.
 - **Niet gebouwd (cijfers niet bevestigd):** AOW-bedragen en AOW-leeftijd na 2028, drempels voor giften en zorgkosten, lijfrente-jaarruimte, werkgeverspremies.
+
+## Controle van alle tarieven (3 november 2026)
+- Met volledige netwerktoegang zijn alle 37 bron-URL's uit de JSON opgehaald, plus de Fiscale informatie 2026 van de Belastingdienst en de cijferbijlage loonheffingen 2026. Een script (`verify.py`, niet in de repo) vergeleek elk getal met de brontekst. Alle waarden komen overeen; er waren geen correcties nodig.
+- De inflatiecijfers zijn gecontroleerd tegen de CBS-databank (OData 70936ned) en uitgebreid naar 1963–2025.
+- Er is een bron toegevoegd voor de 214-dagenregel (Kennisgroep Loonheffingen). De 261 werkdagen per jaar in de WW-rekenhulp blijven een benadering; UWV telt de werkelijke werkdagen.
