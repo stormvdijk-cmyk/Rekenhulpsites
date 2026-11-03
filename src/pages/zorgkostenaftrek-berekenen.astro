@@ -1,0 +1,92 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const z = tarieven.zorgkosten;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 2 }) + '%';
+const faq = [
+  { vraag: 'Welke zorgkosten mag ik aftrekken?', antwoord: 'Onder meer: genees- en heelkundige hulp die niet wordt vergoed (zoals een behandeling door een arts of fysiotherapeut zonder vergoeding), voorgeschreven medicijnen, hulpmiddelen zoals een gehoorapparaat of rolstoel, een voorgeschreven dieet, extra kleding en beddengoed, en vervoerskosten door ziekte. Je eigen risico en de premie van je zorgverzekering zijn niet aftrekbaar.' },
+  { vraag: 'Wat is de verhoging van 40% of 113%?', antwoord: `Is je drempelinkomen niet hoger dan ${eur(z.verhogingGrens)}, dan mag je een deel van je zorgkosten verhogen: met 40%, of met 113% als jij of je partner aan het begin van het jaar de AOW-leeftijd had. De verhoging geldt niet voor genees- en heelkundige hulp en reiskosten voor ziekenbezoek.` },
+  { vraag: 'Mag ik de kosten van mijn bril aftrekken?', antwoord: 'Nee. Brillen, contactlenzen en laseroperaties aan de ogen zijn niet aftrekbaar. Ook een gewoon gehoorapparaat valt alleen onder de aftrek voor het deel dat je echt zelf betaalt, zonder de verplichte eigen bijdrage.' },
+  { vraag: 'Moet ik bewijs bewaren?', antwoord: 'Ja. Bewaar rekeningen, betaalbewijzen en voor een dieet een verklaring van je arts of diëtist. De Belastingdienst kan erom vragen.' },
+];
+---
+<CalculatorPage
+  slug="zorgkostenaftrek-berekenen"
+  title="Zorgkostenaftrek berekenen 2026"
+  description="Bereken je aftrek voor specifieke zorgkosten in 2026, met de drempel en de verhoging van 40% of 113%. Met de officiële drempeltabel."
+  h1="Zorgkostenaftrek berekenen"
+  intro="Vul je drempelinkomen en je zorgkosten in. Je ziet direct de drempel, de verhoging en hoeveel je mag aftrekken."
+  faq={faq}
+  bron={z.bron}
+  bronNaam="Belastingdienst, Fiscale informatie 2026"
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Aftrek specifieke zorgkosten</p>
+      <p class="result-main" id="r-aftrek">–</p>
+      <dl>
+        <dt>Zorgkosten met verhoging</dt><dd id="r-tot">–</dd>
+        <dt>Waarvan verhoging</dt><dd id="r-verh">–</dd>
+        <dt>Drempel</dt><dd id="r-dr">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="di" label="Drempelinkomen" value="30000" prefix="€" hint="Box 1 + 2 + 3, met partner samen" />
+      <Field id="met" label="Hulpmiddelen, medicijnen, dieet, kleding, vervoer" value="2000" prefix="€" hint="Deze kosten tellen mee voor de verhoging" />
+      <Field id="zonder" label="Genees- en heelkundige hulp, reiskosten ziekenbezoek" value="0" prefix="€" />
+      <label class="check"><input type="checkbox" id="partner" name="partner" /> Ik heb het hele jaar een fiscale partner</label>
+      <label class="check"><input type="checkbox" id="aow" name="aow" /> Ik of mijn partner had op 1 januari de AOW-leeftijd</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>De drempel in 2026</h2>
+    <p>Je mag alleen het deel van je zorgkosten aftrekken dat boven een drempel uitkomt. De drempel hangt af van je drempelinkomen:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Drempelinkomen</th><th>Drempel</th></tr></thead>
+        <tbody>
+          <tr><td>tot {eur(z.drempelVastTot)}</td><td>{eur(z.drempelVast)} (met partner tot {eur(z.drempelVastTotPartner)}: {eur(z.drempelVastPartner)})</td></tr>
+          <tr><td>tot {eur(z.grensHoog)}</td><td>{pct(z.drempelPercentage)} van het drempelinkomen</td></tr>
+          <tr><td>boven {eur(z.grensHoog)}</td><td>{eur(z.drempelHoogBasis)} + {pct(z.drempelHoogPercentage)} van het meerdere</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Is je drempelinkomen niet hoger dan {eur(z.verhogingGrens)}, dan worden de kosten voor hulpmiddelen, medicijnen, dieet, kleding en vervoer verhoogd met {pct(z.verhoging)} (of {pct(z.verhogingAow)} bij AOW-leeftijd). Zo houdt de Belastingdienst rekening met lagere inkomens.</p>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je drempelinkomen is <strong>€ 30.000</strong> en je hebt <strong>€ 2.000</strong> betaald aan een hulpmiddel en een voorgeschreven dieet.</p>
+      <ul>
+        <li>Verhoging: 40% × € 2.000 = € 800</li>
+        <li>Drempel: 1,65% × € 30.000 = € 495</li>
+        <li>Aftrek: € 2.000 + € 800 − € 495 = <strong>€ 2.305</strong></li>
+      </ul>
+      <p>Bij een tarief van 35,75% scheelt dat ongeveer € 824 belasting.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Vaste bedragen</h2>
+    <ul>
+      <li><strong>Extra kleding en beddengoed:</strong> een vast bedrag van € 330, of € 825 als je kunt aantonen dat je minstens € 660 meer uitgaf dan een gezond persoon.</li>
+      <li><strong>Vervoer per auto of taxi:</strong> € 0,25 per kilometer. Kun je niet meer dan 100 meter lopen, dan mag je daarnaast een vast bedrag van € 925 aftrekken.</li>
+      <li><strong>Dieet op voorschrift:</strong> een vast bedrag per dieet uit de dieetkostentabel van de Belastingdienst.</li>
+    </ul>
+    <p>Geef je ook aan goede doelen? Bereken dan de <a href="../giftenaftrek-berekenen/">giftenaftrek</a>. Heb je een laag inkomen, kijk dan ook of je recht hebt op <a href="../zorgtoeslag-berekenen/">zorgtoeslag</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenZorgkostenaftrek } from '../lib/calculators/aftrekposten';
+  import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenZorgkostenaftrek({ drempelinkomen: getal('di'), partner: vinkje('partner'), aow: vinkje('aow'), kostenMetVerhoging: getal('met'), kostenZonderVerhoging: getal('zonder') });
+    zet('r-aftrek', euro(r.aftrek));
+    zet('r-tot', euro(r.totaleKosten));
+    zet('r-verh', euro(r.verhoging));
+    zet('r-dr', euro(r.drempel));
+  });
+</script>

@@ -1,0 +1,115 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const w = tarieven.werkgever;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 2 }) + '%';
+const sectoren = [...w.whkSectoren].sort((a, b) => a.naam.localeCompare(b.naam, 'nl'));
+const faq = [
+  { vraag: 'Wat kost een werknemer bovenop het brutoloon?', antwoord: 'Meestal 20 tot 35% extra. Daarin zitten de werkgeverspremies voor WW, arbeidsongeschiktheid (Aof en Whk), kinderopvang (Wko), de werkgeversheffing Zvw, vakantiegeld en vaak het werkgeversdeel van de pensioenpremie. Daarbovenop komen kosten als een laptop, opleiding en reiskosten.' },
+  { vraag: 'Wanneer betaal ik de lage WW-premie?', antwoord: `Bij een schriftelijk contract voor onbepaalde tijd, zonder oproepkarakter, betaal je de lage premie van ${pct(w.awfLaag)}. Voor tijdelijke contracten en oproepcontracten geldt de hoge premie van ${pct(w.awfHoog)}. Werkt iemand met een vast contract meer dan 30% boven de afgesproken uren, dan geldt alsnog de hoge premie.` },
+  { vraag: 'Waar vind ik mijn Whk-premie?', antwoord: 'Op de beschikking gedifferentieerde premie Whk die je van de Belastingdienst krijgt. Kleine werkgevers betalen de sectorpremie; die staat in de keuzelijst. Middelgrote en grote werkgevers betalen deels of helemaal een eigen premie, afhankelijk van hun eigen ziekte- en arbeidsongeschiktheidslasten.' },
+  { vraag: 'Ben ik een kleine werkgever?', antwoord: `Ja, als je premieloonsom in 2024 niet hoger was dan ${eur(w.kleineWerkgeverTot)}, dat is 25 keer het gemiddelde premieloon van ${eur(w.gemiddeldPremieloon)}. Kleine werkgevers betalen de lage Aof-premie van ${pct(w.aofLaag)}, anderen ${pct(w.aofHoog)}.` },
+];
+---
+<CalculatorPage
+  slug="loonkosten-werkgever-berekenen"
+  title="Loonkosten werkgever berekenen 2026"
+  description="Bereken wat een werknemer je als werkgever echt kost in 2026: brutoloon plus vakantiegeld, WW, Aof, Whk, Wko, werkgeversheffing Zvw en pensioen."
+  h1="Loonkosten werkgever berekenen"
+  intro="Vul het brutosalaris en een paar gegevens over het contract in. Je ziet direct de totale loonkosten per jaar en per maand, met alle werkgeverspremies van 2026."
+  faq={faq}
+  bron={w.bron}
+  bronNaam="Belastingdienst, tarieven loonheffingen 2026"
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Loonkosten per maand</p>
+      <p class="result-main" id="r-maand">–</p>
+      <p class="result-sub">Per jaar <strong id="r-jaar">–</strong> · <span id="r-opslag">–</span> bovenop het brutoloon</p>
+      <dl>
+        <dt>Bruto jaarloon (incl. vakantiegeld)</dt><dd id="r-bruto">–</dd>
+        <dt>WW-premie (AWf)</dt><dd id="r-awf">–</dd>
+        <dt>Arbeidsongeschiktheid (Aof)</dt><dd id="r-aof">–</dd>
+        <dt>Whk</dt><dd id="r-whk">–</dd>
+        <dt>Kinderopvang (Wko)</dt><dd id="r-wko">–</dd>
+        <dt>Werkgeversheffing Zvw</dt><dd id="r-zvw">–</dd>
+        <dt>Pensioen werkgeversdeel</dt><dd id="r-pens">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="bruto" label="Bruto maandsalaris" value="3500" prefix="€" />
+      <div class="field">
+        <label for="sector">Sector (Whk-premie kleine werkgevers)</label>
+        <select id="sector" name="sector">
+          {sectoren.map((s) => <option value={String(s.totaal)} selected={s.code === 1}>{s.naam} ({pct(s.totaal)})</option>)}
+        </select>
+      </div>
+      <Field id="pens" label="Pensioenpremie werkgeversdeel" value="0" suffix="%" hint="Percentage van het brutoloon; 0 als er geen pensioenregeling is" />
+      <label class="check"><input type="checkbox" id="vast" name="vast" checked /> Vast contract (lage WW-premie)</label>
+      <label class="check"><input type="checkbox" id="klein" name="klein" checked /> Kleine werkgever (lage Aof-premie)</label>
+      <label class="check"><input type="checkbox" id="vg" name="vg" checked /> 8% vakantiegeld</label>
+      <label class="check"><input type="checkbox" id="dm" name="dm" /> Dertiende maand</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>De werkgeverspremies in 2026</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Premie</th><th>Percentage</th></tr></thead>
+        <tbody>
+          <tr><td>WW (AWf), vast contract / flex</td><td>{pct(w.awfLaag)} / {pct(w.awfHoog)}</td></tr>
+          <tr><td>Arbeidsongeschiktheid (Aof), klein / overig</td><td>{pct(w.aofLaag)} / {pct(w.aofHoog)}</td></tr>
+          <tr><td>Werkhervattingskas (Whk)</td><td>per sector of werkgever</td></tr>
+          <tr><td>Opslag kinderopvang (Wko)</td><td>{pct(w.wko)}</td></tr>
+          <tr><td>Werkgeversheffing Zvw</td><td>{pct(w.werkgeversheffingZvw)}</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Alle premies worden berekend over het premieloon, met een maximum van {eur(w.maximumPremieloon)} per jaar. Vakantiegeld en een dertiende maand tellen mee in het premieloon. De pensioenpremie van de werkgever rekent deze rekenhulp over het hele brutoloon; in de praktijk hangt die af van je pensioenregeling.</p>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Een werknemer verdient <strong>€ 3.500 bruto per maand</strong>, met vast contract, bij een kleine werkgever in het agrarisch bedrijf (Whk 1,17%).</p>
+      <ul>
+        <li>Bruto jaarloon met 8% vakantiegeld: € 45.360</li>
+        <li>WW 2,74%: € 1.242,86 · Aof 6,27%: € 2.844,07 · Whk 1,17%: € 530,71</li>
+        <li>Wko 0,5%: € 226,80 · Zvw 6,10%: € 2.766,96</li>
+        <li>Totale premies: € 7.611,41</li>
+        <li>Loonkosten: <strong>€ 52.971,41 per jaar</strong>, € 4.414,28 per maand</li>
+      </ul>
+      <p>Dat is bijna 17% bovenop het brutoloon met vakantiegeld, en ruim 26% bovenop 12 × het maandsalaris. Met een pensioenregeling komt er vaak nog 10 tot 15% bij.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Wat er niet in zit</h2>
+    <ul>
+      <li><strong>Werkkostenregeling.</strong> Vergoedingen zoals reiskosten, een laptop of een kerstpakket kun je tot de vrije ruimte onbelast geven. Die kosten komen bovenop deze loonkosten.</li>
+      <li><strong>Loondoorbetaling bij ziekte.</strong> Je betaalt bij ziekte tot twee jaar loon door. Veel kleine werkgevers verzekeren dat risico.</li>
+      <li><strong>Subsidies en kortingen.</strong> Zoals het lage-inkomensvoordeel of loonkostenvoordelen voor bepaalde werknemers.</li>
+    </ul>
+    <p>Wat houdt de werknemer zelf netto over? Bereken het met <a href="../netto-salaris-berekenen/">netto salaris berekenen</a>. Vergelijk het met het inhuren van een zzp'er via <a href="../zzp-uurtarief-berekenen/">zzp-uurtarief berekenen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenLoonkosten } from '../lib/calculators/werkgever';
+  import { formatProcent } from '../lib/calculators/format';
+  import { $, euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenLoonkosten({ brutoMaand: getal('bruto'), vakantiegeld: vinkje('vg'), dertiendeMaand: vinkje('dm'), vastContract: vinkje('vast'), kleineWerkgever: vinkje('klein'), whk: Number(($('sector') as HTMLSelectElement).value), pensioenWerkgeverPct: getal('pens') / 100 });
+    zet('r-maand', euro(r.loonkostenMaand));
+    zet('r-jaar', euro(r.loonkostenJaar));
+    zet('r-opslag', formatProcent(r.opslagPct, 1));
+    zet('r-bruto', euro(r.brutoJaar));
+    zet('r-awf', euro(r.awf));
+    zet('r-aof', euro(r.aof));
+    zet('r-whk', euro(r.whk));
+    zet('r-wko', euro(r.wko));
+    zet('r-zvw', euro(r.zvw));
+    zet('r-pens', euro(r.pensioen));
+  });
+</script>

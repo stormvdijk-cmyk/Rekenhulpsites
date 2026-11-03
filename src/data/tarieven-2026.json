@@ -87,7 +87,51 @@
     "standaard": 0.22,
     "elektrischVerlaagd": 0.18,
     "elektrischGrens": 30000,
-    "waterstofZonnecel": 0.18
+    "waterstofZonnecel": 0.18,
+    "bronLh": "https://download.belastingdienst.nl/belastingdienst/docs/bijlage-nieuwsbrief-loonheffingen-2026-lh2091b63fd.pdf",
+    "elektrischKortingPerJaar": [
+      {
+        "jaar": "2026",
+        "korting": 0.04,
+        "cap": 30000
+      },
+      {
+        "jaar": "2025",
+        "korting": 0.05,
+        "cap": 30000
+      },
+      {
+        "jaar": "2024",
+        "korting": 0.06,
+        "cap": 30000
+      },
+      {
+        "jaar": "2023",
+        "korting": 0.06,
+        "cap": 30000
+      },
+      {
+        "jaar": "2022",
+        "korting": 0.06,
+        "cap": 35000
+      },
+      {
+        "jaar": "2021-binnen-60",
+        "korting": 0.1,
+        "cap": 40000
+      },
+      {
+        "jaar": "2021-na-60",
+        "korting": 0.04,
+        "cap": 30000
+      },
+      {
+        "jaar": "2017-2020",
+        "korting": 0.04,
+        "cap": 30000
+      }
+    ],
+    "standaardVoor2017": 0.25
   },
   "ondernemer": {
     "bron": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/ondernemersaftrek-2026/zelfstandigenaftrek-2026",
@@ -254,7 +298,9 @@
     "omschrijving": "Maximale onbelaste vergoeding per kilometer in 2026 (met terugwerkende kracht vanaf 1 januari 2026). Vaste vergoeding: maximaal 214 reisdagen per jaar bij een vijfdaagse werkweek.",
     "onbelastPerKm": 0.25,
     "vasteVergoedingDagenFulltime": 214,
-    "bronDagen": "https://kennisgroepen.belastingdienst.nl/publicaties/kg204202222-toepassing-vaste-reiskostenvergoeding-vanaf-2022/"
+    "bronDagen": "https://kennisgroepen.belastingdienst.nl/publicaties/kg204202222-toepassing-vaste-reiskostenvergoeding-vanaf-2022/",
+    "thuiswerkPerDag": 2.45,
+    "bronThuiswerk": "https://download.belastingdienst.nl/belastingdienst/docs/bijlage-nieuwsbrief-loonheffingen-2026-lh2091b63fd.pdf"
   },
   "aow": {
     "bron": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_1/box_1",
@@ -349,7 +395,7 @@
   },
   "minimumloon": {
     "bron": "https://www.rijksoverheid.nl/actueel/nieuws/2026/06/11/uitkeringsbedragen-per-1-juli-2026",
-    "opgezocht": "2026-11-02",
+    "opgezocht": "2026-11-03",
     "omschrijving": "Wettelijk minimumloon per uur voor werknemers van 21 jaar en ouder.",
     "perUur": [
       {
@@ -360,7 +406,28 @@
         "vanaf": "2026-07-01",
         "bedrag": 14.99
       }
-    ]
+    ],
+    "bronJeugd": "https://www.rijksoverheid.nl/onderwerpen/minimumloon/bedragen-minimumloon/bedragen-minimumloon-2026",
+    "perLeeftijd": {
+      "2026-01-01": {
+        "21": 14.71,
+        "20": 11.77,
+        "19": 8.83,
+        "18": 7.36,
+        "17": 5.81,
+        "16": 5.07,
+        "15": 4.41
+      },
+      "2026-07-01": {
+        "21": 14.99,
+        "20": 11.99,
+        "19": 8.99,
+        "18": 7.5,
+        "17": 5.92,
+        "16": 5.17,
+        "15": 4.5
+      }
+    }
   },
   "transitievergoeding": {
     "bron": "https://www.rijksoverheid.nl/documenten/vraag-en-antwoord/ontslag/hoe-hoog-is-de-transitievergoeding-als-ik-word-ontslagen",
@@ -869,5 +936,426 @@
         "volgende": 0.682
       }
     ]
+  },
+  "giften": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/aftrek_giften",
+    "opgezocht": "2026-11-03",
+    "drempelPercentage": 0.01,
+    "drempelMinimum": 60,
+    "maximumPercentage": 0.1,
+    "cultureelVerhoging": 0.25,
+    "cultureelMaximum": 1250
+  },
+  "zorgkosten": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/aftrek_specifieke_zorgkosten",
+    "opgezocht": "2026-11-03",
+    "drempelVastTot": 9680,
+    "drempelVast": 166,
+    "drempelVastTotPartner": 19360,
+    "drempelVastPartner": 332,
+    "drempelPercentage": 0.0165,
+    "grensHoog": 51411,
+    "drempelHoogBasis": 848,
+    "drempelHoogPercentage": 0.0575,
+    "verhogingGrens": 41123,
+    "verhoging": 0.4,
+    "verhogingAow": 1.13
+  },
+  "lijfrente": {
+    "bron": "https://odb.belastingdienst.nl/wp-content/uploads/2026/01/20251218-Overzicht-cijfers-leven-2026-FsL.pdf",
+    "bronUitleg": "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/uitgaven_voor_inkomensvoorzieningen",
+    "opgezocht": "2026-11-03",
+    "percentage": 0.3,
+    "aftoppingsgrens": 137800,
+    "franchise": 19172,
+    "maximaleJaarruimte": 35589,
+    "factorA": 6.27,
+    "maximaleReserveringsruimte": 42753
+  },
+  "werkgever": {
+    "bron": "https://download.belastingdienst.nl/belastingdienst/docs/bijlage-nieuwsbrief-loonheffingen-2026-lh2091b63fd.pdf",
+    "opgezocht": "2026-11-03",
+    "awfLaag": 0.0274,
+    "awfHoog": 0.0774,
+    "aofLaag": 0.0627,
+    "aofHoog": 0.0763,
+    "wko": 0.005,
+    "werkgeversheffingZvw": 0.061,
+    "maximumPremieloon": 79409,
+    "gemiddeldPremieloon": 43300,
+    "kleineWerkgeverTot": 1082500,
+    "whkSectoren": [
+      {
+        "code": 1,
+        "naam": "Agrarisch bedrijf",
+        "totaal": 0.0117
+      },
+      {
+        "code": 2,
+        "naam": "Tabakverwerkende industrie",
+        "totaal": 0.0147
+      },
+      {
+        "code": 3,
+        "naam": "Bouwbedrijf",
+        "totaal": 0.0131
+      },
+      {
+        "code": 4,
+        "naam": "Baggerbedrijf",
+        "totaal": 0.0157
+      },
+      {
+        "code": 5,
+        "naam": "Houten emballage-industrie, houtwaren- en borstelindustrie",
+        "totaal": 0.0166
+      },
+      {
+        "code": 6,
+        "naam": "Timmerindustrie",
+        "totaal": 0.0106
+      },
+      {
+        "code": 7,
+        "naam": "Meubel- en orgelbouwindustrie",
+        "totaal": 0.015
+      },
+      {
+        "code": 8,
+        "naam": "Groothandel in hout, zagerijen, schaverijen en houtbereidingsindustrie",
+        "totaal": 0.0116
+      },
+      {
+        "code": 9,
+        "naam": "Grafische industrie",
+        "totaal": 0.0175
+      },
+      {
+        "code": 10,
+        "naam": "Metaalindustrie",
+        "totaal": 0.0144
+      },
+      {
+        "code": 11,
+        "naam": "Elektrotechnische industrie",
+        "totaal": 0.0097
+      },
+      {
+        "code": 12,
+        "naam": "Metaal-en technische bedrijfstakken",
+        "totaal": 0.0138
+      },
+      {
+        "code": 13,
+        "naam": "Bakkerijen",
+        "totaal": 0.022
+      },
+      {
+        "code": 14,
+        "naam": "Suikerverwerkende industrie",
+        "totaal": 0.0219
+      },
+      {
+        "code": 15,
+        "naam": "Slagersbedrijven en poeliers",
+        "totaal": 0.0212
+      },
+      {
+        "code": 16,
+        "naam": "Slagers overig",
+        "totaal": 0.0246
+      },
+      {
+        "code": 17,
+        "naam": "Detailhandel en ambachten",
+        "totaal": 0.0193
+      },
+      {
+        "code": 18,
+        "naam": "Reiniging",
+        "totaal": 0.042
+      },
+      {
+        "code": 19,
+        "naam": "Grootwinkelbedrijf",
+        "totaal": 0.0175
+      },
+      {
+        "code": 20,
+        "naam": "Havenbedrijven",
+        "totaal": 0.0142
+      },
+      {
+        "code": 21,
+        "naam": "Havenclassificeerders",
+        "totaal": 0.029
+      },
+      {
+        "code": 22,
+        "naam": "Binnenscheepvaart",
+        "totaal": 0.0136
+      },
+      {
+        "code": 23,
+        "naam": "Visserij",
+        "totaal": 0.015
+      },
+      {
+        "code": 24,
+        "naam": "Koopvaardij",
+        "totaal": 0.0088
+      },
+      {
+        "code": 25,
+        "naam": "Vervoer KLM",
+        "totaal": 0.0152
+      },
+      {
+        "code": 26,
+        "naam": "Vervoer NS",
+        "totaal": 0.0152
+      },
+      {
+        "code": 27,
+        "naam": "Vervoer posterijen",
+        "totaal": 0.0345
+      },
+      {
+        "code": 28,
+        "naam": "Taxivervoer",
+        "totaal": 0.0476
+      },
+      {
+        "code": 29,
+        "naam": "Openbaar Vervoer",
+        "totaal": 0.0188
+      },
+      {
+        "code": 30,
+        "naam": "Besloten busvervoer",
+        "totaal": 0.021
+      },
+      {
+        "code": 31,
+        "naam": "Overig personenvervoer te land en in de lucht",
+        "totaal": 0.0112
+      },
+      {
+        "code": 32,
+        "naam": "Overig goederenvervoer te land en in de lucht",
+        "totaal": 0.0176
+      },
+      {
+        "code": 33,
+        "naam": "Horeca algemeen",
+        "totaal": 0.0177
+      },
+      {
+        "code": 34,
+        "naam": "Horeca catering",
+        "totaal": 0.0355
+      },
+      {
+        "code": 35,
+        "naam": "Gezondheid, geestelijke en maatschappelijke belangen",
+        "totaal": 0.0181
+      },
+      {
+        "code": 38,
+        "naam": "Banken",
+        "totaal": 0.0141
+      },
+      {
+        "code": 39,
+        "naam": "Verzekeringswezen",
+        "totaal": 0.0076
+      },
+      {
+        "code": 40,
+        "naam": "Uitgeverij",
+        "totaal": 0.0147
+      },
+      {
+        "code": 41,
+        "naam": "Groothandel I",
+        "totaal": 0.0125
+      },
+      {
+        "code": 42,
+        "naam": "Groothandel II",
+        "totaal": 0.0145
+      },
+      {
+        "code": 43,
+        "naam": "Zakelijke Dienstverlening I",
+        "totaal": 0.0116
+      },
+      {
+        "code": 44,
+        "naam": "Zakelijke Dienstverlening II",
+        "totaal": 0.0094
+      },
+      {
+        "code": 45,
+        "naam": "Zakelijke Dienstverlening III",
+        "totaal": 0.0125
+      },
+      {
+        "code": 46,
+        "naam": "Zuivelindustrie",
+        "totaal": 0.0203
+      },
+      {
+        "code": 47,
+        "naam": "Textielindustrie",
+        "totaal": 0.0161
+      },
+      {
+        "code": 48,
+        "naam": "Steen-, cement-, glas- en keramische industrie",
+        "totaal": 0.0231
+      },
+      {
+        "code": 49,
+        "naam": "Chemische industrie",
+        "totaal": 0.021
+      },
+      {
+        "code": 50,
+        "naam": "Voedingsindustrie",
+        "totaal": 0.0192
+      },
+      {
+        "code": 51,
+        "naam": "Algemene industrie",
+        "totaal": 0.0196
+      },
+      {
+        "code": 52,
+        "naam": "Uitzendbedrijven",
+        "totaal": 0.0663
+      },
+      {
+        "code": 53,
+        "naam": "Bewakingsondernemingen",
+        "totaal": 0.0297
+      },
+      {
+        "code": 54,
+        "naam": "Culturele instellingen",
+        "totaal": 0.015
+      },
+      {
+        "code": 55,
+        "naam": "Overige takken van bedrijf en beroep",
+        "totaal": 0.0193
+      },
+      {
+        "code": 56,
+        "naam": "Schildersbedrijf",
+        "totaal": 0.0188
+      },
+      {
+        "code": 57,
+        "naam": "Stukadoorsbedrijf",
+        "totaal": 0.0187
+      },
+      {
+        "code": 58,
+        "naam": "Dakdekkersbedrijf",
+        "totaal": 0.0234
+      },
+      {
+        "code": 59,
+        "naam": "Mortelbedrijf",
+        "totaal": 0.0213
+      },
+      {
+        "code": 60,
+        "naam": "Steenhouwersbedrijf",
+        "totaal": 0.0187
+      },
+      {
+        "code": 61,
+        "naam": "Overheid, onderwijs en wetenschappen",
+        "totaal": 0.014
+      },
+      {
+        "code": 62,
+        "naam": "Overheid, rijk, politie en rechterlijke macht",
+        "totaal": 0.0167
+      },
+      {
+        "code": 63,
+        "naam": "Overheid, defensie",
+        "totaal": 0.0131
+      },
+      {
+        "code": 64,
+        "naam": "Overheid, provincies, gemeenten en waterschappen",
+        "totaal": 0.0149
+      },
+      {
+        "code": 65,
+        "naam": "Overheid, openbare nutsbedrijven",
+        "totaal": 0.0129
+      },
+      {
+        "code": 66,
+        "naam": "Overheid, overige instellingen",
+        "totaal": 0.0135
+      },
+      {
+        "code": 67,
+        "naam": "Werk en (re)Integratie",
+        "totaal": 0.0491
+      },
+      {
+        "code": 68,
+        "naam": "Railbouw",
+        "totaal": 0.0192
+      },
+      {
+        "code": 69,
+        "naam": "Telecommunicatie",
+        "totaal": 0.0152
+      }
+    ],
+    "gebruikelijkLoonMinimum": 58000,
+    "thuiswerkPerDag": 2.45
+  },
+  "aowLeeftijd": {
+    "bron": "https://www.rijksoverheid.nl/themas/belastingen-uitkeringen-en-toeslagen/algemene-ouderdomswet-aow/aow-leeftijd",
+    "opgezocht": "2026-11-03",
+    "perJaar": {
+      "2025": [
+        67,
+        0
+      ],
+      "2026": [
+        67,
+        0
+      ],
+      "2027": [
+        67,
+        0
+      ],
+      "2028": [
+        67,
+        3
+      ],
+      "2029": [
+        67,
+        3
+      ],
+      "2030": [
+        67,
+        3
+      ],
+      "2031": [
+        67,
+        3
+      ]
+    }
   }
 }

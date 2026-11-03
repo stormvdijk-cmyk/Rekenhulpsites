@@ -28,6 +28,7 @@ const faq = [
       <p class="result-label">Bijtelling per maand</p>
       <p class="result-main" id="r-maand">–</p>
       <p class="result-sub">Per jaar <strong id="r-jaar">–</strong> · effectief <span id="r-pct">–</span> van de cataloguswaarde</p>
+      <p class="result-sub" id="r-regel"></p>
       <dl>
         <dt id="r-exact-l" hidden>Netto kosten bij jouw salaris</dt><dd id="r-exact" hidden>–</dd>
         <dt>Netto kosten bij {pct(s[0].tarief)}</dt><dd id="r-s1">–</dd>
@@ -43,6 +44,21 @@ const faq = [
         <label><input type="radio" name="type" value="brandstof" /><span>Benzine, diesel, hybride</span></label>
         <label><input type="radio" name="type" value="waterstof" /><span>Waterstof / zonnecel</span></label>
       </fieldset>
+      <div class="field">
+        <label for="jaar">Datum eerste toelating</label>
+        <select id="jaar" name="jaar">
+          <option value="2026" selected>2026</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
+          <option value="2022">2022</option>
+          <option value="2021-binnen-60">2021 (nog binnen 60 maanden)</option>
+          <option value="2021-na-60">2021 (60 maanden voorbij)</option>
+          <option value="2017-2020">2017 – 2020</option>
+          <option value="voor-2017">Vóór 2017</option>
+        </select>
+        <span class="hint">Het percentage blijft 60 maanden gelijk; staat op je kenteken of leasecontract</span>
+      </div>
       <Field id="eigen" label="Eigen bijdrage per maand" value="0" prefix="€" hint="Ingehouden op je nettoloon, voor privégebruik" />
       <Field id="salaris" label="Je bruto maandsalaris (optioneel)" value="" prefix="€" hint="Voor het exacte netto effect bij jouw inkomen, inclusief de afbouw van je heffingskortingen" />
       <p class="hint">Uitgangspunt: datum eerste toelating in 2026. Wat bij je in welke schijf valt, zie je op je loonstrook of met <a href="../netto-salaris-berekenen/">netto salaris berekenen</a>.</p>
@@ -77,7 +93,7 @@ const faq = [
     <h2>Wat de rekenhulp niet meeneemt</h2>
     <p>De netto kosten per schijf zijn een benadering: bijtelling × schijftarief. De bijtelling verhoogt je inkomen, en daardoor dalen ook je algemene heffingskorting en arbeidskorting als je in het afbouwgebied zit. <strong>Vul je bruto maandsalaris in</strong>, dan rekent de rekenhulp het exacte effect uit: je netto jaarinkomen met en zonder bijtelling. Bij € 3.500 bruto per maand en een benzineauto van € 45.000 is dat € 414,73 per maand, ongeveer 50% van de bijtelling, in plaats van de € 309,87 die je met alleen het schijftarief zou verwachten.</p>
     <ul>
-      <li><strong>Oudere auto’s.</strong> Voor auto’s met een eerste toelating vóór 2026 kunnen andere percentages en grenzen gelden. Het percentage staat vast voor 60 maanden.</li>
+      <li><strong>Oudere auto’s.</strong> Kies het jaar van eerste toelating. Elektrische auto's uit 2025 hebben 17% tot € 30.000, uit 2023 en 2024 16% tot € 30.000, uit 2022 16% tot € 35.000, en uit 2021 (binnen 60 maanden) 12% tot € 40.000. Benzine- en dieselauto's van vóór 2017 hebben 25%.</li>
       <li><strong>Youngtimers.</strong> Voor auto’s ouder dan 16 jaar geldt 35% van de waarde in het economisch verkeer in plaats van de cataloguswaarde.</li>
       <li><strong>Ondernemers.</strong> Voor een ondernemer met een auto op de zaak gelden dezelfde percentages, maar die telt de bijtelling op bij de winst.</li>
       <li><strong>Vanaf 2027.</strong> Het kabinet heeft maatregelen aangekondigd voor nieuwe benzine- en dieselauto’s van de zaak. Controleer vóór je een nieuw leasecontract tekent de actuele regels bij de Belastingdienst.</li>
@@ -86,13 +102,14 @@ const faq = [
 </CalculatorPage>
 
 <script>
-  import { berekenBijtelling, type Aandrijving } from '../lib/calculators/bijtelling';
+  import { berekenBijtelling, type Aandrijving, type ToelatingJaar } from '../lib/calculators/bijtelling';
   import { bijtellingNettoEffect } from '../lib/calculators/bijtellingExact';
   import { $ } from '../lib/ui';
   import { formatProcent } from '../lib/calculators/format';
   import { euro, getal, live, radio, zet } from '../lib/ui';
   live('f', () => {
-    const r = berekenBijtelling({ cataloguswaarde: getal('waarde'), aandrijving: (radio('type') || 'elektrisch') as Aandrijving, eigenBijdrageMaand: getal('eigen') });
+    const r = berekenBijtelling({ cataloguswaarde: getal('waarde'), aandrijving: (radio('type') || 'elektrisch') as Aandrijving, eigenBijdrageMaand: getal('eigen'), jaarToelating: ($('jaar') as HTMLSelectElement).value as ToelatingJaar });
+    zet('r-regel', r.cap ? `${formatProcent(r.percentageTotCap, 0)} tot € ${r.cap.toLocaleString('nl-NL')}, daarboven 22%` : `${formatProcent(r.percentageTotCap, 0)} over de hele cataloguswaarde`);
     zet('r-maand', euro(r.bijtellingMaand));
     zet('r-jaar', euro(r.bijtellingJaar));
     zet('r-pct', formatProcent(r.effectiefPercentage, 1));

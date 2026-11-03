@@ -5,22 +5,25 @@ import { tarieven } from '../data/tarieven';
 const m = tarieven.minimumloon;
 const eur2 = (n: number) => '€ ' + n.toLocaleString('nl-NL', { minimumFractionDigits: 2 });
 const [h1, h2] = m.perUur;
+const jan = m.perLeeftijd['2026-01-01'] as Record<string, number>;
+const jul = m.perLeeftijd['2026-07-01'] as Record<string, number>;
+const leeftijden = ['21', '20', '19', '18', '17', '16', '15'];
 const faq = [
   { vraag: 'Hoe hoog is het minimumloon in 2026?', antwoord: `Voor werknemers van 21 jaar en ouder is het wettelijk minimumloon ${eur2(h2.bedrag)} bruto per uur vanaf 1 juli 2026. Van januari tot en met juni 2026 was het ${eur2(h1.bedrag)}. Het minimumloon wordt elk halfjaar aangepast, op 1 januari en 1 juli.` },
   { vraag: 'Zit vakantiegeld in het minimumloon?', antwoord: 'Nee. Het minimumloon is exclusief vakantiegeld. Daarbovenop krijg je minstens 8% vakantiegeld over je brutoloon. Ook toeslagen voor overwerk of onregelmatige uren komen erbovenop als je cao dat regelt.' },
-  { vraag: 'Geldt het minimumloon per uur voor iedereen?', antwoord: 'Sinds 2024 geldt in Nederland één minimumloon per uur, ongeacht hoeveel uur je per week werkt. Voor werknemers jonger dan 21 jaar geldt een lager jeugdminimumloon, een percentage van het volwassen minimumloon. Kijk voor die bedragen op rijksoverheid.nl.' },
+  { vraag: 'Wat is het jeugdminimumloon in 2026?', antwoord: `Vanaf 1 juli 2026 is het minimumloon per uur ${eur2(jul['20'])} op je 20e, ${eur2(jul['19'])} op je 19e, ${eur2(jul['18'])} op je 18e, ${eur2(jul['17'])} op je 17e, ${eur2(jul['16'])} op je 16e en ${eur2(jul['15'])} op je 15e. Vanaf 21 jaar geldt het volwassen minimumloon.` },
   { vraag: 'Wat als mijn werkgever minder betaalt?', antwoord: 'Dat mag niet. Krijg je minder dan het minimumloon, bespreek het dan eerst met je werkgever. Lost dat niets op, dan kun je een melding doen bij de Nederlandse Arbeidsinspectie.' },
 ];
 ---
 <CalculatorPage
   slug="minimumloon-berekenen"
   title="Minimumloon 2026 per uur, maand en jaar"
-  description="Het minimumloon in 2026: € 14,99 per uur vanaf 1 juli (21+). Bereken je minimumloon per week, maand en jaar bij jouw aantal uren."
+  description="Het minimumloon in 2026: € 14,99 per uur vanaf 1 juli (21+), plus alle jeugdlonen. Bereken je minimumloon per week, maand en jaar."
   h1="Minimumloon 2026 berekenen"
   intro="Vul in hoeveel uur je per week werkt. Je ziet direct het minimumloon per week, maand en jaar voor werknemers van 21 jaar en ouder."
   faq={faq}
-  bron={m.bron}
-  bronNaam="Rijksoverheid"
+  bron={m.bronJeugd}
+  bronNaam="Rijksoverheid, bedragen minimumloon 2026"
 >
   <form slot="calculator" class="calc" id="f" novalidate>
     <div class="result" aria-live="polite">
@@ -34,7 +37,17 @@ const faq = [
       </dl>
     </div>
     <div class="form">
-      <Field id="uren" label="Uren per week" value="40" suffix="uur" />
+      <div class="row-2">
+        <Field id="uren" label="Uren per week" value="40" suffix="uur" />
+        <div class="field">
+          <label for="leeftijd">Leeftijd</label>
+          <select id="leeftijd" name="leeftijd">
+            <option value="21" selected>21 jaar of ouder</option>
+            <option value="20">20 jaar</option><option value="19">19 jaar</option><option value="18">18 jaar</option>
+            <option value="17">17 jaar</option><option value="16">16 jaar</option><option value="15">15 jaar</option>
+          </select>
+        </div>
+      </div>
       <fieldset class="seg">
         <legend>Periode</legend>
         <label><input type="radio" name="periode" value="2026-01-01" /><span>jan – jun 2026</span></label>
@@ -47,10 +60,9 @@ const faq = [
     <h2>Het minimumloon in 2026</h2>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Periode</th><th>Per uur (21+)</th></tr></thead>
+        <thead><tr><th>Leeftijd</th><th>1 jan – 30 jun 2026</th><th>vanaf 1 jul 2026</th></tr></thead>
         <tbody>
-          <tr><td>1 januari – 30 juni 2026</td><td>{eur2(h1.bedrag)}</td></tr>
-          <tr><td>vanaf 1 juli 2026</td><td>{eur2(h2.bedrag)}</td></tr>
+          {leeftijden.map((l) => <tr><td>{l === '21' ? '21 jaar en ouder' : `${l} jaar`}</td><td>{eur2(jan[l])}</td><td>{eur2(jul[l])}</td></tr>)}
         </tbody>
       </table>
     </div>
@@ -70,15 +82,15 @@ const faq = [
     <p>Werk je voor het minimumloon, dan betaal je weinig loonheffing. De algemene heffingskorting en de arbeidskorting zijn bij dit inkomen bijna maximaal. Bereken wat je netto overhoudt met <a href="../netto-salaris-berekenen/">netto salaris berekenen</a>, of reken een ander uurloon om met <a href="../bruto-netto-uurloon/">uurloon omrekenen</a>.</p>
     <h3>Waarom er geen vast minimummaandloon meer is</h3>
     <p>Tot 2024 stond het minimumloon vast per maand, en hing het uurloon af van de lengte van je werkweek. Wie 40 uur werkte, verdiende per uur minder dan iemand met een werkweek van 36 uur. Sinds 1 januari 2024 is dat omgedraaid: het uurloon staat vast, en je maandloon volgt uit het aantal uren. Werk je 36 uur, dan verdien je per maand dus minder dan met 40 uur, maar per uur precies hetzelfde.</p>
-    <p>Deze rekenhulp geldt voor werknemers van 21 jaar en ouder. Voor jongere werknemers gelden lagere jeugdminimumlonen.</p>
+    <p>Voor werknemers van 15 tot en met 20 jaar gelden vaste jeugdminimumlonen per uur. Kies de leeftijd in de rekenhulp om je eigen minimumloon te zien.</p>
   </Fragment>
 </CalculatorPage>
 
 <script>
   import { berekenMinimumloon } from '../lib/calculators/minimumloon';
-  import { euro, getal, live, radio, zet } from '../lib/ui';
+  import { $, euro, getal, live, radio, zet } from '../lib/ui';
   live('f', () => {
-    const r = berekenMinimumloon(getal('uren'), radio('periode') || '2026-07-01');
+    const r = berekenMinimumloon(getal('uren'), radio('periode') || '2026-07-01', Number(($('leeftijd') as HTMLSelectElement).value));
     zet('r-maand', euro(r.maand));
     zet('r-uur', euro(r.uurloon));
     zet('r-week', euro(r.week));

@@ -1,0 +1,79 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import { tarieven } from '../data/tarieven';
+const a = tarieven.aowLeeftijd;
+const rijen = Object.entries(a.perJaar as Record<string, [number, number]>);
+const lft = ([j, m]: [number, number]) => `${j} jaar${m ? ` en ${m} maanden` : ''}`;
+const faq = [
+  { vraag: 'Wanneer krijg ik AOW?', antwoord: 'Op de dag dat je de AOW-leeftijd bereikt. Die leeftijd hangt af van het jaar waarin je die leeftijd haalt. Tot en met 2027 is dat 67 jaar, vanaf 2028 67 jaar en 3 maanden. Je vraagt de AOW zelf aan bij de SVB, ongeveer een half jaar van tevoren; je krijgt daarover een brief.' },
+  { vraag: 'Waarom krijgt niemand AOW in januari tot en met maart 2028?', antwoord: 'Omdat de AOW-leeftijd in 2028 met 3 maanden stijgt. Wie in januari 1961 is geboren, wordt in januari 2028 67, maar moet dan nog 3 maanden wachten tot april 2028. Wie in december 1960 is geboren, krijgt AOW nog op zijn 67e, in december 2027.' },
+  { vraag: 'Hoe wordt de AOW-leeftijd vastgesteld?', antwoord: 'Elk jaar stelt het kabinet de AOW-leeftijd vast voor over vijf jaar. Die volgt uit de levensverwachting die het CBS berekent. Een vastgestelde AOW-leeftijd kan daarna niet meer veranderen.' },
+  { vraag: 'Krijg ik volledige AOW?', antwoord: 'Je bouwt 2% AOW op voor elk jaar dat je in de 50 jaar vóór je AOW-leeftijd in Nederland woont of werkt. Heb je een tijd in het buitenland gewoond, dan kan je AOW lager zijn. Kijk op Mijn SVB hoeveel AOW je opbouwt.' },
+];
+---
+<CalculatorPage
+  slug="aow-leeftijd-berekenen"
+  title="AOW-leeftijd berekenen: wanneer krijg ik AOW?"
+  description="Bereken je AOW-leeftijd en de datum waarop je AOW ingaat, met de vastgestelde AOW-leeftijden van 2025 tot en met 2031."
+  h1="AOW-leeftijd berekenen"
+  intro="Vul je geboortedatum in. Je ziet direct op welke leeftijd en op welke datum je AOW krijgt."
+  faq={faq}
+  bron={a.bron}
+  bronNaam="Rijksoverheid, AOW-leeftijden 2025–2031"
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Je AOW gaat in op</p>
+      <p class="result-main" id="r-datum">–</p>
+      <p class="result-sub" id="r-leeftijd"></p>
+      <p class="result-sub" id="r-toel"></p>
+    </div>
+    <div class="form">
+      <div class="field">
+        <label for="geb">Geboortedatum</label>
+        <input type="date" id="geb" name="geb" value="1961-01-10" min="1940-01-01" max="2010-12-31" />
+      </div>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>De AOW-leeftijd per jaar</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Jaar</th><th>AOW-leeftijd</th></tr></thead>
+        <tbody>{rijen.map(([j, v]) => <tr><td>{j}</td><td>{lft(v)}</td></tr>)}</tbody>
+      </table>
+    </div>
+    <p>De AOW-leeftijd hangt af van het jaar waarin je die leeftijd bereikt. De rekenhulp telt de AOW-leeftijd van dat jaar op bij je geboortedatum. Valt de uitkomst in dat jaar, dan is dat je AOW-datum.</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Geboren 15 maart 1959:</strong> je wordt 67 in 2026. De AOW-leeftijd in 2026 is 67 jaar, dus je AOW gaat in op <strong>15 maart 2026</strong>.</p>
+      <p><strong>Geboren 1 november 1960:</strong> 67 jaar in 2027, dus AOW op <strong>1 november 2027</strong>.</p>
+      <p><strong>Geboren 10 januari 1961:</strong> je wordt 67 in januari 2028, maar in 2028 is de AOW-leeftijd 67 jaar en 3 maanden. Je AOW gaat in op <strong>10 april 2028</strong>.</p>
+      <p><strong>Geboren 1 juni 1964:</strong> 67 jaar en 3 maanden in 2031, dus AOW op <strong>1 september 2031</strong>.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Na je AOW-leeftijd</h2>
+    <p>Vanaf je AOW-leeftijd betaal je geen AOW-premie meer. Je eerste belastingschijf is dan 17,85% in plaats van 35,75%, en je krijgt ouderenkorting. Bereken wat je netto overhoudt met <a href="../inkomstenbelasting-berekenen/">inkomstenbelasting berekenen</a> (vink AOW aan), of met <a href="../netto-salaris-berekenen/">netto salaris berekenen</a> als je doorwerkt.</p>
+    <p>Vul je pensioen aan met een lijfrente? Tot vijf jaar na je AOW-leeftijd mag je nog jaarruimte gebruiken; zie <a href="../jaarruimte-lijfrente-berekenen/">jaarruimte lijfrente</a>.</p>
+    <p>De SVB heeft een eigen rekenhulp op svb.nl, waar je je persoonlijke AOW-datum ook kunt controleren. Voor wie na 1964 is geboren, is de AOW-leeftijd nog niet vastgesteld: die wordt elk jaar vijf jaar vooruit bepaald.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenAowDatum } from '../lib/calculators/aow';
+  import { $, live, zet } from '../lib/ui';
+  const fmt = (d: Date) => d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  live('f', () => {
+    const v = ($('geb') as HTMLInputElement).value;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) { zet('r-datum', '–'); return; }
+    const [y, m, d] = v.split('-').map(Number);
+    const r = berekenAowDatum(new Date(Date.UTC(y, m - 1, d)));
+    zet('r-datum', r.datum ? fmt(r.datum) : 'Nog niet vastgesteld');
+    zet('r-leeftijd', r.datum ? `AOW-leeftijd: ${r.leeftijdJaar} jaar${r.leeftijdMaand ? ` en ${r.leeftijdMaand} maanden` : ''}` : '');
+    zet('r-toel', r.toelichting);
+  });
+</script>

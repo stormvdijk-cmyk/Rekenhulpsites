@@ -1,0 +1,85 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const l = tarieven.lijfrente;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Wat is de jaarruimte?', antwoord: 'Het bedrag dat je in een jaar aan lijfrentepremie of een lijfrenterekening mag aftrekken, omdat je te weinig pensioen opbouwt. De jaarruimte voor 2026 hangt af van je inkomen en je pensioenopbouw in 2025.' },
+  { vraag: 'Waar vind ik mijn factor A?', antwoord: 'Op je Uniform Pensioenoverzicht (UPO) van je pensioenfonds, meestal onder het kopje Factor A of Jaarruimte. Bouw je pensioen op in een beschikbarepremieregeling of al in de nieuwe regeling onder de Wet toekomst pensioenen, vul dan de totale premie van werkgever en werknemer in in plaats van factor A.' },
+  { vraag: 'Wat is reserveringsruimte?', antwoord: `Jaarruimte die je in de tien jaar ervoor niet hebt gebruikt, mag je inhalen. Dat heet reserveringsruimte. In 2026 mag je maximaal ${eur(l.maximaleReserveringsruimte)} aan reserveringsruimte gebruiken. Het hulpmiddel lijfrentepremie van de Belastingdienst rekent dat per jaar voor je uit.` },
+  { vraag: 'Hoeveel belasting levert het op?', antwoord: 'De premie verlaagt je belastbaar inkomen in box 1. Bij een inkomen in de tweede of hoogste schijf levert dat 37,56% op, in de eerste schijf 35,75%. Over de uitkering later betaal je weer belasting, maar na je AOW-leeftijd vaak tegen een lager tarief.' },
+];
+---
+<CalculatorPage
+  slug="jaarruimte-lijfrente-berekenen"
+  title="Jaarruimte lijfrente berekenen 2026"
+  description={`Bereken je jaarruimte 2026: hoeveel lijfrentepremie je mag aftrekken bij een pensioentekort. 30% van je premiegrondslag, maximaal ${eur(l.maximaleJaarruimte)}.`}
+  h1="Jaarruimte lijfrente berekenen"
+  intro="Vul je inkomen van 2025 en je pensioenopbouw in. Je ziet direct hoeveel je in 2026 maximaal aan lijfrente mag inleggen en aftrekken."
+  faq={faq}
+  bron={l.bron}
+  bronNaam="Belastingdienst, cijfers levensverzekeringen 2026"
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Jaarruimte 2026</p>
+      <p class="result-main" id="r-jr">–</p>
+      <p class="result-sub">Belastingvoordeel bij volledige inleg ongeveer <strong id="r-vd">–</strong></p>
+      <dl>
+        <dt>Premiegrondslag</dt><dd id="r-pg">–</dd>
+        <dt>30% van de premiegrondslag</dt><dd id="r-30">–</dd>
+        <dt>Min pensioenopbouw</dt><dd id="r-opb">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="ink" label="Inkomen in 2025 (loon + winst)" value="60000" prefix="€" hint="Box 1-inkomen uit werk, vóór aftrekposten" />
+      <Field id="fa" label="Factor A over 2025 (van je UPO)" value="0" prefix="€" hint="0 als je geen pensioen opbouwt, zoals veel zzp'ers" />
+      <Field id="pp" label="Of: premie beschikbarepremieregeling / Wtp" value="0" prefix="€" hint="Werkgever + werknemer samen, per jaar" />
+      <Field id="for" label="Storting oudedagsreserve 2025" value="0" prefix="€" hint="Alleen voor ondernemers met een FOR" />
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo bereken je de jaarruimte</h2>
+    <ol>
+      <li><strong>Premiegrondslag:</strong> je inkomen uit werk in 2025, maximaal {eur(l.aftoppingsgrens)}, min de AOW-franchise van {eur(l.franchise)}.</li>
+      <li><strong>Ruimte:</strong> {l.percentage * 100}% van de premiegrondslag.</li>
+      <li><strong>Min je pensioenopbouw:</strong> {l.factorA.toLocaleString('nl-NL')} × factor A van je UPO, of de premie in een beschikbarepremieregeling, plus een eventuele storting in de oudedagsreserve.</li>
+    </ol>
+    <p>Wat overblijft is je jaarruimte, met een maximum van {eur(l.maximaleJaarruimte)} in 2026. Bouw je via je werkgever veel pensioen op, dan is je jaarruimte vaak nul. Voor zzp'ers zonder pensioen is ze meestal juist ruim.</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Zzp'er zonder pensioen, € 60.000 winst in 2025:</strong> premiegrondslag € 60.000 − € 19.172 = € 40.828. Jaarruimte 30% = <strong>€ 12.248,40</strong>. Leg je dat in, dan scheelt het ongeveer € 4.600 belasting.</p>
+      <p><strong>Werknemer, € 60.000 loon, factor A € 800:</strong> € 12.248,40 − 6,27 × € 800 = <strong>€ 7.232,40</strong>.</p>
+      <p><strong>Hoog inkomen, € 200.000:</strong> de premiegrondslag is maximaal € 118.628, dus de jaarruimte is maximaal 30% daarvan: <strong>€ 35.589</strong>.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Waar je op let</h2>
+    <ul>
+      <li><strong>Lijfrenterekening of -verzekering.</strong> Aftrekbaar zijn premies voor een lijfrenteverzekering bij een verzekeraar, of stortingen op een geblokkeerde lijfrenterekening of beleggingsrecht bij een bank.</li>
+      <li><strong>Leeftijdsgrens.</strong> Je kunt jaarruimte gebruiken tot het einde van het jaar waarin je vijf jaar ouder wordt dan je AOW-leeftijd.</li>
+      <li><strong>Uitkering.</strong> De lijfrente wordt later in termijnen uitgekeerd en is dan belast in box 1. Afkopen kan, maar dan betaal je er in één keer belasting over, en soms 20% revisierente.</li>
+      <li><strong>Precies uitrekenen.</strong> Gebruik voor je aangifte het hulpmiddel lijfrentepremie van de Belastingdienst. Dat houdt ook rekening met je reserveringsruimte.</li>
+    </ul>
+    <p>Zie hoe je inleg groeit met <a href="../samengestelde-rente/">samengestelde rente</a>, of bereken je netto inkomen als ondernemer met <a href="../zzp-netto-inkomen-berekenen/">zzp netto inkomen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenJaarruimte } from '../lib/calculators/aftrekposten';
+  import { aftrekTarief } from '../lib/calculators/hypotheek';
+  import { euro, getal, live, zet } from '../lib/ui';
+  live('f', () => {
+    const ink = getal('ink');
+    const r = berekenJaarruimte({ inkomenVorigJaar: ink, factorA: getal('fa'), pensioenpremie: getal('pp'), stortingFor: getal('for') });
+    zet('r-jr', euro(r.jaarruimte));
+    zet('r-vd', euro(r.jaarruimte * aftrekTarief(ink)));
+    zet('r-pg', euro(r.premiegrondslag));
+    zet('r-30', euro(r.ruimteVoorAftrek));
+    zet('r-opb', '− ' + euro(r.aftrekPensioen));
+  });
+</script>
