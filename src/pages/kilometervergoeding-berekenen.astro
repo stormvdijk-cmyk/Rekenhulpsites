@@ -8,7 +8,7 @@ const faq = [
   { vraag: 'Hoe hoog is de onbelaste kilometervergoeding in 2026?', antwoord: `${eurKm} per kilometer. De verhoging van € 0,23 naar ${eurKm} geldt met terugwerkende kracht vanaf 1 januari 2026. Je werkgever mag het verschil over de eerdere maanden alsnog onbelast uitbetalen.` },
   { vraag: 'Moet mijn werkgever reiskosten vergoeden?', antwoord: 'Nee, een reiskostenvergoeding is in Nederland niet wettelijk verplicht. Vaak staat het in je cao of arbeidscontract. Als je werkgever het wel vergoedt, mag dat tot het maximum per kilometer belastingvrij.' },
   { vraag: 'Waarom rekent de werkgever met 214 dagen?', antwoord: 'Bij een vaste vergoeding per maand mag je werkgever uitgaan van maximaal 214 reisdagen per jaar bij een werkweek van vijf dagen. Zo zijn vakantie, feestdagen en ziekte al verrekend. Werk je minder dagen, dan gaat het naar verhouding: bij drie dagen zijn het er 128.' },
-  { vraag: 'Telt thuiswerken mee?', antwoord: 'Voor dagen dat je thuiswerkt, krijg je geen reiskostenvergoeding voor die dag. Je werkgever mag dan wel een onbelaste thuiswerkvergoeding geven. Werk je deels thuis, vul dan alleen het aantal dagen in dat je naar kantoor reist.' },
+  { vraag: 'Telt thuiswerken mee?', antwoord: 'Voor dagen dat je thuiswerkt, krijg je geen reiskostenvergoeding voor die dag. Je werkgever mag dan wel een onbelaste thuiswerkvergoeding geven. Werk je deels thuis, vul dan alleen het aantal dagen in dat je naar kantoor reist, en daarnaast je thuiswerkdagen: voor die dagen mag je werkgever in 2026 € 2,45 per dag onbelast vergoeden.' },
 ];
 ---
 <CalculatorPage
@@ -30,6 +30,7 @@ const faq = [
         <dt>Kilometers per jaar</dt><dd id="r-km">–</dd>
         <dt>Vergoeding van je werkgever per jaar</dt><dd id="r-verg">–</dd>
         <dt>Daarvan belast</dt><dd id="r-belast">–</dd>
+        <dt>Thuiswerkvergoeding per maand (max.)</dt><dd id="r-thuis">–</dd>
       </dl>
     </div>
     <div class="form">
@@ -38,6 +39,7 @@ const faq = [
         <Field id="dagen" label="Reisdagen per week" value="5" inputmode="numeric" />
       </div>
       <Field id="verg" label="Vergoeding van je werkgever per km" value="0,25" prefix="€" hint="Laat 0,25 staan als je wilt weten wat maximaal onbelast mag" />
+      <Field id="thuis" label="Thuiswerkdagen per week" value="0" inputmode="numeric" hint={`Onbelaste thuiswerkvergoeding: ${'€ ' + r.thuiswerkPerDag.toLocaleString('nl-NL', { minimumFractionDigits: 2 })} per dag`} />
     </div>
   </form>
 
@@ -69,6 +71,7 @@ const faq = [
 
 <script>
   import { berekenKilometervergoeding } from '../lib/calculators/kilometervergoeding';
+  import { tarieven } from '../data/tarieven';
   import { formatGetal } from '../lib/calculators/format';
   import { euro, getal, live, zet } from '../lib/ui';
   live('f', () => {
@@ -79,5 +82,8 @@ const faq = [
     zet('r-km', formatGetal(r.kmJaar));
     zet('r-verg', euro(r.vergoedingJaar));
     zet('r-belast', euro(r.belastDeelJaar));
+    const rk = tarieven.reiskosten;
+    const thuisDagen = Math.round((rk.vasteVergoedingDagenFulltime * Math.min(5, Math.max(0, getal('thuis')))) / 5);
+    zet('r-thuis', euro((thuisDagen * rk.thuiswerkPerDag) / 12));
   });
 </script>

@@ -87,7 +87,51 @@
     "standaard": 0.22,
     "elektrischVerlaagd": 0.18,
     "elektrischGrens": 30000,
-    "waterstofZonnecel": 0.18
+    "waterstofZonnecel": 0.18,
+    "bronLh": "https://download.belastingdienst.nl/belastingdienst/docs/bijlage-nieuwsbrief-loonheffingen-2026-lh2091b63fd.pdf",
+    "elektrischKortingPerJaar": [
+      {
+        "jaar": "2026",
+        "korting": 0.04,
+        "cap": 30000
+      },
+      {
+        "jaar": "2025",
+        "korting": 0.05,
+        "cap": 30000
+      },
+      {
+        "jaar": "2024",
+        "korting": 0.06,
+        "cap": 30000
+      },
+      {
+        "jaar": "2023",
+        "korting": 0.06,
+        "cap": 30000
+      },
+      {
+        "jaar": "2022",
+        "korting": 0.06,
+        "cap": 35000
+      },
+      {
+        "jaar": "2021-binnen-60",
+        "korting": 0.1,
+        "cap": 40000
+      },
+      {
+        "jaar": "2021-na-60",
+        "korting": 0.04,
+        "cap": 30000
+      },
+      {
+        "jaar": "2017-2020",
+        "korting": 0.04,
+        "cap": 30000
+      }
+    ],
+    "standaardVoor2017": 0.25
   },
   "ondernemer": {
     "bron": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/ondernemersaftrek-2026/zelfstandigenaftrek-2026",
@@ -104,9 +148,46 @@
   "inflatie": {
     "bron": "https://www.cbs.nl/nl-nl/cijfers/detail/70936ned",
     "bronNieuws": "https://www.cbs.nl/nl-nl/nieuws/2026/03/inflatie-3-3-procent-in-2025",
-    "opgezocht": "2026-11-02",
+    "opgezocht": "2026-11-03",
     "omschrijving": "Jaarmutatie consumentenprijsindex (CPI) in procenten, CBS",
     "jaarmutatie": {
+      "1963": 3.8,
+      "1964": 5.5,
+      "1965": 5.2,
+      "1966": 5.8,
+      "1967": 3.1,
+      "1968": 3.7,
+      "1969": 7.5,
+      "1970": 4.4,
+      "1971": 7.6,
+      "1972": 7.8,
+      "1973": 8.0,
+      "1974": 9.6,
+      "1975": 10.2,
+      "1976": 8.8,
+      "1977": 6.7,
+      "1978": 4.1,
+      "1979": 4.2,
+      "1980": 6.5,
+      "1981": 6.7,
+      "1982": 6.0,
+      "1983": 2.8,
+      "1984": 3.3,
+      "1985": 2.3,
+      "1986": 0.2,
+      "1987": -0.5,
+      "1988": 0.7,
+      "1989": 1.1,
+      "1990": 2.5,
+      "1991": 3.9,
+      "1992": 3.7,
+      "1993": 2.1,
+      "1994": 2.7,
+      "1995": 2.0,
+      "1996": 2.1,
+      "1997": 2.2,
+      "1998": 2.0,
+      "1999": 2.2,
       "2000": 2.6,
       "2001": 4.5,
       "2002": 3.4,
@@ -133,7 +214,8 @@
       "2023": 3.8,
       "2024": 3.3,
       "2025": 3.3
-    }
+    },
+    "bronData": "https://opendata.cbs.nl/ODataApi/odata/70936ned/TypedDataSet"
   },
   "overdrachtsbelasting": {
     "bron": "https://www.rijksoverheid.nl/vraag-en-antwoord/huis-kopen/vrijstelling-overdrachtsbelasting",
@@ -215,7 +297,10 @@
     "opgezocht": "2026-11-02",
     "omschrijving": "Maximale onbelaste vergoeding per kilometer in 2026 (met terugwerkende kracht vanaf 1 januari 2026). Vaste vergoeding: maximaal 214 reisdagen per jaar bij een vijfdaagse werkweek.",
     "onbelastPerKm": 0.25,
-    "vasteVergoedingDagenFulltime": 214
+    "vasteVergoedingDagenFulltime": 214,
+    "bronDagen": "https://kennisgroepen.belastingdienst.nl/publicaties/kg204202222-toepassing-vaste-reiskostenvergoeding-vanaf-2022/",
+    "thuiswerkPerDag": 2.45,
+    "bronThuiswerk": "https://download.belastingdienst.nl/belastingdienst/docs/bijlage-nieuwsbrief-loonheffingen-2026-lh2091b63fd.pdf"
   },
   "aow": {
     "bron": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_1/box_1",
@@ -310,7 +395,7 @@
   },
   "minimumloon": {
     "bron": "https://www.rijksoverheid.nl/actueel/nieuws/2026/06/11/uitkeringsbedragen-per-1-juli-2026",
-    "opgezocht": "2026-11-02",
+    "opgezocht": "2026-11-03",
     "omschrijving": "Wettelijk minimumloon per uur voor werknemers van 21 jaar en ouder.",
     "perUur": [
       {
@@ -321,7 +406,28 @@
         "vanaf": "2026-07-01",
         "bedrag": 14.99
       }
-    ]
+    ],
+    "bronJeugd": "https://www.rijksoverheid.nl/onderwerpen/minimumloon/bedragen-minimumloon/bedragen-minimumloon-2026",
+    "perLeeftijd": {
+      "2026-01-01": {
+        "21": 14.71,
+        "20": 11.77,
+        "19": 8.83,
+        "18": 7.36,
+        "17": 5.81,
+        "16": 5.07,
+        "15": 4.41
+      },
+      "2026-07-01": {
+        "21": 14.99,
+        "20": 11.99,
+        "19": 8.99,
+        "18": 7.5,
+        "17": 5.92,
+        "16": 5.17,
+        "15": 4.5
+      }
+    }
   },
   "transitievergoeding": {
     "bron": "https://www.rijksoverheid.nl/documenten/vraag-en-antwoord/ontslag/hoe-hoog-is-de-transitievergoeding-als-ik-word-ontslagen",
@@ -351,5 +457,905 @@
     "bronVoorwaarden": "https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/kor-voorwaarden",
     "opgezocht": "2026-11-02",
     "omzetgrens": 20000
+  },
+  "gecontroleerd": {
+    "datum": "2026-11-03",
+    "werkwijze": "Elk getal automatisch vergeleken met de tekst van de officiële bronpagina's en pdf's (Belastingdienst Fiscale informatie 2026, cijferbijlage loonheffingen 2026, CBS-databank 70936ned). Alle waarden komen overeen."
+  },
+  "zorgtoeslag": {
+    "bron": "https://download.belastingdienst.nl/toeslagen/docs/berekening_zorgtoeslag_tg0821z62fd.pdf",
+    "opgezocht": "2026-11-03",
+    "standaardpremie": 2119,
+    "drempelinkomen": 29736,
+    "normpremieAlleen": 0.01912,
+    "normpremiePartner": 0.04289,
+    "normpremieBoven": 0.1373,
+    "inkomensgrensAlleen": 40857,
+    "inkomensgrensPartner": 51142,
+    "vermogensgrensAlleen": 146011,
+    "vermogensgrensPartner": 184633,
+    "maximumAlleen": 1550,
+    "maximumPartner": 2963
+  },
+  "huurtoeslag": {
+    "bron": "https://download.belastingdienst.nl/toeslagen/docs/berekening_huurtoeslag_tg0831z62fd.pdf",
+    "opgezocht": "2026-11-03",
+    "omschrijving": "Nieuwe berekening vanaf 2026: vaste basishuur per huishoudtype en een inkomensafhankelijke correctie boven het inkomensijkpunt.",
+    "huurgrensJong": 498.2,
+    "huurgrens": 932.93,
+    "basishuurEen": 202.52,
+    "basishuurMeer": 200.71,
+    "kwaliteitskortingsgrens": 498.2,
+    "aftoppingsgrensKlein": 713.02,
+    "aftoppingsgrensGroot": 764.14,
+    "vergoedingB": 0.65,
+    "vergoedingC": 0.4,
+    "ijkpuntEen": 23425,
+    "ijkpuntMeer": 31500,
+    "afbouwEen": 0.27,
+    "afbouwMeer": 0.22,
+    "vrijstellingKind": 6218,
+    "vermogensgrensPerPersoon": 38479
+  },
+  "kindgebondenBudget": {
+    "bron": "https://download.belastingdienst.nl/toeslagen/docs/berekening_kindgebonden_budget_tg0811z61fd.pdf",
+    "opgezocht": "2026-11-03",
+    "perKind": 2580,
+    "verhoging12tot15": 724,
+    "verhoging16en17": 964,
+    "drempelAlleen": 29736,
+    "drempelPartner": 39141,
+    "afbouwPercentage": 0.076,
+    "vermogensgrensAlleen": 146011,
+    "vermogensgrensPartner": 184633,
+    "maxEenKindAlleen": 5996,
+    "maxEenKindPartner": 2580,
+    "maxTweeKinderenAlleen": 8576,
+    "maxTweeKinderenPartner": 5160
+  },
+  "kinderopvangtoeslag": {
+    "bron": "https://download.belastingdienst.nl/toeslagen/docs/berekening_kinderopvangtoeslag_tg0801z61fd.pdf",
+    "opgezocht": "2026-11-03",
+    "maxUurprijsDagopvang": 11.23,
+    "maxUurprijsBso": 9.98,
+    "maxUurprijsGastouder": 8.49,
+    "maxUrenPerMaand": 230,
+    "tabel": [
+      {
+        "van": 0,
+        "tot": 24149,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 24150,
+        "tot": 25756,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 25757,
+        "tot": 27363,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 27364,
+        "tot": 28973,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 28974,
+        "tot": 30579,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 30580,
+        "tot": 32189,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 32190,
+        "tot": 33795,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 33796,
+        "tot": 35400,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 35401,
+        "tot": 37129,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 37130,
+        "tot": 38855,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 38856,
+        "tot": 40586,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 40587,
+        "tot": 42313,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 42314,
+        "tot": 44046,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 44047,
+        "tot": 45776,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 45777,
+        "tot": 47546,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 47547,
+        "tot": 49318,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 49319,
+        "tot": 51092,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 51093,
+        "tot": 52864,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 52865,
+        "tot": 54641,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 54642,
+        "tot": 56412,
+        "eerste": 0.96,
+        "volgende": 0.96
+      },
+      {
+        "van": 56413,
+        "tot": 58184,
+        "eerste": 0.955,
+        "volgende": 0.956
+      },
+      {
+        "van": 58185,
+        "tot": 59957,
+        "eerste": 0.948,
+        "volgende": 0.956
+      },
+      {
+        "van": 59958,
+        "tot": 61895,
+        "eerste": 0.939,
+        "volgende": 0.956
+      },
+      {
+        "van": 61896,
+        "tot": 65695,
+        "eerste": 0.924,
+        "volgende": 0.956
+      },
+      {
+        "van": 65696,
+        "tot": 69492,
+        "eerste": 0.916,
+        "volgende": 0.952
+      },
+      {
+        "van": 69493,
+        "tot": 73292,
+        "eerste": 0.905,
+        "volgende": 0.946
+      },
+      {
+        "van": 73293,
+        "tot": 77094,
+        "eerste": 0.882,
+        "volgende": 0.942
+      },
+      {
+        "van": 77095,
+        "tot": 80891,
+        "eerste": 0.859,
+        "volgende": 0.939
+      },
+      {
+        "van": 80892,
+        "tot": 84693,
+        "eerste": 0.837,
+        "volgende": 0.932
+      },
+      {
+        "van": 84694,
+        "tot": 88491,
+        "eerste": 0.812,
+        "volgende": 0.927
+      },
+      {
+        "van": 88492,
+        "tot": 92291,
+        "eerste": 0.789,
+        "volgende": 0.922
+      },
+      {
+        "van": 92292,
+        "tot": 96091,
+        "eerste": 0.767,
+        "volgende": 0.915
+      },
+      {
+        "van": 96092,
+        "tot": 99889,
+        "eerste": 0.743,
+        "volgende": 0.909
+      },
+      {
+        "van": 99890,
+        "tot": 103694,
+        "eerste": 0.721,
+        "volgende": 0.905
+      },
+      {
+        "van": 103695,
+        "tot": 107492,
+        "eerste": 0.696,
+        "volgende": 0.902
+      },
+      {
+        "van": 107493,
+        "tot": 111290,
+        "eerste": 0.673,
+        "volgende": 0.895
+      },
+      {
+        "van": 111291,
+        "tot": 115090,
+        "eerste": 0.651,
+        "volgende": 0.891
+      },
+      {
+        "van": 115091,
+        "tot": 118963,
+        "eerste": 0.627,
+        "volgende": 0.886
+      },
+      {
+        "van": 118964,
+        "tot": 122857,
+        "eerste": 0.606,
+        "volgende": 0.879
+      },
+      {
+        "van": 122858,
+        "tot": 126747,
+        "eerste": 0.585,
+        "volgende": 0.874
+      },
+      {
+        "van": 126748,
+        "tot": 130638,
+        "eerste": 0.564,
+        "volgende": 0.87
+      },
+      {
+        "van": 130639,
+        "tot": 134527,
+        "eerste": 0.542,
+        "volgende": 0.867
+      },
+      {
+        "van": 134528,
+        "tot": 138420,
+        "eerste": 0.523,
+        "volgende": 0.86
+      },
+      {
+        "van": 138421,
+        "tot": 142312,
+        "eerste": 0.504,
+        "volgende": 0.854
+      },
+      {
+        "van": 142313,
+        "tot": 146205,
+        "eerste": 0.485,
+        "volgende": 0.85
+      },
+      {
+        "van": 146206,
+        "tot": 150092,
+        "eerste": 0.465,
+        "volgende": 0.844
+      },
+      {
+        "van": 150093,
+        "tot": 153982,
+        "eerste": 0.445,
+        "volgende": 0.84
+      },
+      {
+        "van": 153983,
+        "tot": 157877,
+        "eerste": 0.425,
+        "volgende": 0.833
+      },
+      {
+        "van": 157878,
+        "tot": 161766,
+        "eerste": 0.405,
+        "volgende": 0.827
+      },
+      {
+        "van": 161767,
+        "tot": 165657,
+        "eerste": 0.385,
+        "volgende": 0.817
+      },
+      {
+        "van": 165658,
+        "tot": 169547,
+        "eerste": 0.365,
+        "volgende": 0.814
+      },
+      {
+        "van": 169548,
+        "tot": 173440,
+        "eerste": 0.365,
+        "volgende": 0.806
+      },
+      {
+        "van": 173441,
+        "tot": 177335,
+        "eerste": 0.365,
+        "volgende": 0.797
+      },
+      {
+        "van": 177336,
+        "tot": 181223,
+        "eerste": 0.365,
+        "volgende": 0.791
+      },
+      {
+        "van": 181224,
+        "tot": 185114,
+        "eerste": 0.365,
+        "volgende": 0.782
+      },
+      {
+        "van": 185115,
+        "tot": 189002,
+        "eerste": 0.365,
+        "volgende": 0.777
+      },
+      {
+        "van": 189003,
+        "tot": 192896,
+        "eerste": 0.365,
+        "volgende": 0.769
+      },
+      {
+        "van": 192897,
+        "tot": 196789,
+        "eerste": 0.365,
+        "volgende": 0.762
+      },
+      {
+        "van": 196790,
+        "tot": 200681,
+        "eerste": 0.365,
+        "volgende": 0.755
+      },
+      {
+        "van": 200682,
+        "tot": 204571,
+        "eerste": 0.365,
+        "volgende": 0.745
+      },
+      {
+        "van": 204572,
+        "tot": 208458,
+        "eerste": 0.365,
+        "volgende": 0.74
+      },
+      {
+        "van": 208459,
+        "tot": 212353,
+        "eerste": 0.365,
+        "volgende": 0.733
+      },
+      {
+        "van": 212354,
+        "tot": 216242,
+        "eerste": 0.365,
+        "volgende": 0.725
+      },
+      {
+        "van": 216243,
+        "tot": 220134,
+        "eerste": 0.365,
+        "volgende": 0.718
+      },
+      {
+        "van": 220135,
+        "tot": 224026,
+        "eerste": 0.365,
+        "volgende": 0.712
+      },
+      {
+        "van": 224027,
+        "tot": 227915,
+        "eerste": 0.365,
+        "volgende": 0.704
+      },
+      {
+        "van": 227916,
+        "tot": 231807,
+        "eerste": 0.365,
+        "volgende": 0.696
+      },
+      {
+        "van": 231808,
+        "tot": 235697,
+        "eerste": 0.365,
+        "volgende": 0.691
+      },
+      {
+        "van": 235698,
+        "tot": 99999999,
+        "eerste": 0.365,
+        "volgende": 0.682
+      }
+    ]
+  },
+  "giften": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/aftrek_giften",
+    "opgezocht": "2026-11-03",
+    "drempelPercentage": 0.01,
+    "drempelMinimum": 60,
+    "maximumPercentage": 0.1,
+    "cultureelVerhoging": 0.25,
+    "cultureelMaximum": 1250
+  },
+  "zorgkosten": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/aftrek_specifieke_zorgkosten",
+    "opgezocht": "2026-11-03",
+    "drempelVastTot": 9680,
+    "drempelVast": 166,
+    "drempelVastTotPartner": 19360,
+    "drempelVastPartner": 332,
+    "drempelPercentage": 0.0165,
+    "grensHoog": 51411,
+    "drempelHoogBasis": 848,
+    "drempelHoogPercentage": 0.0575,
+    "verhogingGrens": 41123,
+    "verhoging": 0.4,
+    "verhogingAow": 1.13
+  },
+  "lijfrente": {
+    "bron": "https://odb.belastingdienst.nl/wp-content/uploads/2026/01/20251218-Overzicht-cijfers-leven-2026-FsL.pdf",
+    "bronUitleg": "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/uitgaven_voor_inkomensvoorzieningen",
+    "opgezocht": "2026-11-03",
+    "percentage": 0.3,
+    "aftoppingsgrens": 137800,
+    "franchise": 19172,
+    "maximaleJaarruimte": 35589,
+    "factorA": 6.27,
+    "maximaleReserveringsruimte": 42753
+  },
+  "werkgever": {
+    "bron": "https://download.belastingdienst.nl/belastingdienst/docs/bijlage-nieuwsbrief-loonheffingen-2026-lh2091b63fd.pdf",
+    "opgezocht": "2026-11-03",
+    "awfLaag": 0.0274,
+    "awfHoog": 0.0774,
+    "aofLaag": 0.0627,
+    "aofHoog": 0.0763,
+    "wko": 0.005,
+    "werkgeversheffingZvw": 0.061,
+    "maximumPremieloon": 79409,
+    "gemiddeldPremieloon": 43300,
+    "kleineWerkgeverTot": 1082500,
+    "whkSectoren": [
+      {
+        "code": 1,
+        "naam": "Agrarisch bedrijf",
+        "totaal": 0.0117
+      },
+      {
+        "code": 2,
+        "naam": "Tabakverwerkende industrie",
+        "totaal": 0.0147
+      },
+      {
+        "code": 3,
+        "naam": "Bouwbedrijf",
+        "totaal": 0.0131
+      },
+      {
+        "code": 4,
+        "naam": "Baggerbedrijf",
+        "totaal": 0.0157
+      },
+      {
+        "code": 5,
+        "naam": "Houten emballage-industrie, houtwaren- en borstelindustrie",
+        "totaal": 0.0166
+      },
+      {
+        "code": 6,
+        "naam": "Timmerindustrie",
+        "totaal": 0.0106
+      },
+      {
+        "code": 7,
+        "naam": "Meubel- en orgelbouwindustrie",
+        "totaal": 0.015
+      },
+      {
+        "code": 8,
+        "naam": "Groothandel in hout, zagerijen, schaverijen en houtbereidingsindustrie",
+        "totaal": 0.0116
+      },
+      {
+        "code": 9,
+        "naam": "Grafische industrie",
+        "totaal": 0.0175
+      },
+      {
+        "code": 10,
+        "naam": "Metaalindustrie",
+        "totaal": 0.0144
+      },
+      {
+        "code": 11,
+        "naam": "Elektrotechnische industrie",
+        "totaal": 0.0097
+      },
+      {
+        "code": 12,
+        "naam": "Metaal-en technische bedrijfstakken",
+        "totaal": 0.0138
+      },
+      {
+        "code": 13,
+        "naam": "Bakkerijen",
+        "totaal": 0.022
+      },
+      {
+        "code": 14,
+        "naam": "Suikerverwerkende industrie",
+        "totaal": 0.0219
+      },
+      {
+        "code": 15,
+        "naam": "Slagersbedrijven en poeliers",
+        "totaal": 0.0212
+      },
+      {
+        "code": 16,
+        "naam": "Slagers overig",
+        "totaal": 0.0246
+      },
+      {
+        "code": 17,
+        "naam": "Detailhandel en ambachten",
+        "totaal": 0.0193
+      },
+      {
+        "code": 18,
+        "naam": "Reiniging",
+        "totaal": 0.042
+      },
+      {
+        "code": 19,
+        "naam": "Grootwinkelbedrijf",
+        "totaal": 0.0175
+      },
+      {
+        "code": 20,
+        "naam": "Havenbedrijven",
+        "totaal": 0.0142
+      },
+      {
+        "code": 21,
+        "naam": "Havenclassificeerders",
+        "totaal": 0.029
+      },
+      {
+        "code": 22,
+        "naam": "Binnenscheepvaart",
+        "totaal": 0.0136
+      },
+      {
+        "code": 23,
+        "naam": "Visserij",
+        "totaal": 0.015
+      },
+      {
+        "code": 24,
+        "naam": "Koopvaardij",
+        "totaal": 0.0088
+      },
+      {
+        "code": 25,
+        "naam": "Vervoer KLM",
+        "totaal": 0.0152
+      },
+      {
+        "code": 26,
+        "naam": "Vervoer NS",
+        "totaal": 0.0152
+      },
+      {
+        "code": 27,
+        "naam": "Vervoer posterijen",
+        "totaal": 0.0345
+      },
+      {
+        "code": 28,
+        "naam": "Taxivervoer",
+        "totaal": 0.0476
+      },
+      {
+        "code": 29,
+        "naam": "Openbaar Vervoer",
+        "totaal": 0.0188
+      },
+      {
+        "code": 30,
+        "naam": "Besloten busvervoer",
+        "totaal": 0.021
+      },
+      {
+        "code": 31,
+        "naam": "Overig personenvervoer te land en in de lucht",
+        "totaal": 0.0112
+      },
+      {
+        "code": 32,
+        "naam": "Overig goederenvervoer te land en in de lucht",
+        "totaal": 0.0176
+      },
+      {
+        "code": 33,
+        "naam": "Horeca algemeen",
+        "totaal": 0.0177
+      },
+      {
+        "code": 34,
+        "naam": "Horeca catering",
+        "totaal": 0.0355
+      },
+      {
+        "code": 35,
+        "naam": "Gezondheid, geestelijke en maatschappelijke belangen",
+        "totaal": 0.0181
+      },
+      {
+        "code": 38,
+        "naam": "Banken",
+        "totaal": 0.0141
+      },
+      {
+        "code": 39,
+        "naam": "Verzekeringswezen",
+        "totaal": 0.0076
+      },
+      {
+        "code": 40,
+        "naam": "Uitgeverij",
+        "totaal": 0.0147
+      },
+      {
+        "code": 41,
+        "naam": "Groothandel I",
+        "totaal": 0.0125
+      },
+      {
+        "code": 42,
+        "naam": "Groothandel II",
+        "totaal": 0.0145
+      },
+      {
+        "code": 43,
+        "naam": "Zakelijke Dienstverlening I",
+        "totaal": 0.0116
+      },
+      {
+        "code": 44,
+        "naam": "Zakelijke Dienstverlening II",
+        "totaal": 0.0094
+      },
+      {
+        "code": 45,
+        "naam": "Zakelijke Dienstverlening III",
+        "totaal": 0.0125
+      },
+      {
+        "code": 46,
+        "naam": "Zuivelindustrie",
+        "totaal": 0.0203
+      },
+      {
+        "code": 47,
+        "naam": "Textielindustrie",
+        "totaal": 0.0161
+      },
+      {
+        "code": 48,
+        "naam": "Steen-, cement-, glas- en keramische industrie",
+        "totaal": 0.0231
+      },
+      {
+        "code": 49,
+        "naam": "Chemische industrie",
+        "totaal": 0.021
+      },
+      {
+        "code": 50,
+        "naam": "Voedingsindustrie",
+        "totaal": 0.0192
+      },
+      {
+        "code": 51,
+        "naam": "Algemene industrie",
+        "totaal": 0.0196
+      },
+      {
+        "code": 52,
+        "naam": "Uitzendbedrijven",
+        "totaal": 0.0663
+      },
+      {
+        "code": 53,
+        "naam": "Bewakingsondernemingen",
+        "totaal": 0.0297
+      },
+      {
+        "code": 54,
+        "naam": "Culturele instellingen",
+        "totaal": 0.015
+      },
+      {
+        "code": 55,
+        "naam": "Overige takken van bedrijf en beroep",
+        "totaal": 0.0193
+      },
+      {
+        "code": 56,
+        "naam": "Schildersbedrijf",
+        "totaal": 0.0188
+      },
+      {
+        "code": 57,
+        "naam": "Stukadoorsbedrijf",
+        "totaal": 0.0187
+      },
+      {
+        "code": 58,
+        "naam": "Dakdekkersbedrijf",
+        "totaal": 0.0234
+      },
+      {
+        "code": 59,
+        "naam": "Mortelbedrijf",
+        "totaal": 0.0213
+      },
+      {
+        "code": 60,
+        "naam": "Steenhouwersbedrijf",
+        "totaal": 0.0187
+      },
+      {
+        "code": 61,
+        "naam": "Overheid, onderwijs en wetenschappen",
+        "totaal": 0.014
+      },
+      {
+        "code": 62,
+        "naam": "Overheid, rijk, politie en rechterlijke macht",
+        "totaal": 0.0167
+      },
+      {
+        "code": 63,
+        "naam": "Overheid, defensie",
+        "totaal": 0.0131
+      },
+      {
+        "code": 64,
+        "naam": "Overheid, provincies, gemeenten en waterschappen",
+        "totaal": 0.0149
+      },
+      {
+        "code": 65,
+        "naam": "Overheid, openbare nutsbedrijven",
+        "totaal": 0.0129
+      },
+      {
+        "code": 66,
+        "naam": "Overheid, overige instellingen",
+        "totaal": 0.0135
+      },
+      {
+        "code": 67,
+        "naam": "Werk en (re)Integratie",
+        "totaal": 0.0491
+      },
+      {
+        "code": 68,
+        "naam": "Railbouw",
+        "totaal": 0.0192
+      },
+      {
+        "code": 69,
+        "naam": "Telecommunicatie",
+        "totaal": 0.0152
+      }
+    ],
+    "gebruikelijkLoonMinimum": 58000,
+    "thuiswerkPerDag": 2.45
+  },
+  "aowLeeftijd": {
+    "bron": "https://www.rijksoverheid.nl/themas/belastingen-uitkeringen-en-toeslagen/algemene-ouderdomswet-aow/aow-leeftijd",
+    "opgezocht": "2026-11-03",
+    "perJaar": {
+      "2025": [
+        67,
+        0
+      ],
+      "2026": [
+        67,
+        0
+      ],
+      "2027": [
+        67,
+        0
+      ],
+      "2028": [
+        67,
+        3
+      ],
+      "2029": [
+        67,
+        3
+      ],
+      "2030": [
+        67,
+        3
+      ],
+      "2031": [
+        67,
+        3
+      ]
+    }
   }
 }

@@ -1,0 +1,85 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const g = tarieven.giften;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Welke giften zijn aftrekbaar?', antwoord: 'Giften aan een instelling die bij de Belastingdienst is geregistreerd als ANBI (algemeen nut beogende instelling) of als steunstichting SBBI. Je moet de gift kunnen aantonen, bijvoorbeeld met een bankafschrift. Contante giften, loten van een loterij en giften waar je iets voor terugkrijgt, zijn niet aftrekbaar.' },
+  { vraag: 'Wat is het verschil tussen een gewone en een periodieke gift?', antwoord: 'Een periodieke gift leg je vast in een notariële akte of een schriftelijke overeenkomst met de instelling, voor minstens vijf jaar. Voor periodieke giften geldt geen drempel en geen maximum. Voor gewone giften geldt wel een drempel en een maximum.' },
+  { vraag: 'Wat is het drempelinkomen?', antwoord: 'Het totaal van je inkomen en aftrekposten in box 1, 2 en 3, zonder je persoonsgebonden aftrek (zoals giften en zorgkosten zelf). Met een fiscale partner tellen jullie drempelinkomens samen en mogen jullie de aftrek verdelen.' },
+  { vraag: 'Hoeveel belasting krijg ik terug?', antwoord: 'De giftenaftrek verlaagt je belastbaar inkomen. Je krijgt terug: aftrek × je belastingtarief. Valt je inkomen in de eerste schijf, dan is dat 35,75%. Daarboven is het maximaal 37,56%, ook als je in de hoogste schijf zit.' },
+];
+---
+<CalculatorPage
+  slug="giftenaftrek-berekenen"
+  title="Giftenaftrek berekenen 2026"
+  description="Bereken hoeveel van je giften aan goede doelen (ANBI) je in 2026 mag aftrekken: drempel 1% (minimaal € 60), maximaal 10%, periodieke giften volledig."
+  h1="Giftenaftrek berekenen"
+  intro="Vul je drempelinkomen en je giften in. Je ziet direct hoeveel je mag aftrekken in je aangifte over 2026."
+  faq={faq}
+  bron={g.bron}
+  bronNaam="Belastingdienst, Fiscale informatie 2026"
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Aftrekbaar bedrag</p>
+      <p class="result-main" id="r-tot">–</p>
+      <p class="result-sub">Belastingvoordeel ongeveer <strong id="r-vd">–</strong></p>
+      <dl>
+        <dt>Drempel gewone giften</dt><dd id="r-dr">–</dd>
+        <dt>Maximum gewone giften</dt><dd id="r-max">–</dd>
+        <dt>Verhoging culturele ANBI</dt><dd id="r-cult">–</dd>
+        <dt>Aftrek gewone giften</dt><dd id="r-gew">–</dd>
+        <dt>Aftrek periodieke giften</dt><dd id="r-per">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="di" label="Drempelinkomen" value="50000" prefix="€" hint="Box 1 + 2 + 3, met partner samen" />
+      <Field id="gew" label="Gewone giften aan ANBI's" value="1200" prefix="€" />
+      <Field id="cult" label="Waarvan of daarnaast: giften aan culturele ANBI's" value="0" prefix="€" />
+      <Field id="per" label="Periodieke giften (vastgelegd)" value="0" prefix="€" />
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Drempel en maximum</h2>
+    <p>Voor <strong>gewone giften</strong> geldt een drempel: je mag alleen aftrekken wat boven {g.drempelPercentage * 100}% van je drempelinkomen uitkomt, met een minimum van {eur(g.drempelMinimum)}. Daarnaast mag je niet meer aftrekken dan {g.maximumPercentage * 100}% van je drempelinkomen.</p>
+    <p>Geef je aan een <strong>culturele ANBI</strong>, zoals een museum of theater? Dan mag je die gift voor de berekening met {g.cultureelVerhoging * 100}% verhogen, tot maximaal {eur(g.cultureelMaximum)} extra. Het maximum voor gewone giften gaat dan ook met dat bedrag omhoog.</p>
+    <p><strong>Periodieke giften</strong> zijn volledig aftrekbaar, zonder drempel en zonder maximum. Daarvoor moet je de gift vastleggen voor minstens vijf jaar.</p>
+
+    <h2>Rekenvoorbeelden</h2>
+    <div class="voorbeeld">
+      <p><strong>Gewone giften:</strong> je drempelinkomen is € 50.000 en je geeft € 1.200. De drempel is 1% = € 500. Je mag <strong>€ 700</strong> aftrekken. Bij een tarief van 37,56% krijg je ongeveer € 263 terug.</p>
+      <p><strong>Culturele ANBI:</strong> je geeft € 500 aan een museum. Voor de aftrek telt dat als € 500 + 25% = € 625. Dit is het voorbeeld uit de Fiscale informatie 2026 van de Belastingdienst.</p>
+      <p><strong>Periodiek:</strong> je geeft vijf jaar lang € 200 per maand via een schriftelijke overeenkomst. Elk jaar mag je de volle <strong>€ 2.400</strong> aftrekken.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Tips</h2>
+    <ul>
+      <li><strong>Bundelen.</strong> Geef je elk jaar net onder de drempel, overweeg dan om twee jaar giften in één jaar te doen. Of maak er een periodieke gift van: dan vervalt de drempel helemaal.</li>
+      <li><strong>Vrijwilligerswerk.</strong> Zie je af van een vrijwilligersvergoeding of onkostenvergoeding van een ANBI, dan kun je dat onder voorwaarden als gift aftrekken.</li>
+      <li><strong>Controleer de ANBI-status</strong> met ANBI opzoeken op belastingdienst.nl, voordat je een grote gift doet.</li>
+    </ul>
+    <p>Heb je ook hoge zorgkosten? Bereken dan je <a href="../zorgkostenaftrek-berekenen/">zorgkostenaftrek</a>. Wil je het effect op je totale belasting zien, vul de aftrek dan in bij <a href="../inkomstenbelasting-berekenen/">inkomstenbelasting berekenen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenGiftenaftrek } from '../lib/calculators/aftrekposten';
+  import { aftrekTarief } from '../lib/calculators/hypotheek';
+  import { euro, getal, live, zet } from '../lib/ui';
+  live('f', () => {
+    const di = getal('di');
+    const r = berekenGiftenaftrek({ drempelinkomen: di, gewoneGiften: getal('gew'), cultureleGiften: getal('cult'), periodiekeGiften: getal('per') });
+    zet('r-tot', euro(r.totaal));
+    zet('r-vd', euro(r.totaal * aftrekTarief(di)));
+    zet('r-dr', euro(r.drempel));
+    zet('r-max', euro(r.maximum));
+    zet('r-cult', euro(r.verhogingCultureel));
+    zet('r-gew', euro(r.aftrekGewoon));
+    zet('r-per', euro(r.aftrekPeriodiek));
+  });
+</script>

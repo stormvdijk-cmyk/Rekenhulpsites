@@ -66,3 +66,22 @@ Datum: 2 november 2026.
 - **Vpb 2026** 19% tot € 200.000 / 25,8%; **box 2** 24,5% tot € 68.843 per persoon / 31% (Belastingdienst). Box 2 wordt afgerond op centen voordat het netto dividend wordt berekend. De voorgestelde multiplier voor lucratief belang is niet meegenomen.
 - **KOR:** omzetgrens € 20.000. Vereenvoudigd model: particulieren betalen dezelfde prijs incl. btw, zakelijke klanten de prijs excl. btw.
 - **Niet gebouwd (cijfers niet bevestigd):** AOW-bedragen en AOW-leeftijd na 2028, drempels voor giften en zorgkosten, lijfrente-jaarruimte, werkgeverspremies.
+
+## Controle van alle tarieven (3 november 2026)
+- Met volledige netwerktoegang zijn alle 37 bron-URL's uit de JSON opgehaald, plus de Fiscale informatie 2026 van de Belastingdienst en de cijferbijlage loonheffingen 2026. Een script (`verify.py`, niet in de repo) vergeleek elk getal met de brontekst. Alle waarden komen overeen; er waren geen correcties nodig.
+- De inflatiecijfers zijn gecontroleerd tegen de CBS-databank (OData 70936ned) en uitgebreid naar 1963–2025.
+- Er is een bron toegevoegd voor de 214-dagenregel (Kennisgroep Loonheffingen). De 261 werkdagen per jaar in de WW-rekenhulp blijven een benadering; UWV telt de werkelijke werkdagen.
+
+## Toeslagen en aftrekposten (3 november 2026)
+- **Bronnen:** de officiële berekenings-pdf's 2026 van de Belastingdienst (zorgtoeslag, huurtoeslag, kindgebonden budget, kinderopvangtoeslag), de Fiscale informatie 2026 (giften, zorgkosten), het overzicht Cijfers levensverzekeringen 2026 (jaarruimte), de cijferbijlage loonheffingen 2026 (werkgeverspremies, de 67 Whk-sectoren, bijtellingskortingen per jaar, thuiswerkvergoeding, gebruikelijk loon) en Rijksoverheid (jeugdminimumlonen, AOW-leeftijden 2025–2031).
+- **Tests met de officiële rekenvoorbeelden:** zorgtoeslag (Wouter), huurtoeslag (Sem € 295; Demi en Sophie € 492), kinderopvangtoeslag (€ 1.202; € 1.162). Deel C van de huurtoeslag ronden wij af (€ 67,52), de Belastingdienst kapt af (€ 67,51); het eindbedrag is in beide gevallen gelijk.
+- **Kinderopvangtabel** (69 inkomensgroepen) automatisch uit de pdf-tekst gehaald en gecontroleerd op aansluitende grenzen.
+- **Huurtoeslag** volgens de nieuwe formule 2026 (basishuur per huishoudtype, inkomenscorrectie boven het ijkpunt). De vrijstelling van € 6.218 voor inwonende kinderen en de bijzondere situaties (kamers, woonwagen, buitenland) worden niet apart berekend; vul het rekeninkomen zelf in.
+- **Jaarruimte:** de vereenvoudigde formule 30% × (min(inkomen, € 137.800) − € 19.172) − 6,27 × factor A − premie of FOR-storting. De reserveringsruimte wordt niet berekend; de pagina verwijst naar het hulpmiddel van de Belastingdienst.
+- **AOW-leeftijd:** de AOW-datum is de eerste datum waarop geboortedatum + de AOW-leeftijd van dat jaar in datzelfde jaar valt. Na 2031 is de leeftijd nog niet vastgesteld.
+- **Niet gebouwd:** AOW-bedragen en kinderbijslag, omdat svb.nl tijdens het bouwen offline was ('tijdelijk niet beschikbaar') en de bedragen niet bij de bron konden worden gecontroleerd.
+
+## Nieuwe homepage v2 (3 november 2026)
+- **Breder** (72rem, `wide`-prop op Base) voor 38 rekenhulpen.
+- **Opbouw:** een zoekveld met live resultaten (Enter opent de eerste), "Wat is jouw situatie?" (6 tegels met de 4 belangrijkste rekenhulpen per levenssituatie), "Alle rekenhulpen" per onderwerp in maximaal 3 kolommen met alleen titels (de korte omschrijving staat als tooltip), het label "nieuw" bij recent toegevoegde rekenhulpen, en een directe link naar het tarievenoverzicht.
+- Nieuw onderwerp **Toeslagen**.

@@ -12,97 +12,117 @@ const jsonLd = [
     itemListElement: REKENHULPEN.map((r, i) => ({ '@type': 'ListItem', position: i + 1, name: r.titel, url: new URL(url(`${r.slug}/`), Astro.site).href })),
   },
 ];
+const r = (slug: string) => REKENHULPEN.find((x) => x.slug === slug)!;
 const anker = (c: string) => c.toLowerCase().replace(/[^a-z]+/g, '-');
 
-// Volgorde binnen een onderwerp: meest gezochte eerst.
-const VOORRANG = [
-  'netto-salaris-berekenen', 'netto-naar-bruto-berekenen', 'bruto-netto-uurloon', 'vakantiegeld-berekenen', 'bonus-13e-maand-netto', 'minimumloon-berekenen', 'ww-uitkering-berekenen', 'transitievergoeding-berekenen',
-  'inkomstenbelasting-berekenen', 'box-3-belasting-berekenen', 'combinatiekorting-berekenen', 'box-2-belasting-berekenen',
-  'hypotheek-maandlasten-berekenen', 'overdrachtsbelasting-berekenen',
-  'samengestelde-rente', 'spaardoel-berekenen', 'lening-maandlasten', 'inflatie-berekenen',
-  'zzp-uurtarief-berekenen', 'zzp-netto-inkomen-berekenen', 'loondienst-of-zzp', 'btw-berekenen', 'kor-kleineondernemersregeling', 'vennootschapsbelasting-berekenen',
-  'schenkbelasting-berekenen', 'erfbelasting-berekenen',
+// Instap per levenssituatie: de vier meest gebruikte rekenhulpen per situatie.
+const SITUATIES = [
+  { titel: 'Ik werk in loondienst', icoon: 'M4 7h16v12H4zM9 7V5h6v2M4 12h16', items: ['netto-salaris-berekenen', 'netto-naar-bruto-berekenen', 'vakantiegeld-berekenen', 'bonus-13e-maand-netto'], meer: 'werk-salaris' },
+  { titel: 'Ik ben zzp\'er of ondernemer', icoon: 'M4 20h16M7 16v-4M12 16V8M17 16V5', items: ['zzp-uurtarief-berekenen', 'zzp-netto-inkomen-berekenen', 'btw-berekenen', 'loondienst-of-zzp'], meer: 'ondernemen' },
+  { titel: 'Ik heb kinderen', icoon: 'M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z', items: ['kindgebonden-budget-berekenen', 'kinderopvangtoeslag-berekenen', 'combinatiekorting-berekenen', 'zorgtoeslag-berekenen'], meer: 'toeslagen' },
+  { titel: 'Ik koop of huur een huis', icoon: 'M3 11l9-7 9 7M5 10v10h14V10M10 20v-6h4v6', items: ['hypotheek-maandlasten-berekenen', 'overdrachtsbelasting-berekenen', 'huurtoeslag-berekenen', 'schenkbelasting-berekenen'], meer: 'wonen' },
+  { titel: 'Ik ga (bijna) met pensioen', icoon: 'M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16zM12 8v4l3 2', items: ['aow-leeftijd-berekenen', 'jaarruimte-lijfrente-berekenen', 'inkomstenbelasting-berekenen', 'box-3-belasting-berekenen'], meer: 'belastingen' },
+  { titel: 'Ik spaar of beleg', icoon: 'M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16zM12 8v8M9.5 10.5c0-1 1-1.5 2.5-1.5s2.5.6 2.5 1.6-1 1.4-2.5 1.4-2.5.4-2.5 1.5 1 1.5 2.5 1.5 2.5-.5 2.5-1.5', items: ['samengestelde-rente', 'spaardoel-berekenen', 'box-3-belasting-berekenen', 'inflatie-berekenen'], meer: 'sparen-lenen' },
 ];
-const rang = (r: Rekenhulp) => { const i = VOORRANG.indexOf(r.slug); return i === -1 ? 99 : i; };
-const perOnderwerp = ONDERWERPEN.map((o) => ({ ...o, items: REKENHULPEN.filter((r) => r.categorie === o.naam).sort((a, b) => rang(a) - rang(b)) }));
-
-const POPULAIR = ['netto-salaris-berekenen', 'inkomstenbelasting-berekenen', 'btw-berekenen', 'vakantiegeld-berekenen', 'hypotheek-maandlasten-berekenen', 'box-3-belasting-berekenen'];
-const populair = POPULAIR.map((s) => REKENHULPEN.find((r) => r.slug === s)!).filter(Boolean);
-const zoektekst = (r: Rekenhulp) => `${r.titel} ${r.kort} ${r.trefwoorden} ${r.categorie}`.toLowerCase();
+const NIEUW = new Set(['zorgtoeslag-berekenen', 'huurtoeslag-berekenen', 'kindgebonden-budget-berekenen', 'kinderopvangtoeslag-berekenen', 'giftenaftrek-berekenen', 'zorgkostenaftrek-berekenen', 'jaarruimte-lijfrente-berekenen', 'loonkosten-werkgever-berekenen', 'aow-leeftijd-berekenen']);
+const VOORRANG = ['netto-salaris-berekenen', 'netto-naar-bruto-berekenen', 'bruto-netto-uurloon', 'vakantiegeld-berekenen', 'bonus-13e-maand-netto', 'minimumloon-berekenen', 'ww-uitkering-berekenen', 'transitievergoeding-berekenen', 'aow-leeftijd-berekenen',
+  'inkomstenbelasting-berekenen', 'box-3-belasting-berekenen', 'box-2-belasting-berekenen', 'combinatiekorting-berekenen', 'giftenaftrek-berekenen', 'zorgkostenaftrek-berekenen', 'jaarruimte-lijfrente-berekenen',
+  'zorgtoeslag-berekenen', 'huurtoeslag-berekenen', 'kindgebonden-budget-berekenen', 'kinderopvangtoeslag-berekenen',
+  'hypotheek-maandlasten-berekenen', 'overdrachtsbelasting-berekenen', 'samengestelde-rente', 'spaardoel-berekenen', 'lening-maandlasten', 'inflatie-berekenen',
+  'zzp-uurtarief-berekenen', 'zzp-netto-inkomen-berekenen', 'loondienst-of-zzp', 'btw-berekenen', 'kor-kleineondernemersregeling', 'vennootschapsbelasting-berekenen', 'loonkosten-werkgever-berekenen',
+  'schenkbelasting-berekenen', 'erfbelasting-berekenen'];
+const rang = (x: Rekenhulp) => { const i = VOORRANG.indexOf(x.slug); return i === -1 ? 99 : i; };
+const perOnderwerp = ONDERWERPEN.map((o) => ({ ...o, items: REKENHULPEN.filter((x) => x.categorie === o.naam).sort((a, b) => rang(a) - rang(b)) })).filter((o) => o.items.length);
+const zoektekst = (x: Rekenhulp) => `${x.titel} ${x.kort} ${x.trefwoorden} ${x.categorie}`.toLowerCase();
 ---
-<Base title={`Rekenhulp – gratis financiële rekenhulpen ${TARIEF_JAAR}`} description={`${REKENHULPEN.length} gratis rekenhulpen voor salaris, belasting, wonen, sparen en ondernemen, met de tarieven van ${TARIEF_JAAR}. Snel, ook offline.`} jsonLd={jsonLd}>
-  <section class="home-hero">
-    <h1>Financiële rekenhulpen</h1>
-    <p class="lead">{REKENHULPEN.length} gratis rekenhulpen voor je geldzaken, met de officiële tarieven van {TARIEF_JAAR}. Je vult in, de uitkomst staat er meteen.</p>
-    <div class="home-search">
+<Base title={`Rekenhulp – ${REKENHULPEN.length} gratis financiële rekenhulpen ${TARIEF_JAAR}`} description={`${REKENHULPEN.length} gratis rekenhulpen voor salaris, belasting, toeslagen, wonen, sparen en ondernemen, met de officiële tarieven van ${TARIEF_JAAR}.`} jsonLd={jsonLd} wide>
+  <section class="h-hero">
+    <p class="h-eyebrow">Officiële tarieven {TARIEF_JAAR} · gratis · zonder account</p>
+    <h1>Reken je geldzaken uit</h1>
+    <p class="lead">{REKENHULPEN.length} rekenhulpen voor salaris, belasting, toeslagen, wonen en ondernemen. Je vult in, de uitkomst staat er meteen, met uitleg erbij.</p>
+    <div class="h-search">
       <label for="zoek" class="visually-hidden">Zoek een rekenhulp</label>
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
-      <input type="search" id="zoek" placeholder="Zoek, bijv. netto of btw" autocomplete="off" />
+      <input type="search" id="zoek" placeholder="Bijv. netto, huurtoeslag of btw" autocomplete="off" />
     </div>
-    <nav class="home-chips" aria-label="Onderwerpen">
-      {perOnderwerp.map((o) => <a href={`#${anker(o.naam)}`}>{o.naam} <span>{o.items.length}</span></a>)}
-    </nav>
+    <ul class="h-results" id="resultaten" hidden></ul>
+    <p class="no-results" id="geen" hidden>Geen rekenhulp gevonden. Probeer een ander woord, zoals "loon", "toeslag" of "huis".</p>
   </section>
 
-  <section class="home-popular" data-populair aria-labelledby="h-populair">
-    <h2 id="h-populair">Meest gebruikt</h2>
-    <ul>
-      {populair.map((r) => (
-        <li><a href={url(`${r.slug}/`)}><strong>{r.titel}</strong><span class="kort">{r.kort}</span></a></li>
+  <section class="h-block" id="situaties" aria-labelledby="h-sit">
+    <h2 id="h-sit">Wat is jouw situatie?</h2>
+    <div class="h-situaties">
+      {SITUATIES.map((s) => (
+        <article class="sit">
+          <header>
+            <span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={s.icoon} /></svg></span>
+            <h3>{s.titel}</h3>
+          </header>
+          <ul>
+            {s.items.map((slug) => <li><a href={url(`${slug}/`)}>{r(slug).titel}</a></li>)}
+          </ul>
+          <a class="sit-meer" href={`#${s.meer}`}>Meer in {ONDERWERPEN.find((o) => anker(o.naam) === s.meer)?.naam ?? 'dit onderwerp'} ↓</a>
+        </article>
       ))}
-    </ul>
-  </section>
-
-  <div class="home-topics">
-    {perOnderwerp.map((o) => (
-      <section class="topic" id={anker(o.naam)} data-topic aria-labelledby={`h-${anker(o.naam)}`}>
-        <header>
-          <span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={o.icoon} /></svg></span>
-          <div>
-            <h2 id={`h-${anker(o.naam)}`}>{o.naam}</h2>
-            <p>{o.omschrijving}</p>
-          </div>
-        </header>
-        <ul>
-          {o.items.map((r) => (
-            <li data-zoek={zoektekst(r)}>
-              <a href={url(`${r.slug}/`)}>
-                <span class="t"><strong>{r.titel}</strong><span>{r.kort}</span></span>
-                <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
-              </a>
-            </li>
-          ))}
-        </ul>
-        {o.naam === 'Belastingen' && (
-          <a class="topic-extra" href={url(`belastingtarieven-${TARIEF_JAAR}/`)}>Alle belastingtarieven {TARIEF_JAAR} op een rij →</a>
-        )}
-      </section>
-    ))}
-  </div>
-  <p class="no-results" id="geen" hidden>Geen rekenhulp gevonden. Probeer een ander woord, zoals "loon", "belasting" of "huis".</p>
-
-  <section class="home-about">
-    <h2>Waarom deze rekenhulpen?</h2>
-    <div class="home-about-grid">
-      <div><h3>Officiële tarieven</h3><p>Belastingtarieven, kortingen en grenzen komen van de Belastingdienst, de Rijksoverheid, het UWV en het CBS. Bij elke rekenhulp staat de bron.</p></div>
-      <div><h3>Uitleg erbij</h3><p>Elke rekenhulp laat zien hoe de uitkomst tot stand komt, met een uitgewerkt voorbeeld. Zo kun je het zelf nakijken.</p></div>
-      <div><h3>Je gegevens blijven bij jou</h3><p>Alles wordt in je eigen browser uitgerekend. We slaan niets op een server op. Installeer de site als app, dan werkt hij ook offline.</p></div>
     </div>
   </section>
 
+  <section class="h-block" aria-labelledby="h-alle">
+    <div class="h-alle-kop">
+      <h2 id="h-alle">Alle rekenhulpen <span>({REKENHULPEN.length})</span></h2>
+      <a href={url(`belastingtarieven-${TARIEF_JAAR}/`)}>Alle belastingtarieven {TARIEF_JAAR} →</a>
+    </div>
+    <div class="h-onderwerpen">
+      {perOnderwerp.map((o) => (
+        <section class="ond" id={anker(o.naam)} aria-labelledby={`o-${anker(o.naam)}`}>
+          <header>
+            <span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={o.icoon} /></svg></span>
+            <div>
+              <h3 id={`o-${anker(o.naam)}`}>{o.naam} <span class="cnt">{o.items.length}</span></h3>
+              <p>{o.omschrijving}</p>
+            </div>
+          </header>
+          <ul>
+            {o.items.map((x) => (
+              <li><a href={url(`${x.slug}/`)} title={x.kort}>{x.titel}</a>{NIEUW.has(x.slug) && <span class="badge">nieuw</span>}</li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </section>
+
+  <section class="h-block h-about">
+    <div><h3>Officiële bronnen</h3><p>Alle tarieven komen van de Belastingdienst, de Rijksoverheid, het UWV en het CBS. Bij elke rekenhulp staat de bron, en elk getal is nagekeken.</p></div>
+    <div><h3>Uitleg erbij</h3><p>Elke rekenhulp laat zien hoe de uitkomst tot stand komt, met uitgewerkte voorbeelden. Zo kun je het zelf nakijken.</p></div>
+    <div><h3>Privé en offline</h3><p>Alles wordt in je eigen browser uitgerekend; we slaan niets op. Installeer de site als app, dan werkt hij ook zonder internet.</p></div>
+  </section>
+
+  <script type="application/json" id="index-data" set:html={JSON.stringify(REKENHULPEN.map((x) => ({ s: x.slug, t: x.titel, k: x.kort, c: x.categorie, z: zoektekst(x) })))} />
   <script>
+    const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+    const data: { s: string; t: string; k: string; c: string; z: string }[] = JSON.parse(document.getElementById('index-data')!.textContent || '[]');
     const zoek = document.getElementById('zoek') as HTMLInputElement;
-    const items = [...document.querySelectorAll<HTMLElement>('[data-zoek]')];
-    const topics = [...document.querySelectorAll<HTMLElement>('[data-topic]')];
-    const populair = document.querySelector<HTMLElement>('[data-populair]')!;
+    const lijst = document.getElementById('resultaten')!;
     const geen = document.getElementById('geen')!;
     zoek.addEventListener('input', () => {
       const q = zoek.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
-      let n = 0;
-      items.forEach((li) => { const ok = q.every((w) => li.dataset.zoek!.includes(w)); li.hidden = !ok; if (ok) n++; });
-      topics.forEach((t) => { t.hidden = !t.querySelector('[data-zoek]:not([hidden])'); });
-      populair.hidden = q.length > 0;
-      geen.hidden = n > 0;
+      lijst.replaceChildren();
+      if (!q.length) { lijst.hidden = true; geen.hidden = true; return; }
+      const hits = data.filter((d) => q.every((w) => d.z.includes(w))).slice(0, 8);
+      hits.forEach((h) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `${base}/${h.s}/`;
+        const t = document.createElement('strong'); t.textContent = h.t;
+        const k = document.createElement('span'); k.textContent = `${h.c} · ${h.k}`;
+        a.append(t, k); li.append(a); lijst.append(li);
+      });
+      lijst.hidden = hits.length === 0;
+      geen.hidden = hits.length > 0;
+    });
+    zoek.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { const a = lijst.querySelector('a'); if (a) { e.preventDefault(); (a as HTMLAnchorElement).click(); } }
     });
   </script>
 </Base>

@@ -1,4 +1,4 @@
-export type Categorie = 'Werk & salaris' | 'Belastingen' | 'Schenken & erven' | 'Wonen' | 'Sparen & lenen' | 'Ondernemen' | 'Handig rekenen';
+export type Categorie = 'Werk & salaris' | 'Belastingen' | 'Toeslagen' | 'Schenken & erven' | 'Wonen' | 'Sparen & lenen' | 'Ondernemen' | 'Handig rekenen';
 
 export interface Rekenhulp {
   slug: string;
@@ -9,7 +9,7 @@ export interface Rekenhulp {
   trefwoorden: string;
 }
 
-export const CATEGORIEEN: Categorie[] = ['Werk & salaris', 'Belastingen', 'Wonen', 'Sparen & lenen', 'Ondernemen', 'Schenken & erven', 'Handig rekenen'];
+export const CATEGORIEEN: Categorie[] = ['Werk & salaris', 'Belastingen', 'Toeslagen', 'Wonen', 'Sparen & lenen', 'Ondernemen', 'Schenken & erven', 'Handig rekenen'];
 
 export interface Onderwerp { naam: Categorie; omschrijving: string; icoon: string }
 
@@ -17,6 +17,7 @@ export interface Onderwerp { naam: Categorie; omschrijving: string; icoon: strin
 export const ONDERWERPEN: Onderwerp[] = [
   { naam: 'Werk & salaris', omschrijving: 'Loon, uitkeringen en vergoedingen als werknemer.', icoon: 'M4 7h16v12H4zM9 7V5h6v2M4 12h16' },
   { naam: 'Belastingen', omschrijving: 'Inkomstenbelasting, kortingen en vermogensbelasting.', icoon: 'M6 3h9l3 3v15H6zM9 9h6M9 13h6M9 17h4' },
+  { naam: 'Toeslagen', omschrijving: 'Zorgtoeslag, huurtoeslag en toeslagen voor kinderen.', icoon: 'M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z' },
   { naam: 'Wonen', omschrijving: 'Een huis kopen en je hypotheek.', icoon: 'M3 11l9-7 9 7M5 10v10h14V10M10 20v-6h4v6' },
   { naam: 'Sparen & lenen', omschrijving: 'Sparen, rente, lenen en de waarde van geld.', icoon: 'M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16zM12 8v8M9.5 10.5c0-1 1-1.5 2.5-1.5s2.5.6 2.5 1.6-1 1.4-2.5 1.4-2.5.4-2.5 1.5 1 1.5 2.5 1.5 2.5-.5 2.5-1.5' },
   { naam: 'Ondernemen', omschrijving: 'Voor zzp\'ers en ondernemers: tarief, netto en btw.', icoon: 'M4 20h16M7 16v-4M12 16V8M17 16V5' },
@@ -54,6 +55,15 @@ export const REKENHULPEN: Rekenhulp[] = [
   { slug: 'vennootschapsbelasting-berekenen', titel: 'Vennootschapsbelasting en dividend', kort: 'Van winst in je bv naar netto dividend (DGA).', categorie: 'Ondernemen', verwant: ['box-2-belasting-berekenen', 'zzp-netto-inkomen-berekenen', 'loondienst-of-zzp'], trefwoorden: 'vennootschapsbelasting vpb bv dga dividend holding winst' },
   { slug: 'box-2-belasting-berekenen', titel: 'Box 2-belasting berekenen', kort: 'Belasting over dividend uit een aanmerkelijk belang.', categorie: 'Belastingen', verwant: ['vennootschapsbelasting-berekenen', 'box-3-belasting-berekenen', 'inkomstenbelasting-berekenen'], trefwoorden: 'box 2 aanmerkelijk belang dividend dga 24,5 31' },
   { slug: 'kor-kleineondernemersregeling', titel: 'Kleineondernemersregeling (KOR)', kort: 'Levert de KOR je iets op? Omzetgrens € 20.000.', categorie: 'Ondernemen', verwant: ['btw-berekenen', 'zzp-netto-inkomen-berekenen', 'zzp-uurtarief-berekenen'], trefwoorden: 'kor kleineondernemersregeling btw vrijstelling kleine ondernemer omzet' },
+  { slug: 'zorgtoeslag-berekenen', titel: 'Zorgtoeslag berekenen', kort: 'Hoeveel zorgtoeslag krijg je in 2026?', categorie: 'Toeslagen', verwant: ['huurtoeslag-berekenen', 'kindgebonden-budget-berekenen', 'netto-salaris-berekenen'], trefwoorden: 'zorgtoeslag zorgverzekering toeslag inkomen 2026' },
+  { slug: 'huurtoeslag-berekenen', titel: 'Huurtoeslag berekenen', kort: 'Huurtoeslag met de nieuwe berekening van 2026.', categorie: 'Toeslagen', verwant: ['zorgtoeslag-berekenen', 'kindgebonden-budget-berekenen', 'hypotheek-maandlasten-berekenen'], trefwoorden: 'huurtoeslag huur toeslag huurwoning 2026' },
+  { slug: 'kindgebonden-budget-berekenen', titel: 'Kindgebonden budget berekenen', kort: 'Toeslag voor ouders met kinderen tot 18 jaar.', categorie: 'Toeslagen', verwant: ['kinderopvangtoeslag-berekenen', 'combinatiekorting-berekenen', 'zorgtoeslag-berekenen'], trefwoorden: 'kindgebonden budget kinderen toeslag ouders alleenstaande ouder' },
+  { slug: 'kinderopvangtoeslag-berekenen', titel: 'Kinderopvangtoeslag berekenen', kort: 'Toeslag voor dagopvang, bso en gastouder.', categorie: 'Toeslagen', verwant: ['kindgebonden-budget-berekenen', 'combinatiekorting-berekenen', 'netto-salaris-berekenen'], trefwoorden: 'kinderopvangtoeslag kinderopvang bso gastouder dagopvang uurprijs' },
+  { slug: 'giftenaftrek-berekenen', titel: 'Giftenaftrek berekenen', kort: 'Hoeveel van je giften aan goede doelen mag je aftrekken?', categorie: 'Belastingen', verwant: ['inkomstenbelasting-berekenen', 'zorgkostenaftrek-berekenen', 'jaarruimte-lijfrente-berekenen'], trefwoorden: 'giften aftrek anbi goede doelen periodieke gift culturele anbi' },
+  { slug: 'zorgkostenaftrek-berekenen', titel: 'Zorgkostenaftrek berekenen', kort: 'Aftrek specifieke zorgkosten met drempel en verhoging.', categorie: 'Belastingen', verwant: ['giftenaftrek-berekenen', 'inkomstenbelasting-berekenen', 'zorgtoeslag-berekenen'], trefwoorden: 'zorgkosten aftrek specifieke zorgkosten drempel ziekte hulpmiddelen dieet' },
+  { slug: 'jaarruimte-lijfrente-berekenen', titel: 'Jaarruimte lijfrente', kort: 'Hoeveel lijfrentepremie mag je aftrekken?', categorie: 'Belastingen', verwant: ['zzp-netto-inkomen-berekenen', 'inkomstenbelasting-berekenen', 'samengestelde-rente'], trefwoorden: 'jaarruimte lijfrente pensioen aftrek pensioentekort factor a reserveringsruimte' },
+  { slug: 'loonkosten-werkgever-berekenen', titel: 'Loonkosten werkgever', kort: 'Wat kost een werknemer je echt, met alle premies?', categorie: 'Ondernemen', verwant: ['netto-salaris-berekenen', 'zzp-uurtarief-berekenen', 'vennootschapsbelasting-berekenen'], trefwoorden: 'loonkosten werkgever werkgeverslasten premies ww aof whk zvw personeel' },
+  { slug: 'aow-leeftijd-berekenen', titel: 'AOW-leeftijd berekenen', kort: 'Wanneer krijg jij AOW?', categorie: 'Werk & salaris', verwant: ['inkomstenbelasting-berekenen', 'jaarruimte-lijfrente-berekenen', 'netto-salaris-berekenen'], trefwoorden: 'aow leeftijd pensioen wanneer aow geboortedatum svb' },
 ];
 
 export const rekenhulp = (slug: string): Rekenhulp => {

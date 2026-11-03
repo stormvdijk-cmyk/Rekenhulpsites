@@ -1,0 +1,94 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const h = tarieven.huurtoeslag;
+const eur2 = (n: number) => '€ ' + n.toLocaleString('nl-NL', { minimumFractionDigits: 2 });
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Wat is er veranderd aan de huurtoeslag in 2026?', antwoord: 'De berekening is eenvoudiger geworden. De basishuur, het deel dat je altijd zelf betaalt, hangt niet meer af van je inkomen maar alleen van de grootte van je huishouden. Verdien je meer dan het inkomensijkpunt, dan gaat er een vast percentage van je extra inkomen af. Ook verlies je je recht niet meer als je huur boven de huurgrens ligt.' },
+  { vraag: 'Mag mijn huur hoger zijn dan de huurgrens?', antwoord: `Ja, sinds 2026 wel. Je krijgt dan huurtoeslag alsof je huur gelijk is aan de huurgrens van ${eur2(h.huurgrens)} (voor jongeren onder de 21 ${eur2(h.huurgrensJong)}). Het deel daarboven betaal je volledig zelf.` },
+  { vraag: 'Tellen servicekosten mee?', antwoord: 'Nee, vanaf 2026 niet meer. Alleen de kale huur telt mee. Huur je een woonwagen, dan telt de huur van de standplaats wel mee.' },
+  { vraag: 'Telt het inkomen van mijn kinderen mee?', antwoord: `Voor inwonende kinderen die bij het begin van 2026 jonger zijn dan 23, telt alleen het inkomen boven ${eur(h.vrijstellingKind)} per jaar mee. Het inkomen van medebewoners en een toeslagpartner telt volledig mee.` },
+];
+---
+<CalculatorPage
+  slug="huurtoeslag-berekenen"
+  title="Huurtoeslag berekenen 2026"
+  description="Bereken je huurtoeslag in 2026 met de nieuwe berekening: vaste basishuur en een inkomenscorrectie. Met de officiële bedragen van de Belastingdienst."
+  h1="Huurtoeslag berekenen"
+  intro="Vul je kale huur, je huishouden en jullie inkomen in. Je ziet direct hoeveel huurtoeslag je per maand krijgt volgens de regels van 2026."
+  faq={faq}
+  bron={h.bron}
+  bronNaam="Belastingdienst, berekening huurtoeslag 2026"
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Huurtoeslag per maand</p>
+      <p class="result-main" id="r-maand">–</p>
+      <p class="result-sub" id="r-reden"></p>
+      <dl>
+        <dt>Rekenhuur</dt><dd id="r-rek">–</dd>
+        <dt>Basishuur (zelf betalen)</dt><dd id="r-bas">–</dd>
+        <dt>Deel A (100%)</dt><dd id="r-a">–</dd>
+        <dt>Deel B (65%)</dt><dd id="r-b">–</dd>
+        <dt>Deel C (40%)</dt><dd id="r-c">–</dd>
+        <dt>Inkomenscorrectie</dt><dd id="r-d">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="huur" label="Kale huur per maand" value="650" prefix="€" hint="Zonder servicekosten" />
+      <div class="row-2">
+        <Field id="pers" label="Personen in huishouden" value="1" inputmode="numeric" />
+        <Field id="ink" label="Inkomen samen per jaar" value="22000" prefix="€" />
+      </div>
+      <label class="check"><input type="checkbox" id="jong" name="jong" /> Iedereen in het huishouden is jonger dan 21</label>
+      <Field id="verm" label="Vermogen op 1 januari 2026" value="0" prefix="€" hint={`Maximaal ${eur(h.vermogensgrensPerPersoon)} per persoon`} />
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo werkt de huurtoeslag in 2026</h2>
+    <p>De huurtoeslag wordt berekend over je <strong>rekenhuur</strong>: je kale huur, maar niet meer dan de huurgrens van {eur2(h.huurgrens)} ({eur2(h.huurgrensJong)} als iedereen jonger is dan 21). Daarvan betaal je de <strong>basishuur</strong> altijd zelf: {eur2(h.basishuurEen)} voor één persoon, {eur2(h.basishuurMeer)} voor twee of meer personen. Over de rest krijg je een deel vergoed:</p>
+    <ul>
+      <li><strong>Deel A:</strong> 100% van de huur tussen de basishuur en {eur2(h.kwaliteitskortingsgrens)}.</li>
+      <li><strong>Deel B:</strong> 65% van de huur tussen {eur2(h.kwaliteitskortingsgrens)} en de aftoppingsgrens ({eur2(h.aftoppingsgrensKlein)} voor 1–2 personen, {eur2(h.aftoppingsgrensGroot)} voor 3 of meer).</li>
+      <li><strong>Deel C:</strong> 40% van de huur boven de aftoppingsgrens.</li>
+      <li><strong>Correctie:</strong> verdient je huishouden meer dan het inkomensijkpunt ({eur(h.ijkpuntEen)} voor één persoon, {eur(h.ijkpuntMeer)} voor meer personen), dan gaat er per maand {(h.afbouwEen * 100)}% (of {(h.afbouwMeer * 100)}%) van het inkomen daarboven, gedeeld door 12, vanaf.</li>
+    </ul>
+    <p>Huishoudens waarin iedereen jonger is dan 21 krijgen alleen deel A. Het totaal wordt naar beneden afgerond op hele euro's.</p>
+
+    <h2>Rekenvoorbeelden van de Belastingdienst</h2>
+    <div class="voorbeeld">
+      <p><strong>Sem, 20 jaar, € 22.000, huur € 600:</strong> de rekenhuur is € 498,20 (jongerengrens). Deel A: € 498,20 − € 202,52 = € 295,68. Geen correctie, want zijn inkomen ligt onder € 23.425. Huurtoeslag: <strong>€ 295 per maand</strong>.</p>
+      <p><strong>Demi en Sophie met kind, samen € 34.000, huur € 1.200:</strong> rekenhuur € 932,93. A € 297,49 + B € 172,86 + C € 67,51 − correctie € 45,83 = <strong>€ 492 per maand</strong>.</p>
+      <p><strong>Alleenstaande, € 30.000, huur € 650:</strong> A € 295,68 + B € 98,67 − correctie € 147,94 = <strong>€ 246 per maand</strong>.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Voorwaarden</h2>
+    <ul>
+      <li>Je bent 18 jaar of ouder en staat ingeschreven op het adres van de huurwoning.</li>
+      <li>Het gezamenlijke vermogen is niet hoger dan {eur(h.vermogensgrensPerPersoon)} per volwassene in het huishouden.</li>
+      <li>De woning is een zelfstandige woonruimte met eigen voordeur, keuken en toilet, of een woonwagen of woonschip. Voor kamers gelden uitzonderingen.</li>
+    </ul>
+    <p>De huurtoeslag vraag je aan via Mijn toeslagen. Je krijgt elke maand een voorschot; na het jaar volgt de definitieve berekening met je echte inkomen. Bereken ook je <a href="../zorgtoeslag-berekenen/">zorgtoeslag</a>, en als je kinderen hebt je <a href="../kindgebonden-budget-berekenen/">kindgebonden budget</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenHuurtoeslag } from '../lib/calculators/toeslagen';
+  import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenHuurtoeslag({ kaleHuur: getal('huur'), personen: Math.max(1, Math.round(getal('pers', 1))), allenJongerDan21: vinkje('jong'), rekeninkomen: getal('ink'), vermogen: getal('verm') });
+    zet('r-maand', euro(r.perMaand, false));
+    zet('r-reden', r.reden);
+    zet('r-rek', euro(r.rekenhuur));
+    zet('r-bas', euro(r.basishuur));
+    zet('r-a', euro(r.deelA));
+    zet('r-b', euro(r.deelB));
+    zet('r-c', euro(r.deelC));
+    zet('r-d', '− ' + euro(r.correctie));
+  });
+</script>

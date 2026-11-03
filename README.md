@@ -33,6 +33,15 @@ Snelle, installeerbare webapp (PWA) met Nederlandstalige financiële rekenhulpen
 | Vennootschapsbelasting en dividend | `/vennootschapsbelasting-berekenen/` |
 | Box 2-belasting | `/box-2-belasting-berekenen/` |
 | Kleineondernemersregeling | `/kor-kleineondernemersregeling/` |
+| Zorgtoeslag | `/zorgtoeslag-berekenen/` |
+| Huurtoeslag | `/huurtoeslag-berekenen/` |
+| Kindgebonden budget | `/kindgebonden-budget-berekenen/` |
+| Kinderopvangtoeslag | `/kinderopvangtoeslag-berekenen/` |
+| Giftenaftrek | `/giftenaftrek-berekenen/` |
+| Zorgkostenaftrek | `/zorgkostenaftrek-berekenen/` |
+| Jaarruimte lijfrente | `/jaarruimte-lijfrente-berekenen/` |
+| Loonkosten werkgever | `/loonkosten-werkgever-berekenen/` |
+| AOW-leeftijd | `/aow-leeftijd-berekenen/` |
 
 Daarnaast: `/belastingtarieven-2026/`, een overzicht van alle tarieven, dat automatisch uit de tarieven-JSON wordt opgebouwd.
 
@@ -160,6 +169,8 @@ Alle belastingcijfers staan in één bestand. Doe dit voor bijvoorbeeld 2027:
    - Bijtelling: belastingdienst.nl → *Bijtelling privégebruik auto <jaar>*
    - Zelfstandigenaftrek, mkb-winstvrijstelling, Zvw: belastingdienst.nl → *Veranderingen inkomstenbelasting <jaar>*
    - Overdrachtsbelasting, box 3, schenk- en erfbelasting, eigenwoningforfait, kilometervergoeding: zie de `bron`-velden in de JSON
+   - Toeslagen: de pdf's 'Berekening zorgtoeslag/huurtoeslag/kindgebonden budget/kinderopvangtoeslag <jaar>' van de Belastingdienst (download.belastingdienst.nl/toeslagen/docs/). De kinderopvangtabel kun je met een script uit de pdf-tekst halen; zie DECISIONS.md
+   - Werkgeverspremies, Whk-sectoren, bijtellingskortingen per jaar, gebruikelijk loon: 'Tarieven, bedragen en percentages loonheffingen <jaar>' (pdf, bijlage bij de Nieuwsbrief Loonheffingen)
    - Inflatie: voeg het nieuwe jaarcijfer toe uit CBS-tabel 70936ned (*Jaarmutatie consumentenprijsindex*)
 3. Verander in `src/data/tarieven.ts` de import naar `./tarieven-2027.json`.
 4. Pas de verwachte bedragen in `tests/calculators.test.ts` aan. Reken ze met de hand na; neem ze niet over uit de code.
