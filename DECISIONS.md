@@ -80,3 +80,8 @@ Datum: 2 november 2026.
 - **Jaarruimte:** de vereenvoudigde formule 30% × (min(inkomen, € 137.800) − € 19.172) − 6,27 × factor A − premie of FOR-storting. De reserveringsruimte wordt niet berekend; de pagina verwijst naar het hulpmiddel van de Belastingdienst.
 - **AOW-leeftijd:** de AOW-datum is de eerste datum waarop geboortedatum + de AOW-leeftijd van dat jaar in datzelfde jaar valt. Na 2031 is de leeftijd nog niet vastgesteld.
 - **Niet gebouwd:** AOW-bedragen en kinderbijslag, omdat svb.nl tijdens het bouwen offline was ('tijdelijk niet beschikbaar') en de bedragen niet bij de bron konden worden gecontroleerd.
+
+## Nieuwe homepage v2 (3 november 2026)
+- **Breder** (72rem, `wide`-prop op Base) voor 38 rekenhulpen.
+- **Opbouw:** een zoekveld met live resultaten (Enter opent de eerste), "Wat is jouw situatie?" (6 tegels met de 4 belangrijkste rekenhulpen per levenssituatie), "Alle rekenhulpen" per onderwerp in maximaal 3 kolommen met alleen titels (de korte omschrijving staat als tooltip), het label "nieuw" bij recent toegevoegde rekenhulpen, en een directe link naar het tarievenoverzicht.
+- Nieuw onderwerp **Toeslagen**.

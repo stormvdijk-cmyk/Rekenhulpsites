@@ -18,7 +18,7 @@ const jsonLd = [
 ];
 const link = (slug: string, tekst: string) => `<a href="${url(slug + '/')}">${tekst}</a>`;
 ---
-<Base title={`Belastingtarieven ${TARIEF_JAAR}: alle bedragen`} description={`Alle belastingtarieven van ${TARIEF_JAAR}: box 1-schijven, heffingskortingen, box 3, btw, bijtelling, schenk- en erfbelasting, overdrachtsbelasting. Met bronnen.`} jsonLd={jsonLd}>
+<Base title={`Belastingtarieven ${TARIEF_JAAR}: alle bedragen`} description={`Alle tarieven van ${TARIEF_JAAR}: box 1, heffingskortingen, box 2 en 3, toeslagen, btw, bijtelling, schenk- en erfbelasting, werkgeverspremies. Met bronnen.`} jsonLd={jsonLd}>
   <nav class="breadcrumbs" aria-label="Kruimelpad"><ol><li><a href={url('')}>{SITE.naam}</a></li><li aria-current="page">Belastingtarieven {TARIEF_JAAR}</li></ol></nav>
   <article class="prose" style="margin-top:0">
     <h1>Belastingtarieven {TARIEF_JAAR}</h1>
@@ -104,6 +104,26 @@ const link = (slug: string, tekst: string) => `<a href="${url(slug + '/')}">${te
       </tbody></table></div>
     <p>Vrijstelling schenken aan een kind: {eur(t.schenkErf.vrijstellingSchenk.kind)} per jaar (eenmalig {eur(t.schenkErf.vrijstellingSchenk.kindEenmalig)}); aan anderen {eur(t.schenkErf.vrijstellingSchenk.overig)}. Vrijstelling erfenis: partner {eur(t.schenkErf.vrijstellingErf.partner)}, kind {eur(t.schenkErf.vrijstellingErf.kind)}, ouder {eur(t.schenkErf.vrijstellingErf.ouder)}, anderen {eur(t.schenkErf.vrijstellingErf.overig)}.</p>
     <p class="hint">Bronnen: <a href={t.schenkErf.bronTarievenSchenk} rel="noopener" target="_blank">schenkbelasting</a>, <a href={t.schenkErf.bronVrijstellingErf} rel="noopener" target="_blank">erfbelasting</a>.</p>
+
+    <h2 id="toeslagen">Toeslagen</h2>
+    <div class="table-wrap"><table><tbody>
+      <tr><td>Zorgtoeslag</td><td>standaardpremie {eur(t.zorgtoeslag.standaardpremie)}; max {eur(t.zorgtoeslag.maximumAlleen)} (partner {eur(t.zorgtoeslag.maximumPartner)}); inkomensgrens {eur(t.zorgtoeslag.inkomensgrensAlleen)} / {eur(t.zorgtoeslag.inkomensgrensPartner)}</td></tr>
+      <tr><td>Huurtoeslag</td><td>huurgrens € {t.huurtoeslag.huurgrens.toLocaleString('nl-NL')}; basishuur € {t.huurtoeslag.basishuurEen.toLocaleString('nl-NL')} (1 persoon); ijkpunt {eur(t.huurtoeslag.ijkpuntEen)} / {eur(t.huurtoeslag.ijkpuntMeer)}</td></tr>
+      <tr><td>Kindgebonden budget</td><td>{eur(t.kindgebondenBudget.perKind)} per kind; afbouw {pct(t.kindgebondenBudget.afbouwPercentage)} boven {eur(t.kindgebondenBudget.drempelAlleen)} / {eur(t.kindgebondenBudget.drempelPartner)}</td></tr>
+      <tr><td>Kinderopvangtoeslag</td><td>max uurprijs € {t.kinderopvangtoeslag.maxUurprijsDagopvang.toLocaleString('nl-NL')} (dagopvang), € {t.kinderopvangtoeslag.maxUurprijsBso.toLocaleString('nl-NL')} (bso), € {t.kinderopvangtoeslag.maxUurprijsGastouder.toLocaleString('nl-NL')} (gastouder)</td></tr>
+    </tbody></table></div>
+    <p class="hint">Bronnen: de berekeningen 2026 van de Belastingdienst voor <a href={t.zorgtoeslag.bron} rel="noopener" target="_blank">zorgtoeslag</a>, <a href={t.huurtoeslag.bron} rel="noopener" target="_blank">huurtoeslag</a>, <a href={t.kindgebondenBudget.bron} rel="noopener" target="_blank">kindgebonden budget</a> en <a href={t.kinderopvangtoeslag.bron} rel="noopener" target="_blank">kinderopvangtoeslag</a>.</p>
+
+    <h2 id="aftrekposten">Aftrekposten en pensioen</h2>
+    <div class="table-wrap"><table><tbody>
+      <tr><td>Giften</td><td>drempel {pct(t.giften.drempelPercentage)} (min. {eur(t.giften.drempelMinimum)}), max {pct(t.giften.maximumPercentage)}; culturele ANBI +{pct(t.giften.cultureelVerhoging)} (max {eur(t.giften.cultureelMaximum)})</td></tr>
+      <tr><td>Specifieke zorgkosten</td><td>drempel {eur(t.zorgkosten.drempelVast)} tot {eur(t.zorgkosten.drempelVastTot)}, daarna {pct(t.zorgkosten.drempelPercentage)}; verhoging {pct(t.zorgkosten.verhoging)} / {pct(t.zorgkosten.verhogingAow)} tot {eur(t.zorgkosten.verhogingGrens)}</td></tr>
+      <tr><td>Jaarruimte lijfrente</td><td>{pct(t.lijfrente.percentage)} van (inkomen tot {eur(t.lijfrente.aftoppingsgrens)} − {eur(t.lijfrente.franchise)}), max {eur(t.lijfrente.maximaleJaarruimte)}</td></tr>
+      <tr><td>AOW-leeftijd</td><td>67 jaar (2026–2027), 67 jaar en 3 maanden (2028–2031)</td></tr>
+    </tbody></table></div>
+
+    <h2 id="werkgever">Werkgeverspremies</h2>
+    <p>WW {pct(t.werkgever.awfLaag)} (vast) / {pct(t.werkgever.awfHoog)} (flex); Aof {pct(t.werkgever.aofLaag)} / {pct(t.werkgever.aofHoog)}; Wko {pct(t.werkgever.wko)}; werkgeversheffing Zvw {pct(t.werkgever.werkgeversheffingZvw)}; maximum premieloon {eur(t.werkgever.maximumPremieloon)}; gebruikelijk loon DGA minimaal {eur(t.werkgever.gebruikelijkLoonMinimum)}. Bron: <a href={t.werkgever.bron} rel="noopener" target="_blank">cijferbijlage loonheffingen 2026</a>.</p>
 
     <h2 id="werk">Werk en reizen</h2>
     <p>Minimumloon (21+): € {t.minimumloon.perUur[1].bedrag.toLocaleString('nl-NL', { minimumFractionDigits: 2 })} per uur vanaf 1 juli 2026 (daarvoor € {t.minimumloon.perUur[0].bedrag.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}). WW: maximumdagloon € {t.ww.maximumDagloon.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}. Transitievergoeding: maximaal {eur(t.transitievergoeding.maximum)} of één jaarsalaris. Combinatiekorting: maximaal {eur(t.iack.maximum)}.</p>
