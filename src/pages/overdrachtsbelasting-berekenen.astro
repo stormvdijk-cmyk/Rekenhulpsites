@@ -1,6 +1,8 @@
 ---
 import CalculatorPage from '../components/CalculatorPage.astro';
 import Field from '../components/Field.astro';
+import Wetsvoorstel from '../components/Wetsvoorstel.astro';
+import voorstellen from '../data/wetsvoorstellen.json';
 import { tarieven } from '../data/tarieven';
 const t = tarieven.overdrachtsbelasting;
 const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 1 }) + '%';
@@ -52,6 +54,17 @@ const faq = [
     </div>
   </form>
 
+  <Wetsvoorstel slot="vergelijking" voorstel="overdrachtsbelasting" titel="Nu versus het voorstel voor 2027">
+    <p>Koop je een woning die je <strong>niet zelf gaat bewonen</strong>, zoals een verhuurwoning? Dan wil het kabinet het tarief per 2027 verlagen van {Math.round(tarieven.overdrachtsbelasting.woningNietZelfBewonen * 100)}% naar {Math.round(voorstellen.overdrachtsbelasting.woningNietZelfBewonen * 100)}%. Het tarief van 2% voor zelf bewonen en de startersvrijstelling blijven gelijk.</p>
+    <table class="vgl">
+      <thead><tr><th scope="col"></th><th scope="col">Nu (2026)</th><th scope="col">Voorstel</th></tr></thead>
+      <tbody>
+        <tr><td>Overdrachtsbelasting</td><td id="v-b1">–</td><td id="v-b2">–</td></tr>
+        <tr class="verschil"><td>Verschil</td><td id="v-x"></td><td id="v-d">–</td></tr>
+      </tbody>
+    </table>
+  </Wetsvoorstel>
+
   <Fragment slot="uitleg-1">
     <h2>De tarieven in 2026</h2>
     <p>Koop je een huis of ander onroerend goed, dan betaal je eenmalig overdrachtsbelasting over de koopsom. In 2026 zijn er vier mogelijkheden:</p>
@@ -86,15 +99,21 @@ const faq = [
 
 <script>
   import { berekenOverdrachtsbelasting, type Soort } from '../lib/calculators/overdrachtsbelasting';
+  import { VOORSTELLEN } from '../lib/calculators/wetsvoorstellen';
   import { formatProcent } from '../lib/calculators/format';
   import { $, euro, getal, live, radio, vinkje, zet } from '../lib/ui';
+  const verschil = (d: number, plus = 'meer', min = 'minder') => (d > 0 ? '+ ' : d < 0 ? '− ' : '') + euro(Math.abs(d)) + (d > 0 ? ` ${plus}` : d < 0 ? ` ${min}` : '');
   live('f', () => {
     const twee = radio('aantal') === '2';
     $('k2').hidden = !twee;
     $('k2b').hidden = !twee;
     const kopers = [{ leeftijd: getal('leeftijd1'), eerderGebruikt: vinkje('eerder1') }];
     if (twee) kopers.push({ leeftijd: getal('leeftijd2'), eerderGebruikt: vinkje('eerder2') });
-    const r = berekenOverdrachtsbelasting({ koopsom: getal('koopsom'), soort: (radio('soort') || 'woning') as Soort, zelfBewonen: vinkje('zelf'), kopers });
+    const inv = { koopsom: getal('koopsom'), soort: (radio('soort') || 'woning') as Soort, zelfBewonen: vinkje('zelf'), kopers };
+    const r = berekenOverdrachtsbelasting(inv);
+    const r2 = berekenOverdrachtsbelasting(inv, VOORSTELLEN.overdrachtsbelasting.woningNietZelfBewonen);
+    zet('v-b1', euro(r.totaal)); zet('v-b2', euro(r2.totaal));
+    zet('v-d', r2.totaal === r.totaal ? 'Geen verschil voor deze situatie' : verschil(r2.totaal - r.totaal));
     zet('r-totaal', euro(r.totaal));
     zet('r-sub', `Gemiddeld ${formatProcent(r.effectiefTarief, 1)} van de koopsom`);
     const dl = $('r-kopers');

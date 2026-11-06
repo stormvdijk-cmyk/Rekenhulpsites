@@ -15,9 +15,11 @@ export interface ZzpFiscaal {
 }
 
 /** Netto besteedbaar inkomen bij een bepaalde winst (vereenvoudigd, alleen box 1). */
-export function nettoUitWinst(winst: number, urencriterium: boolean, starter: boolean): ZzpFiscaal {
+export interface Ondernemersaftrek { zelfstandigenaftrek: number; startersaftrek: number }
+
+export function nettoUitWinst(winst: number, urencriterium: boolean, starter: boolean, aftrek: Ondernemersaftrek = o): ZzpFiscaal {
   const w = Math.max(0, winst);
-  const aftrekMax = urencriterium ? o.zelfstandigenaftrek + (starter ? o.startersaftrek : 0) : 0;
+  const aftrekMax = urencriterium ? aftrek.zelfstandigenaftrek + (starter ? aftrek.startersaftrek : 0) : 0;
   const ondernemersaftrek = Math.min(aftrekMax, w);
   const mkbVrijstelling = (w - ondernemersaftrek) * o.mkbWinstvrijstelling;
   const aftrekposten = ondernemersaftrek + mkbVrijstelling;

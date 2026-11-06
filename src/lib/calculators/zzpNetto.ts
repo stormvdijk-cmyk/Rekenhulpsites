@@ -1,4 +1,4 @@
-import { nettoUitWinst } from './zzpUurtarief';
+import { nettoUitWinst, type Ondernemersaftrek } from './zzpUurtarief';
 import { round2 } from './format';
 
 export interface ZzpNettoInput { omzet: number; kosten: number; urencriterium: boolean; starter: boolean }
@@ -8,9 +8,9 @@ export interface ZzpNettoResultaat {
 }
 
 /** Van omzet (excl. btw) en kosten naar netto inkomen als zzp'er, met de regels van 2026. */
-export function berekenZzpNetto(i: ZzpNettoInput): ZzpNettoResultaat {
+export function berekenZzpNetto(i: ZzpNettoInput, aftrek?: Ondernemersaftrek): ZzpNettoResultaat {
   const winst = Math.max(0, i.omzet - i.kosten);
-  const f = nettoUitWinst(winst, i.urencriterium, i.starter);
+  const f = nettoUitWinst(winst, i.urencriterium, i.starter, aftrek);
   const reserveren = f.inkomstenbelasting + f.zvw;
   return {
     winst: round2(winst),

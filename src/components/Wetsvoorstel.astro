@@ -1,0 +1,34 @@
+---
+import voorstellen from '../data/wetsvoorstellen.json';
+
+type Sleutel = 'box3' | 'box2' | 'overdrachtsbelasting' | 'ondernemer' | 'aftoppingsgrens';
+interface Props { voorstel: Sleutel; titel?: string }
+const { voorstel, titel = 'Vergelijking met het wetsvoorstel' } = Astro.props;
+const v = voorstellen[voorstel];
+const bronNamen: Record<string, string> = {
+  bp2027Wetsvoorstel: 'Wetsvoorstel Belastingplan 2027',
+  bp2027Factsheets: 'Factsheets Belastingplan 2027',
+  bp2027DerdeNvw: 'Kamerbrief derde nota van wijziging (3-11-2026)',
+  aanpassingenBrief: 'Kamerbrief aanpassingen Belastingplan en box 3',
+  wwrTekst: 'Wet werkelijk rendement box 3 (tekst Eerste Kamer)',
+  novelleTekst: 'Novelle vermogenswinstbelasting box 3',
+  novelleMvt: 'Memorie van toelichting novelle',
+  box3Plannen: 'Rijksoverheid: plannen box 3',
+  inkomenPlannen: 'Rijksoverheid: plannen belastingen voor inkomen',
+};
+const bronnen = v.bronnen.map((k) => ({ naam: bronNamen[k] ?? k, url: (voorstellen.bronnen as Record<string, string>)[k] }));
+const stand = new Date(voorstellen.stand).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+const id = `wv-${voorstel}`;
+---
+<section class="voorstel" aria-labelledby={id}>
+  <p class="voorstel-badge">Wetsvoorstel · nog geen wet</p>
+  <h2 id={id}>{titel}</h2>
+  <p class="voorstel-naam">{v.naam}</p>
+  <slot />
+  <dl class="voorstel-meta">
+    <dt>Status</dt><dd>{v.status}</dd>
+    <dt>Ingang</dt><dd>{v.ingang}</dd>
+    <dt>Stand</dt><dd>{stand}. Het voorstel kan nog veranderen door amendementen of de stemming.</dd>
+  </dl>
+  <p class="voorstel-bron">Bron: {bronnen.map((b, i) => (<>{i > 0 && ' · '}<a href={b.url} rel="noopener" target="_blank">{b.naam}</a></>))}</p>
+</section>

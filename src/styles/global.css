@@ -213,3 +213,23 @@ details.tabel summary { cursor: pointer; font-weight: 600; margin: var(--space-3
 .h-about { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); padding-top: var(--space-5); border-top: 1px solid var(--border); }
 .h-about h3 { margin: 0 0 var(--space-1); font-size: 1rem; }
 .h-about p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
+
+/* Vergelijking met wetsvoorstel */
+.voorstel { border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: var(--radius-sm); background: var(--surface); padding: var(--space-4); margin: var(--space-4) 0; }
+.voorstel h2 { margin: var(--space-1) 0 0; font-size: 1.2rem; }
+.voorstel-badge { display: inline-block; margin: 0; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--primary); }
+.voorstel-naam { margin: var(--space-1) 0 var(--space-3); color: var(--text-muted); font-size: 0.9rem; }
+.voorstel .form { padding: 0; margin-bottom: var(--space-3); }
+.vgl { width: 100%; table-layout: fixed; border-collapse: collapse; margin: var(--space-2) 0 var(--space-3); font-variant-numeric: tabular-nums; }
+.vgl th, .vgl td { padding: 0.45rem 0.4rem; border-bottom: 1px solid var(--border); text-align: right; white-space: normal; overflow-wrap: anywhere; }
+.vgl th:first-child, .vgl td:first-child { width: 40%; }
+.voorstel { overflow-wrap: anywhere; }
+@media (max-width: 30rem) { .voorstel { padding: var(--space-3); } .vgl { font-size: 0.9rem; } }
+.vgl th:first-child, .vgl td:first-child { text-align: left; }
+.vgl thead th { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+.vgl tr.verschil td { font-weight: 700; border-bottom: 0; }
+.voorstel-meta { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem var(--space-3); margin: var(--space-3) 0 0; font-size: 0.85rem; color: var(--text-muted); }
+.voorstel-meta dt { font-weight: 600; }
+.voorstel-meta dd { margin: 0; }
+.voorstel-bron { font-size: 0.85rem; color: var(--text-muted); margin: var(--space-2) 0 0; }
+@media (max-width: 30rem) { .voorstel-meta { grid-template-columns: 1fr; } .voorstel-meta dd { margin-bottom: var(--space-2); } }

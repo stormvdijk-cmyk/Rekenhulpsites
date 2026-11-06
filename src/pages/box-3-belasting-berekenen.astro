@@ -1,6 +1,9 @@
 ---
 import CalculatorPage from '../components/CalculatorPage.astro';
 import Field from '../components/Field.astro';
+import Wetsvoorstel from '../components/Wetsvoorstel.astro';
+import voorstellen from '../data/wetsvoorstellen.json';
+const wv = voorstellen.box3;
 import { tarieven } from '../data/tarieven';
 const t = tarieven.box3;
 const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 2 }) + '%';
@@ -9,6 +12,7 @@ const faq = [
   { vraag: 'Hoeveel spaargeld is belastingvrij in 2026?', antwoord: `Het heffingsvrij vermogen is ${eur(t.heffingsvrijVermogen)} per persoon, of ${eur(t.heffingsvrijVermogen * 2)} samen met een fiscale partner. Het gaat om je bezittingen min je schulden op 1 januari 2026.` },
   { vraag: 'Waarom betaal ik belasting terwijl mijn spaarrente lager is?', antwoord: 'Box 3 rekent niet met je echte rente of je echte koerswinst, maar met vaste percentages per soort bezit. Is je werkelijke rendement lager dan het forfaitaire, dan kun je met de tegenbewijsregeling aantonen wat je echt hebt verdiend, en betaal je over dat lagere bedrag.' },
   { vraag: 'Telt mijn eigen huis mee in box 3?', antwoord: 'Nee. Je eigen woning en de hypotheek daarop vallen in box 1. In box 3 tellen wel een tweede woning, een vakantiehuis, een verhuurde woning en schulden die niet bij je eigen woning horen.' },
+  { vraag: 'Wanneer komt box 3 op basis van werkelijk rendement?', antwoord: `Volgens het kabinet uiterlijk op 1 januari 2029, en mogelijk al in 2028 als de uitvoering dat toelaat. De Tweede Kamer heeft de Wet werkelijk rendement box 3 aangenomen; de Eerste Kamer moet nog stemmen. Tot die tijd blijft het forfaitaire stelsel met tegenbewijs gelden. In het voorstel betaal je ${pct(wv.tarief)} over je werkelijke rendement boven ${eur(wv.heffingsvrijResultaat)} per persoon.` },
   { vraag: 'Zijn de percentages voor 2026 definitief?', antwoord: `Nog niet helemaal. Het percentage voor overige bezittingen (${pct(t.rendementOverig)}) staat vast. De percentages voor banktegoeden (${pct(t.rendementBank)}) en schulden (${pct(t.rendementSchulden)}) zijn voorlopig en worden begin 2027 vastgesteld. De uitkomst kan daardoor nog iets veranderen.` },
 ];
 ---
@@ -41,6 +45,32 @@ const faq = [
     </div>
   </form>
 
+  <Wetsvoorstel slot="vergelijking" voorstel="box3" titel="Nu versus het nieuwe box 3-stelsel">
+    <p>Het kabinet wil box 3 laten heffen over je <strong>werkelijke rendement</strong>: {pct(wv.tarief)} over wat je echt verdient, boven een heffingsvrij resultaat van {eur(wv.heffingsvrijResultaat)} per persoon. Aandelen, fondsen en vastgoed worden volgens de novelle pas belast als je ze verkoopt (vermogenswinstbelasting). Vul hieronder in wat je in een jaar werkelijk ontvangt.</p>
+    <form id="fv" novalidate>
+      <div class="form">
+        <div class="row-2 stack">
+          <Field id="rente" label="Ontvangen spaarrente" value="1500" prefix="€" hint="Ook rente op uitgeleend geld" />
+          <Field id="inkomsten" label="Dividend, huur en andere inkomsten" value="1000" prefix="€" />
+        </div>
+        <div class="row-2 stack">
+          <Field id="winst" label="Winst bij verkoop (verlies met min)" value="0" prefix="€" inputmode="text" hint="Verkoopprijs min aankoopprijs; niets verkocht = 0" />
+          <Field id="kosten" label="Betaalde rente en kosten" value="0" prefix="€" hint="Rente op box 3-schulden, bankkosten" />
+        </div>
+      </div>
+    </form>
+    <table class="vgl">
+      <thead><tr><th scope="col"></th><th scope="col">Nu (2026)</th><th scope="col">Voorstel</th></tr></thead>
+      <tbody>
+        <tr><td>Belast rendement</td><td id="v-r1">–</td><td id="v-r2">–</td></tr>
+        <tr><td>Box 3-belasting</td><td id="v-b1">–</td><td id="v-b2">–</td></tr>
+        <tr class="verschil"><td>Verschil per jaar</td><td></td><td id="v-d">–</td></tr>
+      </tbody>
+    </table>
+    <p id="v-verlies" class="hint" hidden></p>
+    <p class="hint">Bij een fiscale partner tellen de heffingsvrije resultaten samen ({eur(wv.heffingsvrijResultaat * 2)}). Niet verkochte beleggingen tellen in het voorstel niet mee; een paar soorten bezit (zoals sommige verzekeringen) vallen tijdelijk onder een jaarlijkse aanwasbelasting. Vul de winst van die bezittingen dan ook in bij winst.</p>
+  </Wetsvoorstel>
+
   <Fragment slot="uitleg-1">
     <h2>Zo werkt box 3 in 2026</h2>
     <p>In box 3 betaal je belasting over een <strong>verondersteld rendement</strong> op je vermogen. De Belastingdienst gaat uit van vaste percentages per soort bezit:</p>
@@ -67,16 +97,17 @@ const faq = [
   <Fragment slot="uitleg-2">
     <h2>Fiscale partners en tegenbewijs</h2>
     <p>Met een fiscale partner tellen jullie bezittingen en schulden samen. Het heffingsvrij vermogen en de schuldendrempel verdubbelen. Daarna mogen jullie de grondslag verdelen zoals jullie willen; voor de totale belasting maakt dat bij dezelfde tarieven niet uit.</p>
-    <p>Box 3 rekent met vaste percentages. Heb je in 2026 minder verdiend dan het forfaitaire rendement, bijvoorbeeld door koersverlies of een lage spaarrente? Dan kun je met de <strong>tegenbewijsregeling</strong> je werkelijke rendement opgeven. Daarin tellen ook ongerealiseerde koerswinsten en -verliezen mee. Het kabinet werkt aan een nieuw stelsel op basis van werkelijk rendement, maar dat geldt nog niet voor 2026.</p>
+    <p>Box 3 rekent met vaste percentages. Heb je in 2026 minder verdiend dan het forfaitaire rendement, bijvoorbeeld door koersverlies of een lage spaarrente? Dan kun je met de <strong>tegenbewijsregeling</strong> je werkelijke rendement opgeven. Daarin tellen ook ongerealiseerde koerswinsten en -verliezen mee. Het kabinet werkt aan een nieuw stelsel op basis van werkelijk rendement, maar dat geldt nog niet voor 2026, 2027 en 2028. Hierboven zie je wat het voorstel voor jou zou betekenen.</p>
     <p>Deze rekenhulp rekent met de standaardberekening zonder tegenbewijs. Groene beleggingen, vrijgestelde bezittingen en vermogen in het buitenland zitten er niet in. Wil je zien hoe je vermogen groeit? Gebruik dan <a href="../samengestelde-rente/">samengestelde rente</a>. Ga je geld schenken? Kijk bij <a href="../schenkbelasting-berekenen/">schenkbelasting berekenen</a>.</p>
   </Fragment>
 </CalculatorPage>
 
 <script>
   import { berekenBox3 } from '../lib/calculators/box3';
+  import { berekenBox3Nieuw } from '../lib/calculators/wetsvoorstellen';
   import { formatProcent } from '../lib/calculators/format';
-  import { euro, getal, live, vinkje, zet } from '../lib/ui';
-  live('f', () => {
+  import { $, euro, getal, live, vinkje, zet } from '../lib/ui';
+  const bereken = () => {
     const r = berekenBox3({ banktegoeden: getal('bank'), overigeBezittingen: getal('overig'), schulden: getal('schulden'), partner: vinkje('partner') });
     zet('r-bel', euro(r.belasting));
     zet('r-rg', euro(r.rendementsgrondslag));
@@ -84,5 +115,17 @@ const faq = [
     zet('r-gr', euro(r.grondslag));
     zet('r-er', formatProcent(r.effectiefRendement, 2));
     zet('r-vd', euro(r.voordeel));
-  });
+    const n = berekenBox3Nieuw({ rente: getal('rente'), overigeInkomsten: getal('inkomsten'), waardeverandering: getal('winst'), kosten: getal('kosten'), partner: vinkje('partner') });
+    zet('v-r1', euro(r.voordeel));
+    zet('v-r2', euro(n.grondslag));
+    zet('v-b1', euro(r.belasting));
+    zet('v-b2', euro(n.belasting));
+    const d = n.belasting - r.belasting;
+    zet('v-d', (d > 0 ? '+ ' : d < 0 ? '− ' : '') + euro(Math.abs(d)) + (d > 0 ? ' meer' : d < 0 ? ' minder' : ''));
+    const vl = $('v-verlies');
+    vl.hidden = n.verlies <= 0;
+    vl.textContent = n.verlies > 0 ? `Je hebt een negatief resultaat. In het voorstel kun je ${euro(n.verlies)} verlies verrekenen met winst in latere jaren (het deel boven de drempel van € 500).` : '';
+  };
+  live('f', bereken);
+  live('fv', bereken);
 </script>

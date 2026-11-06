@@ -1,6 +1,8 @@
 ---
 import CalculatorPage from '../components/CalculatorPage.astro';
 import Field from '../components/Field.astro';
+import Wetsvoorstel from '../components/Wetsvoorstel.astro';
+import voorstellen from '../data/wetsvoorstellen.json';
 import { tarieven } from '../data/tarieven';
 const o = tarieven.ondernemer;
 const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
@@ -46,6 +48,19 @@ const faq = [
     </div>
   </form>
 
+  <Wetsvoorstel slot="vergelijking" voorstel="ondernemer" titel="Nu versus de ondernemersaftrek van 2027">
+    <p>In 2027 daalt de zelfstandigenaftrek van {eur(o.zelfstandigenaftrek)} naar {eur(voorstellen.ondernemer.zelfstandigenaftrek2027)}; dat is al wet. Daarnaast stelt het kabinet voor de startersaftrek in 2027 te verlagen van {eur(o.startersaftrek)} naar {eur(voorstellen.ondernemer.startersaftrek2027)} en per 2028 af te schaffen. De vergelijking laat alleen het effect van die aftrek zien; de tarieven van 2027 zijn nog niet definitief, dus hier staan de tarieven van 2026.</p>
+    <table class="vgl">
+      <thead><tr><th scope="col"></th><th scope="col">Nu (2026)</th><th scope="col">Voorstel</th></tr></thead>
+      <tbody>
+        <tr><td>Ondernemersaftrek</td><td id="v-a1">–</td><td id="v-a2">–</td></tr>
+        <tr><td>Belastbare winst</td><td id="v-b1">–</td><td id="v-b2">–</td></tr>
+        <tr><td>Netto per jaar</td><td id="v-n1">–</td><td id="v-n2">–</td></tr>
+        <tr class="verschil"><td>Verschil per jaar</td><td id="v-x"></td><td id="v-d">–</td></tr>
+      </tbody>
+    </table>
+  </Wetsvoorstel>
+
   <Fragment slot="uitleg-1">
     <h2>Van omzet naar netto in vijf stappen</h2>
     <ol>
@@ -83,8 +98,10 @@ const faq = [
 
 <script>
   import { berekenZzpNetto } from '../lib/calculators/zzpNetto';
+  import { VOORSTELLEN } from '../lib/calculators/wetsvoorstellen';
   import { formatProcent } from '../lib/calculators/format';
   import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  const verschil = (d: number, plus = 'meer', min = 'minder') => (d > 0 ? '+ ' : d < 0 ? '− ' : '') + euro(Math.abs(d)) + (d > 0 ? ` ${plus}` : d < 0 ? ` ${min}` : '');
   live('f', () => {
     const r = berekenZzpNetto({ omzet: getal('omzet'), kosten: getal('kosten'), urencriterium: vinkje('urencrit'), starter: vinkje('starter') });
     zet('r-maand', euro(r.nettoMaand));
@@ -97,5 +114,10 @@ const faq = [
     zet('r-ib', euro(r.inkomstenbelasting));
     zet('r-zvw', euro(r.zvw));
     zet('r-jaar', euro(r.nettoJaar));
+    const r2 = berekenZzpNetto({ omzet: getal('omzet'), kosten: getal('kosten'), urencriterium: vinkje('urencrit'), starter: vinkje('starter') }, { zelfstandigenaftrek: VOORSTELLEN.ondernemer.zelfstandigenaftrek2027, startersaftrek: VOORSTELLEN.ondernemer.startersaftrek2027 });
+    zet('v-a1', euro(r.ondernemersaftrek)); zet('v-a2', euro(r2.ondernemersaftrek));
+    zet('v-b1', euro(r.belastbaar)); zet('v-b2', euro(r2.belastbaar));
+    zet('v-n1', euro(r.nettoJaar)); zet('v-n2', euro(r2.nettoJaar));
+    zet('v-d', verschil(r2.nettoJaar - r.nettoJaar, 'netto meer', 'netto minder'));
   });
 </script>
