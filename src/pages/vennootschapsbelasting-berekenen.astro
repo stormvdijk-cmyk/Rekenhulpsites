@@ -1,6 +1,8 @@
 ---
 import CalculatorPage from '../components/CalculatorPage.astro';
 import Field from '../components/Field.astro';
+import Wetsvoorstel from '../components/Wetsvoorstel.astro';
+import voorstellen from '../data/wetsvoorstellen.json';
 import { tarieven } from '../data/tarieven';
 const v = tarieven.vpb, b = tarieven.box2;
 const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
@@ -41,6 +43,18 @@ const faq = [
     </div>
   </form>
 
+  <Wetsvoorstel slot="vergelijking" voorstel="box2" titel="Nu versus de voorgestelde box 2-tarieven 2027">
+    <p>Voorgesteld is de box 2-tarieven van 2027 tot en met 2030 tijdelijk te verlagen naar {pct(voorstellen.box2.tariefLaag)} en {pct(voorstellen.box2.tariefHoog)}. De vergelijking gebruikt verder de vennootschapsbelasting en schijfgrens van 2026.</p>
+    <table class="vgl">
+      <thead><tr><th scope="col"></th><th scope="col">Nu (2026)</th><th scope="col">Voorstel</th></tr></thead>
+      <tbody>
+        <tr><td>Box 2 over het dividend</td><td id="v-b1">–</td><td id="v-b2">–</td></tr>
+        <tr><td>Netto dividend</td><td id="v-n1">–</td><td id="v-n2">–</td></tr>
+        <tr class="verschil"><td>Verschil per jaar</td><td id="v-x"></td><td id="v-d">–</td></tr>
+      </tbody>
+    </table>
+  </Wetsvoorstel>
+
   <Fragment slot="uitleg-1">
     <h2>Twee keer belasting: Vpb en box 2</h2>
     <p>Winst van een bv wordt in twee stappen belast. Eerst betaalt de bv <strong>vennootschapsbelasting</strong>: {pct(v.tariefLaag)} tot {eur(v.grens)} en {pct(v.tariefHoog)} daarboven. Wat overblijft, kan de bv uitkeren als dividend. Daarover betaal je als aanmerkelijkbelanghouder <strong>box 2-belasting</strong>: {pct(b.tariefLaag)} tot {eur(b.grens)} per persoon en {pct(b.tariefHoog)} daarboven.</p>
@@ -68,8 +82,10 @@ const faq = [
 
 <script>
   import { berekenDga } from '../lib/calculators/dga';
+  import { VOORSTELLEN } from '../lib/calculators/wetsvoorstellen';
   import { formatProcent } from '../lib/calculators/format';
   import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  const verschil = (d: number, plus = 'meer', min = 'minder') => (d > 0 ? '+ ' : d < 0 ? '− ' : '') + euro(Math.abs(d)) + (d > 0 ? ` ${plus}` : d < 0 ? ` ${min}` : '');
   live('f', () => {
     const r = berekenDga({ winstVoorBelasting: getal('winst'), uitkeerPct: getal('uitkeer', 100), partner: vinkje('partner') });
     zet('r-netto', euro(r.nettoDividend));
@@ -79,5 +95,9 @@ const faq = [
     zet('r-div', euro(r.dividend));
     zet('r-box2', euro(r.box2));
     zet('r-blijft', euro(r.ingehouden));
+    const r2 = berekenDga({ winstVoorBelasting: getal('winst'), uitkeerPct: getal('uitkeer', 100), partner: vinkje('partner') }, VOORSTELLEN.box2);
+    zet('v-b1', euro(r.box2)); zet('v-b2', euro(r2.box2));
+    zet('v-n1', euro(r.nettoDividend)); zet('v-n2', euro(r2.nettoDividend));
+    zet('v-d', verschil(r2.nettoDividend - r.nettoDividend, 'netto meer', 'netto minder'));
   });
 </script>

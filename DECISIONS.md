@@ -85,3 +85,12 @@ Datum: 2 november 2026.
 - **Breder** (72rem, `wide`-prop op Base) voor 38 rekenhulpen.
 - **Opbouw:** een zoekveld met live resultaten (Enter opent de eerste), "Wat is jouw situatie?" (6 tegels met de 4 belangrijkste rekenhulpen per levenssituatie), "Alle rekenhulpen" per onderwerp in maximaal 3 kolommen met alleen titels (de korte omschrijving staat als tooltip), het label "nieuw" bij recent toegevoegde rekenhulpen, en een directe link naar het tarievenoverzicht.
 - Nieuw onderwerp **Toeslagen**.
+
+## Vergelijking met wetsvoorstellen (stand 6 november 2026)
+
+- Nieuw: `src/data/wetsvoorstellen.json` met alleen bedragen die letterlijk in officiële stukken staan (wetsvoorstel en factsheets Belastingplan 2027, Kamerbrieven 3-11-2026, tekst Wet werkelijk rendement box 3 zoals aangenomen door de Tweede Kamer (kst-36748-A), novelle vermogenswinstbelasting box 3 + memorie van toelichting). Component `Wetsvoorstel.astro` toont status, ingangsdatum, stand en bronnen, met het label "Wetsvoorstel · nog geen wet".
+- Ingebouwd bij: box 3 (36% over werkelijk resultaat boven € 1.800 p.p., verliesdrempel € 500, beoogd per 2029), box 2 en vennootschapsbelasting/dividend (23,5% / 29% in 2027–2030), overdrachtsbelasting (niet zelf bewonen 8% → 7% per 2027), zzp netto (zelfstandigenaftrek € 900 en startersaftrek € 10 in 2027, met tarieven 2026), jaarruimte (aftoppingsgrens bevroren op € 137.800 t/m 2032).
+- Test box 3 gebruikt voorbeeld 10 uit de memorie van toelichting (€ 4.000 rente, € 20 kosten → € 784).
+- **Niet gebouwd:** vergelijking box 1 / netto salaris 2027. De tabel in het wetsvoorstel (36,23% / 38,16%, arbeidskorting € 5.540 enz.) wordt volgens de Kamerbrief van 3 november aangepast (extra koopkracht via de tabelcorrectiefactor, definitieve invulling met de Kamer); de afbouwpunten hangen af van het minimumloon. Pas toevoegen na de stemming van 12 november of publicatie door de Belastingdienst.
+- **Niet gebouwd:** afschaffing zorgkostenaftrek (kabinet trok dit op 3 november in; nieuwe vormgeving nog onbekend) en btw sierteelt (uit het Belastingplan gehaald).
+- Reiskosten € 0,25 per km gold al met terugwerkende kracht voor 2026 en stond al goed.

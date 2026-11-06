@@ -1,0 +1,60 @@
+{
+  "stand": "2026-11-06",
+  "toelichting": "Voorstellen van het kabinet die nog geen wet zijn. Alleen bedragen en percentages die letterlijk in officiële Kamerstukken staan. Bijwerken na de stemming in de Tweede Kamer (12 november 2026) en de behandeling in de Eerste Kamer (december 2026).",
+  "bronnen": {
+    "bp2027Wetsvoorstel": "https://www.rijksoverheid.nl/site/binaries/site-content/collections/documents/2026/09/15/wetsvoorstel-belastingplan-2027/wetsvoorstel-belastingplan-2027.pdf",
+    "bp2027Factsheets": "https://www.rijksoverheid.nl/site/binaries/site-content/collections/documents/2026/09/15/factsheetbundel/aanbiedingsbrief-bijlage-factsheetbundel-belastingplan-2027.pdf",
+    "bp2027DerdeNvw": "https://open.overheid.nl/documenten/f4b865c4-7b05-47a0-bbed-d76d932244e7/file",
+    "aanpassingenBrief": "https://open.overheid.nl/documenten/53469e7a-f99d-4961-ba51-c015d8e40774/file",
+    "wwrTekst": "https://zoek.officielebekendmakingen.nl/kst-36748-A.html",
+    "novelleTekst": "https://open.overheid.nl/documenten/36dfb567-089a-4fc8-a64f-a0fe4f8a758b/file",
+    "novelleMvt": "https://open.overheid.nl/documenten/9c0231bc-f985-4dd3-b873-fdd787699ac5/file",
+    "box3Plannen": "https://www.rijksoverheid.nl/onderwerpen/inkomstenbelasting/plannen-werkelijk-rendement-box-3",
+    "inkomenPlannen": "https://www.rijksoverheid.nl/themas/belastingen-uitkeringen-en-toeslagen/belastingplan/plannen-kabinet-belastingen-voor-inkomen"
+  },
+  "box3": {
+    "naam": "Wet werkelijk rendement box 3 met de novelle Uitbreiding vermogenswinstbelasting box 3",
+    "status": "Aangenomen door de Tweede Kamer, nog in behandeling bij de Eerste Kamer. Novelle ingediend op 3 november 2026.",
+    "ingang": "1 januari 2029 (vervroeging naar 2028 als dat uitvoerbaar blijkt). In 2027 en 2028 blijft het huidige forfaitaire stelsel met tegenbewijs gelden.",
+    "tarief": 0.36,
+    "heffingsvrijResultaat": 1800,
+    "verliesdrempel": 500,
+    "bronnen": ["wwrTekst", "novelleTekst", "novelleMvt", "bp2027DerdeNvw", "box3Plannen"],
+    "opgezocht": "2026-11-06"
+  },
+  "box2": {
+    "naam": "Novelle Uitbreiding vermogenswinstbelasting box 3 (onderdeel box 2)",
+    "status": "Wetsvoorstel, ingediend bij de Tweede Kamer op 3 november 2026.",
+    "ingang": "Tijdelijk van 1 januari 2027 tot en met 2030; per 1 januari 2031 weer 24,5% en 31%.",
+    "tariefLaag": 0.235,
+    "tariefHoog": 0.29,
+    "excessiefLenenMaximum2027": 420000,
+    "bronnen": ["novelleTekst", "novelleMvt", "bp2027DerdeNvw"],
+    "opgezocht": "2026-11-06"
+  },
+  "overdrachtsbelasting": {
+    "naam": "Belastingplan 2027: verlaging algemeen woningtarief",
+    "status": "Wetsvoorstel Belastingplan 2027, in behandeling bij de Tweede Kamer.",
+    "ingang": "1 januari 2027",
+    "woningNietZelfBewonen": 0.07,
+    "bronnen": ["bp2027Factsheets", "bp2027Wetsvoorstel"],
+    "opgezocht": "2026-11-06"
+  },
+  "ondernemer": {
+    "naam": "Belastingplan 2027: versoberen en afschaffen startersaftrek",
+    "status": "Wetsvoorstel Belastingplan 2027, in behandeling bij de Tweede Kamer. De verlaging van de zelfstandigenaftrek naar € 900 in 2027 is al wet.",
+    "ingang": "Startersaftrek € 10 in 2027 en afgeschaft per 1 januari 2028.",
+    "zelfstandigenaftrek2027": 900,
+    "startersaftrek2027": 10,
+    "bronnen": ["bp2027Factsheets", "bp2027Wetsvoorstel"],
+    "opgezocht": "2026-11-06"
+  },
+  "aftoppingsgrens": {
+    "naam": "Belastingplan 2027: bevriezen aftoppingsgrens pensioen en lijfrente",
+    "status": "Wetsvoorstel Belastingplan 2027, in behandeling bij de Tweede Kamer.",
+    "ingang": "Geen indexatie in 2027 tot en met 2032.",
+    "bedrag": 137800,
+    "bronnen": ["bp2027Factsheets", "inkomenPlannen"],
+    "opgezocht": "2026-11-06"
+  }
+}

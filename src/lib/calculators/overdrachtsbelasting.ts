@@ -24,13 +24,14 @@ export interface OverdrachtInput {
 export interface KoperResultaat { aandeel: number; tarief: number; belasting: number; starter: boolean; reden: string }
 export interface OverdrachtResultaat { totaal: number; perKoper: KoperResultaat[]; effectiefTarief: number }
 
-export function berekenOverdrachtsbelasting(i: OverdrachtInput): OverdrachtResultaat {
+/** Optioneel een ander tarief voor woningen die je niet zelf bewoont (wetsvoorstel). */
+export function berekenOverdrachtsbelasting(i: OverdrachtInput, tariefNietZelfBewonen: number = t.woningNietZelfBewonen): OverdrachtResultaat {
   const koopsom = Math.max(0, i.koopsom);
   const kopers = i.kopers.length ? i.kopers : [{ leeftijd: 40, eerderGebruikt: true }];
   const aandeel = koopsom / kopers.length;
   const perKoper = kopers.map((k): KoperResultaat => {
     if (i.soort === 'overig') return { aandeel, tarief: t.overig, belasting: aandeel * t.overig, starter: false, reden: 'Geen woning: algemeen tarief' };
-    if (!i.zelfBewonen) return { aandeel, tarief: t.woningNietZelfBewonen, belasting: aandeel * t.woningNietZelfBewonen, starter: false, reden: 'Woning die je niet zelf bewoont' };
+    if (!i.zelfBewonen) return { aandeel, tarief: tariefNietZelfBewonen, belasting: aandeel * tariefNietZelfBewonen, starter: false, reden: 'Woning die je niet zelf bewoont' };
     const leeftijdOk = k.leeftijd >= t.starterMinLeeftijd && k.leeftijd <= t.starterMaxLeeftijd;
     const waardeOk = koopsom <= t.starterWoningwaardegrens;
     if (leeftijdOk && waardeOk && !k.eerderGebruikt) return { aandeel, tarief: 0, belasting: 0, starter: true, reden: 'Startersvrijstelling' };

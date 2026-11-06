@@ -1,6 +1,8 @@
 ---
 import CalculatorPage from '../components/CalculatorPage.astro';
 import Field from '../components/Field.astro';
+import Wetsvoorstel from '../components/Wetsvoorstel.astro';
+import voorstellen from '../data/wetsvoorstellen.json';
 import { tarieven } from '../data/tarieven';
 const l = tarieven.lijfrente;
 const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
@@ -40,6 +42,11 @@ const faq = [
     </div>
   </form>
 
+  <Wetsvoorstel slot="vergelijking" voorstel="aftoppingsgrens" titel="Wat verandert er na 2026?">
+    <p>Je jaarruimte rekent met inkomen tot de aftoppingsgrens van {eur(l.aftoppingsgrens)}. Het kabinet wil die grens van 2027 tot en met 2032 niet meer laten meestijgen met de lonen: hij blijft {eur(voorstellen.aftoppingsgrens.bedrag)}. Verdien je meer, dan groeit je jaarruimte niet mee met je inkomen. Boven de grens kun je wel netto lijfrente opbouwen, zonder aftrek.</p>
+    <p id="v-boven" class="hint" hidden></p>
+  </Wetsvoorstel>
+
   <Fragment slot="uitleg-1">
     <h2>Zo bereken je de jaarruimte</h2>
     <ol>
@@ -71,8 +78,9 @@ const faq = [
 
 <script>
   import { berekenJaarruimte } from '../lib/calculators/aftrekposten';
+  import { VOORSTELLEN } from '../lib/calculators/wetsvoorstellen';
   import { aftrekTarief } from '../lib/calculators/hypotheek';
-  import { euro, getal, live, zet } from '../lib/ui';
+  import { $, euro, getal, live, zet } from '../lib/ui';
   live('f', () => {
     const ink = getal('ink');
     const r = berekenJaarruimte({ inkomenVorigJaar: ink, factorA: getal('fa'), pensioenpremie: getal('pp'), stortingFor: getal('for') });
@@ -81,5 +89,9 @@ const faq = [
     zet('r-pg', euro(r.premiegrondslag));
     zet('r-30', euro(r.ruimteVoorAftrek));
     zet('r-opb', '− ' + euro(r.aftrekPensioen));
+    const grens = VOORSTELLEN.aftoppingsgrens.bedrag;
+    const boven = $('v-boven');
+    boven.hidden = ink <= grens;
+    boven.textContent = ink > grens ? `Jouw inkomen ligt ${euro(ink - grens)} boven de grens. Dat deel telt nu niet mee voor je jaarruimte, en met het voorstel blijft dat zo, ook als je inkomen de komende jaren stijgt.` : '';
   });
 </script>

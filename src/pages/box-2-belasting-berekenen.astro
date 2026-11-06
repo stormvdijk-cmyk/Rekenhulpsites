@@ -1,6 +1,8 @@
 ---
 import CalculatorPage from '../components/CalculatorPage.astro';
 import Field from '../components/Field.astro';
+import Wetsvoorstel from '../components/Wetsvoorstel.astro';
+import voorstellen from '../data/wetsvoorstellen.json';
 import { tarieven } from '../data/tarieven';
 const b = tarieven.box2;
 const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
@@ -11,6 +13,7 @@ const faq = [
   { vraag: 'Telt de verkoop van aandelen ook mee?', antwoord: 'Ja. Verkoop je aandelen uit een aanmerkelijk belang, dan is de winst (verkoopprijs min verkrijgingsprijs) box 2-inkomen. Bij bedrijfsoverdracht aan een opvolger kan onder voorwaarden uitstel van betaling of doorschuiving gelden.' },
   { vraag: 'Is dividendbelasting extra?', antwoord: 'Nee. De 15% dividendbelasting die de bv inhoudt, is een voorheffing. Je trekt die in je aangifte af van de box 2-belasting die je verschuldigd bent.' },
 ];
+const pctV = (n: number) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: 2 }) + '%';
 ---
 <CalculatorPage
   slug="box-2-belasting-berekenen"
@@ -37,6 +40,18 @@ const faq = [
       <label class="check"><input type="checkbox" id="div" name="div" checked /> Het gaat om dividend (met 15% dividendbelasting)</label>
     </div>
   </form>
+
+  <Wetsvoorstel slot="vergelijking" voorstel="box2" titel="Nu versus de voorgestelde box 2-tarieven 2027">
+    <p>Het kabinet stelt voor de box 2-tarieven van 2027 tot en met 2030 tijdelijk te verlagen: de eerste schijf naar {pctV(voorstellen.box2.tariefLaag)} en de tweede schijf naar {pctV(voorstellen.box2.tariefHoog)}. Hieronder zie je dat voor jouw bedrag, met de schijfgrens van 2026. Tegelijk mag je minder lenen van je eigen bv: het maximum gaat in 2027 van € 500.000 naar {'€ ' + voorstellen.box2.excessiefLenenMaximum2027.toLocaleString('nl-NL')}.</p>
+    <table class="vgl">
+      <thead><tr><th scope="col"></th><th scope="col">Nu (2026)</th><th scope="col">Voorstel</th></tr></thead>
+      <tbody>
+        <tr><td>Box 2-belasting</td><td id="v-b1">–</td><td id="v-b2">–</td></tr>
+        <tr><td>Netto</td><td id="v-n1">–</td><td id="v-n2">–</td></tr>
+        <tr class="verschil"><td>Verschil per jaar</td><td id="v-x"></td><td id="v-d">–</td></tr>
+      </tbody>
+    </table>
+  </Wetsvoorstel>
 
   <Fragment slot="uitleg-1">
     <h2>De tarieven in box 2</h2>
@@ -70,8 +85,10 @@ const faq = [
 
 <script>
   import { box2Belasting } from '../lib/calculators/dga';
+  import { VOORSTELLEN } from '../lib/calculators/wetsvoorstellen';
   import { formatProcent } from '../lib/calculators/format';
   import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  const verschil = (d: number, plus = 'meer', min = 'minder') => (d > 0 ? '+ ' : d < 0 ? '− ' : '') + euro(Math.abs(d)) + (d > 0 ? ` ${plus}` : d < 0 ? ` ${min}` : '');
   live('f', () => {
     const ink = getal('inkomen');
     const bel = box2Belasting(ink, vinkje('partner'));
@@ -81,5 +98,9 @@ const faq = [
     zet('r-pct', ink > 0 ? formatProcent((bel / ink) * 100, 1) : '–');
     zet('r-db', euro(db));
     zet('r-rest', euro(bel - db));
+    const bel2 = box2Belasting(ink, vinkje('partner'), VOORSTELLEN.box2);
+    zet('v-b1', euro(bel)); zet('v-b2', euro(bel2));
+    zet('v-n1', euro(ink - bel)); zet('v-n2', euro(ink - bel2));
+    zet('v-d', verschil(bel2 - bel, 'meer belasting', 'minder belasting'));
   });
 </script>

@@ -6,7 +6,7 @@ interface Props {
   prefix?: string;
   suffix?: string;
   hint?: string;
-  inputmode?: 'decimal' | 'numeric';
+  inputmode?: 'decimal' | 'numeric' | 'text';
 }
 const { id, label, value, prefix, suffix, hint, inputmode = 'decimal' } = Astro.props;
 ---
