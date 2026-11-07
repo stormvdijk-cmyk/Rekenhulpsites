@@ -1,0 +1,96 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const b = tarieven.bpm;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Hoeveel bpm betaal ik voor een elektrische auto in 2026?', antwoord: `Een auto zonder CO₂-uitstoot valt in de eerste rij van de tabel en betaalt het vaste bedrag van ${eur(b.schijven[0].basis)}.` },
+  { vraag: 'Wat is de dieseltoeslag?', antwoord: `Voor een dieselauto betaal je bovenop de gewone bpm een toeslag van € ${b.dieselToeslagPerGram.toLocaleString('nl-NL')} per gram CO₂ boven ${b.dieselDrempel} gram per kilometer.` },
+  { vraag: 'Hoe werkt de afschrijving bij een gebruikte importauto?', antwoord: 'Bij een gebruikte auto uit het buitenland betaal je niet de volle bpm. Je trekt een afschrijving af. Met de forfaitaire tabel hangt die af van hoe lang geleden de auto voor het eerst op kenteken kwam. Je mag ook een koerslijst of taxatierapport gebruiken als dat gunstiger is.' },
+  { vraag: 'Waar vind ik de CO₂-uitstoot van mijn auto?', antwoord: 'Op het Certificaat van Overeenstemming (CvO) of in de gegevens van de RDW. Gebruik de WLTP-waarde. Voor auto\'s die vóór 1 juli 2020 op kenteken kwamen, gelden de oudere NEDC-tarieven; die zitten niet in deze rekenhulp.' },
+];
+---
+<CalculatorPage
+  slug="bpm-berekenen"
+  title="Bpm berekenen 2026 voor je auto"
+  description="Bereken de bpm voor een nieuwe of gebruikte personenauto in 2026: tarief op CO₂-uitstoot, dieseltoeslag en afschrijving voor importauto's."
+  h1="Bpm berekenen"
+  intro="Vul de CO₂-uitstoot van de auto in. Bij een gebruikte importauto ook de datums. Je ziet direct hoeveel bpm je betaalt."
+  faq={faq}
+  bron={b.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Te betalen bpm</p>
+      <p class="result-main" id="r-bpm">–</p>
+      <dl>
+        <dt>Bpm volgens de tabel</dt><dd id="r-tabel">–</dd>
+        <dt>Dieseltoeslag</dt><dd id="r-diesel">–</dd>
+        <dt>Bruto bpm</dt><dd id="r-bruto">–</dd>
+        <dt id="r-afs-l">Afschrijving</dt><dd id="r-afs">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="co2" label="CO₂-uitstoot (WLTP)" value="130" suffix="g/km" inputmode="numeric" />
+      <label class="check"><input type="checkbox" id="diesel" name="diesel" /> Dieselmotor</label>
+      <fieldset class="seg">
+        <legend>Nieuw of gebruikt?</legend>
+        <label><input type="radio" name="soort" value="nieuw" checked /><span>Nieuw</span></label>
+        <label><input type="radio" name="soort" value="gebruikt" /><span>Gebruikte import</span></label>
+      </fieldset>
+      <div class="row-2 stack" id="datums" hidden>
+        <div class="field"><label for="toel">Datum eerste toelating</label><div class="input-wrap"><input type="date" id="toel" name="toel" value="2023-06-15" /></div></div>
+        <div class="field"><label for="keur">Datum keuring RDW</label><div class="input-wrap"><input type="date" id="keur" name="keur" value="2026-11-15" /></div></div>
+      </div>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo bereken je de bpm</h2>
+    <p>De bpm (belasting van personenauto's en motorrijwielen) betaal je één keer, als een auto voor het eerst in Nederland op kenteken komt. Bij een nieuwe auto zit de bpm meestal al in de prijs. Haal je zelf een auto uit het buitenland, dan doe je zelf aangifte.</p>
+    <p>De bpm hangt af van de <strong>CO₂-uitstoot</strong>. Zoek de rij in de tabel waarin je uitstoot valt, trek de ondergrens af, vermenigvuldig met het bedrag per gram en tel het vaste bedrag op.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th scope="col">CO₂ vanaf (g/km)</th><th scope="col">Vast bedrag</th><th scope="col">Per gram</th></tr></thead>
+      <tbody>
+        {b.schijven.map((s) => <tr><td>{s.vanaf}</td><td>{eur(s.basis)}</td><td>{eur(s.perGram)}</td></tr>)}
+      </tbody>
+    </table></div>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Een nieuwe benzineauto stoot <strong>130 gram CO₂ per kilometer</strong> uit. Dat valt in de rij vanaf 100 gram.</p>
+      <ul>
+        <li>130 − 100 = 30 gram</li>
+        <li>30 × € 181 = € 5.430</li>
+        <li>€ 5.430 + € 2.727 = <strong>€ 8.157 bpm</strong></li>
+      </ul>
+      <p>Is het een diesel, dan komt er (130 − 69) × € 114,83 = € 7.004,63 dieseltoeslag bij.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Gebruikte auto uit het buitenland</h2>
+    <p>Voor een gebruikte importauto bereken je eerst de bruto bpm zoals hierboven. Daarna trek je een afschrijving af, omdat de auto al minder waard is. Deze rekenhulp gebruikt de <strong>forfaitaire tabel</strong> van de Belastingdienst. Die telt de maanden tussen de eerste toelating (in het buitenland) en de keuring bij de RDW. Een auto die al 9 maanden oud is, krijgt bijvoorbeeld 33% afschrijving, plus 1% voor elke volgende (deel van een) maand.</p>
+    <p>Een koerslijst of taxatierapport kan gunstiger uitvallen. Bij een gebruikte auto mag je ook een ouder bpm-tarief kiezen dat gold rond de datum van eerste toelating. Die opties zitten niet in deze rekenhulp. Koop je een auto die korter dan zes maanden in gebruik is of minder dan 6.000 kilometer heeft gereden, dan betaal je als particulier ook btw.</p>
+    <p>Rijd je de auto zakelijk? Bekijk dan wat het je kost aan <a href="../bijtelling-auto-van-de-zaak/">bijtelling</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenBpm } from '../lib/calculators/bpm';
+  import { formatProcent } from '../lib/calculators/format';
+  import { $, euro, getal, live, radio, vinkje, zet } from '../lib/ui';
+  const datum = (id: string) => { const v = $<HTMLInputElement>(id).value; if (!v) return undefined; const [y, m, d] = v.split('-').map(Number); return new Date(y, m - 1, d); };
+  live('f', () => {
+    const gebruikt = radio('soort') === 'gebruikt';
+    $('datums').hidden = !gebruikt;
+    const r = berekenBpm({ co2: getal('co2'), diesel: vinkje('diesel'), gebruikt, eersteToelating: datum('toel'), keuring: datum('keur') });
+    zet('r-bpm', euro(r.teBetalen, false));
+    zet('r-tabel', euro(r.tabel));
+    zet('r-diesel', r.dieseltoeslag ? euro(r.dieseltoeslag) : '–');
+    zet('r-bruto', euro(r.bruto));
+    zet('r-afs-l', gebruikt ? `Afschrijving (${formatProcent(r.afschrijvingPct, 2)})` : 'Afschrijving');
+    zet('r-afs', gebruikt ? '− ' + euro(r.afschrijving) : '–');
+  });
+</script>

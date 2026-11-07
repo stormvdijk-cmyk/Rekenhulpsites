@@ -1,0 +1,79 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const g = tarieven.gebruikelijkLoon;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Wat is het minimum gebruikelijk loon in 2026?', antwoord: `${eur(g.minimum)}. In 2024 en 2025 was het € 56.000. Het gebruikelijk loon is het hoogste van drie bedragen: het loon bij de meest vergelijkbare baan, het loon van je best betaalde werknemer en ${eur(g.minimum)}.` },
+  { vraag: 'Mag ik mezelf minder betalen dan € 58.000?', antwoord: 'Ja, als je aannemelijk kunt maken dat bij de meest vergelijkbare werkzaamheden in loondienst een lager loon gebruikelijk is. Daarbij vergelijk je met werk waarbij geen aanmerkelijk belang speelt. Leg die onderbouwing goed vast, want de Belastingdienst kan erom vragen.' },
+  { vraag: 'Wat als mijn gebruikelijk loon heel laag is?', antwoord: `Is het gebruikelijk loon ${eur(g.kleinGrens)} of lager en kun je dat aantonen, dan geef je het loon op dat je werkelijk kreeg. Die grens geldt voor al je werk voor alle vennootschappen waarin je een aanmerkelijk belang hebt samen.` },
+  { vraag: 'Waarom bestaat de gebruikelijkloonregeling?', antwoord: 'Zonder die regel zou een DGA geen salaris kunnen nemen en alles als dividend uitkeren. Over salaris betaal je box 1-tarieven tot 49,50%, over dividend vennootschapsbelasting plus box 2. De regel zorgt dat over het werk dat je voor je bv doet, loonbelasting wordt betaald.' },
+];
+---
+<CalculatorPage
+  slug="gebruikelijk-loon-dga"
+  title="Gebruikelijk loon DGA 2026 berekenen"
+  description="Bereken je gebruikelijk loon als DGA in 2026: minimaal € 58.000, het loon bij vergelijkbaar werk of je best betaalde werknemer."
+  h1="Gebruikelijk loon DGA berekenen"
+  intro="Vul het loon bij vergelijkbaar werk en het loon van je best betaalde werknemer in. Je ziet welk salaris je jezelf minimaal moet betalen."
+  faq={faq}
+  bron={g.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Gebruikelijk loon 2026</p>
+      <p class="result-main" id="r-loon">–</p>
+      <p class="result-sub" id="r-sub"></p>
+      <dl>
+        <dt>Per maand (12 maanden)</dt><dd id="r-maand">–</dd>
+        <dt>Minimum 2026</dt><dd>{eur(g.minimum)}</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="verg" label="Loon bij de meest vergelijkbare baan" value="65000" prefix="€" hint="Wat iemand in loondienst verdient voor vergelijkbaar werk" />
+      <Field id="wn" label="Loon van je best betaalde werknemer" value="0" prefix="€" hint="Ook bij een verbonden vennootschap; 0 als je geen personeel hebt" />
+      <label class="check"><input type="checkbox" id="lager" name="lager" /> Ik kan aannemelijk maken dat bij vergelijkbaar werk een lager loon gebruikelijk is</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo bepaal je het gebruikelijk loon</h2>
+    <p>Werk je als directeur-grootaandeelhouder (DGA) voor je eigen bv, dan moet je jezelf een salaris betalen dat past bij je werk: het <strong>gebruikelijk loon</strong>. Dat is minimaal het hoogste van deze drie bedragen:</p>
+    <ul>
+      <li>het loon uit de <strong>meest vergelijkbare dienstbetrekking</strong>;</li>
+      <li>het loon van de <strong>meestverdienende werknemer</strong> in je bv of in een verbonden vennootschap;</li>
+      <li><strong>{eur(g.minimum)}</strong> in 2026.</li>
+    </ul>
+    <p>Kun je aannemelijk maken dat bij vergelijkbaar werk een lager loon gebruikelijk is, dan mag je dat lagere loon nemen.</p>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je bent ontwikkelaar in je eigen bv. Een vergelijkbare baan in loondienst levert <strong>€ 65.000</strong> op. Je hebt één werknemer die <strong>€ 48.000</strong> verdient.</p>
+      <ul>
+        <li>Vergelijkbare baan: € 65.000</li>
+        <li>Best betaalde werknemer: € 48.000</li>
+        <li>Minimum: € 58.000</li>
+        <li>Gebruikelijk loon: het hoogste, dus <strong>€ 65.000</strong> (€ 5.416,67 per maand)</li>
+      </ul>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Salaris of dividend?</h2>
+    <p>Boven het gebruikelijk loon mag je kiezen: meer salaris uit je bv halen, of de winst als dividend uitkeren. Salaris is voor de bv een kostenpost en voor jou belast in box 1. Dividend wordt eerst belast met vennootschapsbelasting en daarna met box 2. Welke route goedkoper is, hangt af van de bedragen. Vergelijk het met <a href="../vennootschapsbelasting-berekenen/">vennootschapsbelasting en dividend</a> en <a href="../box-2-belasting-berekenen/">box 2-belasting</a>.</p>
+    <p>Deze rekenhulp past de hoofdregel toe. Voor start-ups, holdings en situaties met meerdere vennootschappen gelden extra regels. Twijfel je over het loon bij vergelijkbaar werk, overleg dan met een belastingadviseur.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenGebruikelijkLoon } from '../lib/calculators/gebruikelijkLoon';
+  import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  const uitleg = { minimum: 'Het wettelijke minimum is het hoogste bedrag.', vergelijkbaar: 'Het loon bij de meest vergelijkbare baan is het hoogste bedrag.', werknemer: 'Het loon van je best betaalde werknemer is het hoogste bedrag.', lager: 'Je neemt het lagere loon bij vergelijkbaar werk. Zorg voor een goede onderbouwing.' };
+  live('f', () => {
+    const r = berekenGebruikelijkLoon({ vergelijkbaar: getal('verg'), hoogsteWerknemer: getal('wn'), lagerAannemelijk: vinkje('lager') });
+    zet('r-loon', euro(r.loon, false));
+    zet('r-sub', uitleg[r.bepalend] + (r.klein ? ' Onder € 5.000 geef je het werkelijke loon op.' : ''));
+    zet('r-maand', euro(r.loon / 12));
+  });
+</script>

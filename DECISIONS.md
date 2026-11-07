@@ -94,3 +94,12 @@ Datum: 2 november 2026.
 - **Niet gebouwd:** vergelijking box 1 / netto salaris 2027. De tabel in het wetsvoorstel (36,23% / 38,16%, arbeidskorting € 5.540 enz.) wordt volgens de Kamerbrief van 3 november aangepast (extra koopkracht via de tabelcorrectiefactor, definitieve invulling met de Kamer); de afbouwpunten hangen af van het minimumloon. Pas toevoegen na de stemming van 12 november of publicatie door de Belastingdienst.
 - **Niet gebouwd:** afschaffing zorgkostenaftrek (kabinet trok dit op 3 november in; nieuwe vormgeving nog onbekend) en btw sierteelt (uit het Belastingplan gehaald).
 - Reiskosten € 0,25 per km gold al met terugwerkende kracht voor 2026 en stond al goed.
+
+## Negen extra belastingrekenhulpen (7 november 2026)
+
+- Nieuw: hypotheekrenteaftrek (met alle forfaitschijven, Wet Hillen 71,867% en tariefsaanpassing), energiebelasting, bpm (tabel 2026, dieseltoeslag, forfaitaire afschrijving), belastingrente (30/360-telling, 19-weken- en 6-wekenregel, afronding zoals de Belastingdienst), 30%-regeling, thuiswerkvergoeding, werkkostenregeling, gebruikelijk loon DGA en KIA. Nu 49 rekenhulpen.
+- Alle cijfers letterlijk gecontroleerd op belastingdienst.nl (pagina's en cijferbijlage loonheffingen 2026) en vastgelegd in `tarieven-2026.json` met bron en opzoekdatum.
+- Tests gebruiken de rekenvoorbeelden van de Belastingdienst: bpm € 8.157 en dieseltoeslag € 7.004,63, afschrijving 39%, belastingrente € 15 en € 93 + € 9, expat € 21.428 / € 21.000 / € 1.986, WKR € 15.080, Wet Hillen € 216.
+- Bpm-dieseltoeslag: de Belastingdienst schrijft zowel "meer dan 70" als "boven 69 g/km"; de rekenstappen trekken 69 af. Wij rekenen met (CO₂ − 69) × € 114,83 boven 69 g/km.
+- Teksten: zinnen die niet in een officiële bron terug te vinden waren, zijn weggelaten (o.a. over salderen, negatieve energiebelasting, gebruikelijkheidstoets WKR).
+- **Niet gebouwd: motorrijtuigenbelasting.** De Belastingdienst publiceert alleen een rekenhulp, geen tabel; het wettelijke tarief (art. 23 Wet MRB 1994) staat op wetten.overheid.nl, dat de verbinding weigert, en de opcenten per provincie zijn niet uit een officiële bron opgehaald. Later opnieuw proberen.

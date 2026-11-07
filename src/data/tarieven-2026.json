@@ -289,7 +289,32 @@
     "forfaitVillaGrens": 1350000,
     "forfaitVillaBasis": 4725,
     "forfaitVillaPercentage": 0.0235,
-    "maxAftrekTarief": 0.3756
+    "maxAftrekTarief": 0.3756,
+    "forfaitSchijven": [
+      {
+        "tot": 12500,
+        "pct": 0
+      },
+      {
+        "tot": 25000,
+        "pct": 0.001
+      },
+      {
+        "tot": 50000,
+        "pct": 0.002
+      },
+      {
+        "tot": 75000,
+        "pct": 0.0025
+      },
+      {
+        "tot": 1350000,
+        "pct": 0.0035
+      }
+    ],
+    "hillenPercentage": 0.71867,
+    "bronHillen": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/woning/eigenwoningforfait/geen_of_een_kleine_eigenwoningschuld/geen_of_een_kleine_eigenwoningschuld",
+    "opgezochtHillen": "2026-11-07"
   },
   "reiskosten": {
     "bron": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/auto_en_vervoer/u_reist_naar_uw_werk/eigen_vervoer/u_reist_met_eigen_vervoer_naar_uw_werk",
@@ -460,7 +485,8 @@
   },
   "gecontroleerd": {
     "datum": "2026-11-03",
-    "werkwijze": "Elk getal automatisch vergeleken met de tekst van de officiële bronpagina's en pdf's (Belastingdienst Fiscale informatie 2026, cijferbijlage loonheffingen 2026, CBS-databank 70936ned). Alle waarden komen overeen."
+    "werkwijze": "Elk getal automatisch vergeleken met de tekst van de officiële bronpagina's en pdf's (Belastingdienst Fiscale informatie 2026, cijferbijlage loonheffingen 2026, CBS-databank 70936ned). Alle waarden komen overeen.",
+    "nieuw-2026-11-07": "KIA, bpm, expatregeling, WKR, gebruikelijk loon, energiebelasting, belastingrente, eigenwoningforfait-schijven en Wet Hillen letterlijk gecontroleerd op belastingdienst.nl."
   },
   "zorgtoeslag": {
     "bron": "https://download.belastingdienst.nl/toeslagen/docs/berekening_zorgtoeslag_tg0821z62fd.pdf",
@@ -1357,5 +1383,231 @@
         3
       ]
     }
+  },
+  "kia": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/investeringsaftrek-2026/kleinschaligheidsinvesteringsaftrek-2026",
+    "bronVoorwaarden": "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/ondernemersaftrek_en_investeringsaftrek",
+    "opgezocht": "2026-11-07",
+    "omschrijving": "KIA 2026: geen aftrek tot en met € 2.900; 28% tot en met € 71.683; € 20.072 tot en met € 132.746; daarna € 20.072 min 7,56% van het deel boven € 132.746; boven € 398.236 geen aftrek. Bedrijfsmiddelen onder € 450 tellen niet mee.",
+    "minimum": 2901,
+    "grens1": 71683,
+    "percentage": 0.28,
+    "grens2": 132746,
+    "vastBedrag": 20072,
+    "afbouwPercentage": 0.0756,
+    "maximum": 398236,
+    "minimumPerBedrijfsmiddel": 450
+  },
+  "bpm": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/nl/bpm/content/personenauto-bpm-tarief-berekenen",
+    "bronAfschrijving": "https://www.belastingdienst.nl/wps/wcm/connect/nl/bpm/content/bpm-afschrijving-koerslijst-taxatierapport-forfaitaire-tabel",
+    "opgezocht": "2026-11-07",
+    "omschrijving": "Bpm-tarief 2026 personenauto (WLTP), nieuw en gebruikt. Dieseltoeslag € 114,83 per gram boven 69 g/km. Forfaitaire afschrijvingstabel voor gebruikte auto's.",
+    "schijven": [
+      {
+        "vanaf": 0,
+        "basis": 687,
+        "perGram": 2
+      },
+      {
+        "vanaf": 77,
+        "basis": 841,
+        "perGram": 82
+      },
+      {
+        "vanaf": 100,
+        "basis": 2727,
+        "perGram": 181
+      },
+      {
+        "vanaf": 139,
+        "basis": 9786,
+        "perGram": 297
+      },
+      {
+        "vanaf": 155,
+        "basis": 14538,
+        "perGram": 594
+      }
+    ],
+    "dieselToeslagPerGram": 114.83,
+    "dieselDrempel": 69,
+    "afschrijving": [
+      {
+        "vanafMaanden": 0,
+        "pct": 0,
+        "perMaand": 12
+      },
+      {
+        "vanafMaanden": 1,
+        "pct": 12,
+        "perMaand": 4
+      },
+      {
+        "vanafMaanden": 3,
+        "pct": 20,
+        "perMaand": 3.5
+      },
+      {
+        "vanafMaanden": 5,
+        "pct": 27,
+        "perMaand": 1.5
+      },
+      {
+        "vanafMaanden": 9,
+        "pct": 33,
+        "perMaand": 1
+      },
+      {
+        "vanafMaanden": 18,
+        "pct": 42,
+        "perMaand": 0.75
+      },
+      {
+        "vanafMaanden": 30,
+        "pct": 51,
+        "perMaand": 0.5
+      },
+      {
+        "vanafMaanden": 42,
+        "pct": 57,
+        "perMaand": 0.42
+      },
+      {
+        "vanafMaanden": 54,
+        "pct": 62,
+        "perMaand": 0.42
+      },
+      {
+        "vanafMaanden": 66,
+        "pct": 67,
+        "perMaand": 0.42
+      },
+      {
+        "vanafMaanden": 78,
+        "pct": 72,
+        "perMaand": 0.25
+      },
+      {
+        "vanafMaanden": 90,
+        "pct": 75,
+        "perMaand": 0.25
+      },
+      {
+        "vanafMaanden": 102,
+        "pct": 78,
+        "perMaand": 0.25
+      },
+      {
+        "vanafMaanden": 114,
+        "pct": 81,
+        "perMaand": 0.19
+      }
+    ]
+  },
+  "expatregeling": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/internationaal/personeel/u_bent_niet_in_nederland_gevestigd_loonheffingen_inhouden/als_u_loonheffingen_gaat_inhouden/extraterritoriale_kosten_en_de_30procentregeling/inhoud_van_de_regeling/inhoud_van_de_regeling",
+    "bronNorm": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/internationaal/personeel/u_bent_niet_in_nederland_gevestigd_loonheffingen_inhouden/als_u_loonheffingen_gaat_inhouden/extraterritoriale_kosten_en_de_30procentregeling/voorwaarden_voor_de_30procentregeling1/deskundigheidsvereiste",
+    "opgezocht": "2026-11-07",
+    "omschrijving": "Maximaal 30% van het loon inclusief vergoeding (of 30/70 van het loon exclusief vergoeding) belastingvrij. Maximaal € 78.600 per jaar (bij een salaris vanaf € 262.000), tijdsevenredig. Salarisnorm 2026: belastbaar jaarloon meer dan € 48.013, of € 36.497 voor jonger dan 30 met een master.",
+    "percentage": 0.3,
+    "maxVergoeding": 78600,
+    "maxSalaris": 262000,
+    "salarisnorm": 48013,
+    "salarisnormJong": 36497
+  },
+  "wkr": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/nl/personeel-en-loon/content/werkkostenregeling",
+    "opgezocht": "2026-11-07",
+    "omschrijving": "Vrije ruimte 2026: 2,00% van het fiscale loon tot en met € 400.000 en 1,18% over het meerdere. Over het bedrag boven de vrije ruimte: 80% eindheffing.",
+    "grens": 400000,
+    "percentageLaag": 0.02,
+    "percentageHoog": 0.0118,
+    "eindheffing": 0.8,
+    "normMaaltijd": 4.05,
+    "normHuisvestingPerDag": 7.0
+  },
+  "gebruikelijkLoon": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/vermogen_en_aanmerkelijk_belang/aanmerkelijk_belang/loon_en_aanmerkelijk_belang/loon_en_aanmerkelijk_belang",
+    "opgezocht": "2026-11-07",
+    "omschrijving": "Gebruikelijk loon: het hoogste van het loon uit de meest vergelijkbare dienstbetrekking, het loon van de meestverdienende werknemer en € 58.000 (2026). Lager als aannemelijk is dat bij vergelijkbaar werk een lager loon gebruikelijk is. Bij € 5.000 of lager: werkelijk loon.",
+    "minimum": 58000,
+    "kleinGrens": 5000
+  },
+  "energiebelasting": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/overige_belastingen/belastingen_op_milieugrondslag/energiebelasting/energiebelasting",
+    "opgezocht": "2026-11-07",
+    "omschrijving": "Tarieven energiebelasting 2026 per kWh en per m³ (exclusief btw) en de belastingvermindering per elektriciteitsaansluiting met verblijfsfunctie.",
+    "elektriciteit": [
+      {
+        "tot": 10000,
+        "tarief": 0.09161
+      },
+      {
+        "tot": 50000,
+        "tarief": 0.06671
+      },
+      {
+        "tot": 10000000,
+        "tarief": 0.03735
+      },
+      {
+        "tot": null,
+        "tarief": 0.00379
+      }
+    ],
+    "gas": [
+      {
+        "tot": 170000,
+        "tarief": 0.60066
+      },
+      {
+        "tot": 1000000,
+        "tarief": 0.33085
+      },
+      {
+        "tot": 10000000,
+        "tarief": 0.21396
+      },
+      {
+        "tot": null,
+        "tarief": 0.05313
+      }
+    ],
+    "vermindering": 519.8,
+    "vorigJaar": {
+      "elektriciteit": 0.10154,
+      "gas": 0.57816,
+      "vermindering": 524.95
+    }
+  },
+  "belastingrente": {
+    "bron": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/overzicht_percentages_belastingrente",
+    "bronBetalen": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/belastingrente_betalen_bij_inkomstenbelasting",
+    "bronOntvangen": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/belastingrente_ontvangen_bij_inkomstenbelasting",
+    "opgezocht": "2026-11-07",
+    "omschrijving": "Belastingrente inkomstenbelasting: 30 dagen per maand, 360 dagen per jaar. Betalen afronden naar beneden, ontvangen naar boven op hele euro's.",
+    "perioden": [
+      {
+        "vanaf": "2020-10-01",
+        "pct": 4
+      },
+      {
+        "vanaf": "2023-07-01",
+        "pct": 6
+      },
+      {
+        "vanaf": "2024-01-01",
+        "pct": 7.5
+      },
+      {
+        "vanaf": "2025-01-01",
+        "pct": 6.5
+      },
+      {
+        "vanaf": "2026-01-01",
+        "pct": 5
+      }
+    ]
   }
 }

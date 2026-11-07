@@ -1,0 +1,84 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const k = tarieven.kia;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Vanaf welk bedrag krijg ik KIA in 2026?', antwoord: `Als je in 2026 in totaal meer dan € 2.900 investeert in bedrijfsmiddelen, en niet meer dan ${eur(k.maximum)}. Bedrijfsmiddelen van minder dan ${eur(k.minimumPerBedrijfsmiddel)} per stuk tellen niet mee.` },
+  { vraag: 'Wat levert de KIA op?', antwoord: 'De KIA is een extra aftrekpost bovenop de afschrijving. Hij verlaagt je winst. Wat je aan belasting bespaart, hangt af van je tarief: in de inkomstenbelasting je schijftarief (na de mkb-winstvrijstelling), bij een bv het tarief van de vennootschapsbelasting.' },
+  { vraag: 'Welke investeringen tellen niet mee?', antwoord: 'Onder meer woonhuizen, grond, personenauto\'s die niet voor beroepsvervoer zijn, dieren, effecten, goodwill, bedrijfsmiddelen voor gebruik in het buitenland en bedrijfsmiddelen die je koopt van iemand uit je eigen huishouden of van je ouders of kinderen.' },
+  { vraag: 'Wat als ik het bedrijfsmiddel snel weer verkoop?', antwoord: 'Verkoop je binnen 5 jaar na het begin van het jaar van de investering voor meer dan € 2.900 aan bedrijfsmiddelen, dan moet je een deel van de aftrek terugnemen: de desinvesteringsbijtelling.' },
+];
+---
+<CalculatorPage
+  slug="kia-investeringsaftrek-berekenen"
+  title="KIA berekenen 2026: investeringsaftrek"
+  description="Bereken de kleinschaligheidsinvesteringsaftrek (KIA) over je investeringen in 2026: 28% tot € 71.683, maximaal € 20.072."
+  h1="Investeringsaftrek (KIA) berekenen"
+  intro="Vul in hoeveel je dit jaar in totaal investeert in bedrijfsmiddelen. Je ziet direct hoeveel investeringsaftrek je krijgt."
+  faq={faq}
+  bron={k.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">KIA 2026</p>
+      <p class="result-main" id="r-kia">–</p>
+      <p class="result-sub" id="r-sub"></p>
+      <dl>
+        <dt>Belastingbesparing bij 19% vpb</dt><dd id="r-vpb">–</dd>
+        <dt>Belastingbesparing bij 37,56% IB</dt><dd id="r-ib">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="inv" label="Totale investering in 2026" value="25000" prefix="€" hint="Alle bedrijfsmiddelen van € 450 of meer samen, exclusief btw" />
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo werkt de KIA</h2>
+    <p>Investeer je in bedrijfsmiddelen, zoals een laptop, machines, inventaris of een bestelauto, dan mag je naast de afschrijving een extra bedrag van je winst aftrekken: de <strong>kleinschaligheidsinvesteringsaftrek</strong>. Hoe hoog die is, hangt af van wat je in het hele jaar samen investeert.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th scope="col">Investering 2026</th><th scope="col">KIA</th></tr></thead>
+      <tbody>
+        <tr><td>tot en met € 2.900</td><td>0%</td></tr>
+        <tr><td>€ 2.901 t/m {eur(k.grens1)}</td><td>28% van het bedrag</td></tr>
+        <tr><td>{eur(k.grens1 + 1)} t/m {eur(k.grens2)}</td><td>{eur(k.vastBedrag)}</td></tr>
+        <tr><td>{eur(k.grens2 + 1)} t/m {eur(k.maximum)}</td><td>{eur(k.vastBedrag)} min 7,56% van het deel boven {eur(k.grens2)}</td></tr>
+        <tr><td>meer dan {eur(k.maximum)}</td><td>0%</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je koopt in 2026 een bestelauto van € 20.000 en een laptop van € 1.500. Samen <strong>€ 21.500</strong>.</p>
+      <ul>
+        <li>KIA: 28% × € 21.500 = <strong>€ 6.020</strong></li>
+        <li>Heb je een bv, dan bespaar je 19% × € 6.020 = € 1.143,80 vennootschapsbelasting</li>
+      </ul>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Voorwaarden</h2>
+    <p>Je hebt alleen recht op KIA als je winst uit onderneming hebt of een bv met winst. Bedrijfsmiddelen die je van je privévermogen naar je onderneming overbrengt, tellen niet mee.</p>
+    <p>Let op het totaal: de KIA gaat over al je investeringen in een jaar samen. Investeer je veel, bijvoorbeeld € 150.000, dan wordt de aftrek juist lager dan bij € 100.000. Soms loont het daarom om een investering naar het volgende jaar te schuiven, of juist naar voren te halen.</p>
+    <p>Naast de KIA bestaan de energie-investeringsaftrek (EIA, 40%) en de milieu-investeringsaftrek (MIA, 27% tot 45%). Die moet je binnen 3 maanden bij de RVO melden. Voor hetzelfde bedrijfsmiddel kun je ze niet allebei gebruiken. De belastingbesparing hierboven is een indicatie; bij de inkomstenbelasting gaat er nog de mkb-winstvrijstelling vanaf en hangt het van je schijf af.</p>
+    <p>Benieuwd wat je netto overhoudt als zzp'er? Gebruik <a href="../zzp-netto-inkomen-berekenen/">zzp netto inkomen</a>. Met een bv: <a href="../vennootschapsbelasting-berekenen/">vennootschapsbelasting en dividend</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenKia } from '../lib/calculators/kia';
+  import { tarieven } from '../data/tarieven';
+  import { euro, getal, live, zet } from '../lib/ui';
+  const k = tarieven.kia;
+  live('f', () => {
+    const inv = getal('inv');
+    const kia = berekenKia(inv);
+    zet('r-kia', euro(kia));
+    zet('r-sub', inv < k.minimum ? 'Onder € 2.901 krijg je geen KIA.' : inv > k.maximum ? `Boven ${euro(k.maximum, false)} krijg je geen KIA.` : `${(inv > 0 ? (kia / inv) * 100 : 0).toLocaleString('nl-NL', { maximumFractionDigits: 1 })}% van je investering`);
+    zet('r-vpb', euro(kia * tarieven.vpb.tariefLaag));
+    zet('r-ib', euro(kia * tarieven.eigenWoning.maxAftrekTarief));
+  });
+</script>
