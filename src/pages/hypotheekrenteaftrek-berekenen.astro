@@ -1,0 +1,88 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const e = tarieven.eigenWoning;
+const grens = tarieven.box1.schijven[1].tot as number;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const pct = (n: number, d = 2) => (n * 100).toLocaleString('nl-NL', { maximumFractionDigits: d }) + '%';
+const faq = [
+  { vraag: 'Hoeveel hypotheekrenteaftrek krijg ik in 2026?', antwoord: `Je betaalde hypotheekrente verlaagt je belastbaar inkomen. Daarvoor tel je eerst het eigenwoningforfait (meestal ${pct(e.forfaitPercentage)} van de WOZ-waarde) bij je inkomen op. Over het verschil krijg je belasting terug tegen je tarief, in 2026 maximaal ${pct(e.maxAftrekTarief)}.` },
+  { vraag: 'Waarom krijg ik niet 49,5% terug?', antwoord: `Ook als je inkomen in de hoogste schijf valt (boven ${eur(grens)}), levert de aftrek maximaal ${pct(e.maxAftrekTarief)} op. Het verschil met 49,50% wordt via de tariefsaanpassing weer bij je belasting opgeteld.` },
+  { vraag: 'Wat is de Wet Hillen?', antwoord: `Heb je geen of weinig hypotheek, dan is je eigenwoningforfait hoger dan je rente. Vroeger hoefde je over dat verschil geen belasting te betalen. Die aftrek wordt afgebouwd: in 2026 krijg je nog ${pct(e.hillenPercentage, 3)} van het verschil als aftrek. Over de rest betaal je belasting. In 2041 is de aftrek helemaal verdwenen.` },
+  { vraag: 'Welke WOZ-waarde moet ik invullen?', antwoord: 'Voor 2026 de WOZ-waarde met peildatum 1 januari 2025. Die staat op de WOZ-beschikking die je begin 2026 van je gemeente kreeg, of op het WOZ-waardeloket.' },
+  { vraag: 'Mag ik alle rente aftrekken?', antwoord: 'Alleen rente over een lening voor de aankoop, verbouwing of het onderhoud van je eigen woning waarin je zelf woont. Voor leningen vanaf 2013 moet je de lening in maximaal 30 jaar (360 maanden) annuïtair of lineair aflossen, en je mag de rente maximaal 30 jaar aftrekken. Financieringskosten zoals taxatiekosten om de lening te krijgen, zijn ook aftrekbaar.' },
+];
+---
+<CalculatorPage
+  slug="hypotheekrenteaftrek-berekenen"
+  title="Hypotheekrenteaftrek berekenen 2026"
+  description="Bereken je hypotheekrenteaftrek in 2026: eigenwoningforfait, aftrek tegen maximaal 37,56%, Wet Hillen en wat je netto per maand aan rente betaalt."
+  h1="Hypotheekrenteaftrek berekenen"
+  intro="Vul de WOZ-waarde van je huis, je betaalde hypotheekrente en je inkomen in. Je ziet direct hoeveel belasting je terugkrijgt."
+  faq={faq}
+  bron={e.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label" id="r-label">Belastingvoordeel per jaar</p>
+      <p class="result-main" id="r-voordeel">–</p>
+      <p class="result-sub">Netto rente per maand <strong id="r-netto">–</strong></p>
+      <dl>
+        <dt>Eigenwoningforfait</dt><dd id="r-forfait">–</dd>
+        <dt>Betaalde rente en kosten</dt><dd id="r-rente">–</dd>
+        <dt>Saldo eigen woning</dt><dd id="r-saldo">–</dd>
+        <dt>Aftrek Wet Hillen</dt><dd id="r-hillen">–</dd>
+        <dt>Tariefsaanpassing</dt><dd id="r-ts">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="woz" label="WOZ-waarde" value="400000" prefix="€" hint="Peildatum 1 januari 2025" />
+      <Field id="rente" label="Betaalde hypotheekrente per jaar" value="12000" prefix="€" hint="Plus eventuele aftrekbare kosten, zoals erfpacht" />
+      <Field id="inkomen" label="Bruto jaarinkomen" value="60000" prefix="€" hint="Je belastbaar inkomen zonder de eigen woning" />
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo werkt de hypotheekrenteaftrek</h2>
+    <p>Woon je in een koophuis met een hypotheek, dan mag je de rente aftrekken van je inkomen in box 1. Daar staat tegenover dat je een klein percentage van de WOZ-waarde bij je inkomen telt: het <strong>eigenwoningforfait</strong>. Voor de meeste woningen is dat {pct(e.forfaitPercentage)} van de WOZ-waarde. Boven {eur(e.forfaitVillaGrens)} betaal je {eur(e.forfaitVillaBasis)} plus {pct(e.forfaitVillaPercentage)} over het meerdere.</p>
+    <p>Is je rente hoger dan het forfait, dan houd je een aftrekpost over. Die levert belasting op tegen je schijftarief, maar <strong>nooit meer dan {pct(e.maxAftrekTarief)}</strong>. Zit je inkomen boven {eur(grens)}, dan rekent de Belastingdienst het verschil tussen 49,50% en {pct(e.maxAftrekTarief)} terug: de tariefsaanpassing. Deze rekenhulp neemt dat mee.</p>
+    <p>Is het forfait juist hoger dan je rente, bijvoorbeeld omdat je bijna alles hebt afgelost? Dan krijg je de aftrek vanwege geen of een kleine eigenwoningschuld (Wet Hillen). In 2026 is die nog {pct(e.hillenPercentage, 3)} van het verschil.</p>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je huis heeft een WOZ-waarde van <strong>€ 400.000</strong>, je betaalt <strong>€ 12.000 rente</strong> per jaar en je verdient <strong>€ 60.000</strong>.</p>
+      <ul>
+        <li>Eigenwoningforfait: 0,35% × € 400.000 = € 1.400</li>
+        <li>Saldo: € 1.400 − € 12.000 = − € 10.600</li>
+        <li>Je inkomen valt in de tweede schijf (37,56%)</li>
+        <li>Belastingvoordeel: € 10.600 × 37,56% = <strong>€ 3.981,36 per jaar</strong></li>
+        <li>Netto rente: (€ 12.000 − € 3.981,36) / 12 = <strong>€ 668,22 per maand</strong></li>
+      </ul>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Terugkrijgen via de voorlopige aanslag</h2>
+    <p>Je hoeft niet tot je aangifte te wachten. Met een voorlopige aanslag krijg je de hypotheekrenteaftrek elke maand terug op je rekening. Je vraagt die aan in Mijn Belastingdienst. Na afloop van het jaar rekent de Belastingdienst alles definitief af in je aangifte.</p>
+    <p>Deze rekenhulp gaat uit van één eigenaar. Heb je een fiscale partner, dan mogen jullie het saldo van de eigen woning verdelen zoals jullie willen; het voordeel is het grootst bij de partner met het hoogste tarief, maar nooit meer dan {pct(e.maxAftrekTarief)}. Andere aftrekposten, heffingskortingen en een overgangsregeling voor oude hypotheken (van vóór 2013) zitten er niet in.</p>
+    <p>Wil je ook je bruto en netto maandlasten zien? Gebruik dan <a href="../hypotheek-maandlasten-berekenen/">hypotheek maandlasten</a>. Ga je een huis kopen? Kijk dan ook bij <a href="../overdrachtsbelasting-berekenen/">overdrachtsbelasting</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenRenteaftrek } from '../lib/calculators/eigenWoning';
+  import { euro, getal, live, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenRenteaftrek({ woz: getal('woz'), rente: getal('rente'), inkomen: getal('inkomen') });
+    const voordeel = -r.belastingeffect;
+    zet('r-label', voordeel >= 0 ? 'Belastingvoordeel per jaar' : 'Extra belasting per jaar');
+    zet('r-voordeel', euro(Math.abs(voordeel)));
+    zet('r-netto', euro(r.netteRentePerMaand));
+    zet('r-forfait', euro(r.forfait));
+    zet('r-rente', euro(getal('rente')));
+    zet('r-saldo', (r.saldo < 0 ? '− ' : '') + euro(Math.abs(r.saldo)));
+    zet('r-hillen', r.hillenAftrek > 0 ? '− ' + euro(r.hillenAftrek) : '–');
+    zet('r-ts', r.tariefsaanpassing > 0 ? '+ ' + euro(r.tariefsaanpassing) : '–');
+  });
+</script>

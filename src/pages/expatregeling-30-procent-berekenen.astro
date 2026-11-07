@@ -1,0 +1,80 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const x = tarieven.expatregeling;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const faq = [
+  { vraag: 'Wat is de salarisnorm voor de 30%-regeling in 2026?', antwoord: `Je belastbare jaarloon zonder de vergoeding moet meer zijn dan ${eur(x.salarisnorm)}. Ben je jonger dan 30 en heb je een Nederlandse master of een gelijkwaardige buitenlandse titel, dan is de norm ${eur(x.salarisnormJong)}. Voor wetenschappelijk onderzoekers bij bepaalde instellingen en artsen in opleiding tot specialist geldt geen norm.` },
+  { vraag: 'Wat is de maximale vergoeding?', antwoord: `In 2026 maximaal ${eur(x.maxVergoeding)} per jaar. Dat haal je bij een salaris van ${eur(x.maxSalaris)} of meer. Geldt de regeling maar een deel van het jaar, dan gaat het maximum naar verhouding omlaag.` },
+  { vraag: 'Wie vraagt de 30%-regeling aan?', antwoord: 'Je werkgever en jij vragen hem samen aan bij de Belastingdienst, binnen 4 maanden na de start van je werk. Je moet van buiten Nederland zijn aangeworven en in de 24 maanden daarvoor meer dan 16 maanden op meer dan 150 kilometer van de Nederlandse grens hebben gewoond.' },
+  { vraag: 'Wat als mijn salaris onder de norm zakt?', antwoord: 'Dan vervalt de regeling met terugwerkende kracht tot 1 januari van dat jaar. Let daarom op bij deeltijd, ouderschapsverlof of een loonsverlaging.' },
+];
+---
+<CalculatorPage
+  slug="expatregeling-30-procent-berekenen"
+  title="30%-regeling berekenen 2026 (expatregeling)"
+  description="Bereken de maximale belastingvrije vergoeding met de 30%-regeling in 2026: salarisnorm € 48.013, maximum € 78.600 en je netto voordeel."
+  h1="30%-regeling berekenen"
+  intro="Vul je bruto jaarsalaris in. Je ziet hoeveel je werkgever je met de expatregeling belastingvrij mag geven, en wat dat netto oplevert."
+  faq={faq}
+  bron={x.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Maximale belastingvrije vergoeding</p>
+      <p class="result-main" id="r-verg">–</p>
+      <p class="result-sub" id="r-status"></p>
+      <dl>
+        <dt>Salarisnorm</dt><dd id="r-norm">–</dd>
+        <dt>Plafond voor deze periode</dt><dd id="r-plafond">–</dd>
+        <dt>Totaal loon met vergoeding</dt><dd id="r-totaal">–</dd>
+        <dt>Belastingvoordeel (indicatie)</dt><dd id="r-voordeel">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="salaris" label="Bruto jaarsalaris zonder vergoeding" value="70000" prefix="€" />
+      <Field id="maanden" label="Maanden met de regeling in 2026" value="12" inputmode="numeric" />
+      <label class="check"><input type="checkbox" id="jong" name="jong" /> Ik ben jonger dan 30 en heb een master</label>
+      <label class="check"><input type="checkbox" id="geen" name="geen" /> Ik ben wetenschappelijk onderzoeker of arts in opleiding tot specialist</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo werkt de 30%-regeling</h2>
+    <p>Kom je uit het buitenland in Nederland werken, dan maak je extra kosten: dubbele woonlasten, reizen naar huis, een taalcursus. Met de <strong>expatregeling</strong> mag je werkgever daarvoor zonder bewijs een belastingvrije vergoeding geven van maximaal <strong>30% van het loon inclusief die vergoeding</strong>. Dat is hetzelfde als 30/70 van je loon zonder vergoeding.</p>
+    <p>Je loon zonder vergoeding moet wel boven de salarisnorm blijven: in 2026 meer dan {eur(x.salarisnorm)}, of {eur(x.salarisnormJong)} als je jonger bent dan 30 en een master hebt. De vergoeding is maximaal {eur(x.maxVergoeding)} per jaar. Je kunt de regeling maximaal 5 jaar gebruiken.</p>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je verdient <strong>€ 50.000</strong> per jaar zonder vergoeding en gebruikt de regeling het hele jaar.</p>
+      <ul>
+        <li>Je loon ligt boven de norm van € 48.013</li>
+        <li>Maximale vergoeding: 30/70 × € 50.000 = <strong>€ 21.428</strong></li>
+        <li>Je totale loon wordt € 71.428, waarvan € 21.428 onbelast</li>
+      </ul>
+      <p>Spreek je in plaats daarvan een totaalloon van € 50.000 inclusief vergoeding af, dan mag de vergoeding maar € 1.986 zijn: je loon zonder vergoeding moet boven € 48.013 blijven.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Wat levert het netto op?</h2>
+    <p>Over de vergoeding betaal je geen loonbelasting en geen premies werknemersverzekeringen. Het belastingvoordeel in deze rekenhulp is een indicatie: de vergoeding maal je hoogste schijftarief. In werkelijkheid hangt het ook af van je heffingskortingen en van hoe je werkgever het loon opbouwt. Soms verlaagt de werkgever het brutoloon om de vergoeding te betalen; dan bouw je ook minder pensioen op.</p>
+    <p>Naast de vergoeding mag je werkgever ook verhuiskosten en schoolgeld voor een internationale school onbelast vergoeden. De werkelijke extra kosten vergoeden mag ook, maar dan moet je ze kunnen bewijzen. Allebei tegelijk mag niet.</p>
+    <p>Wil je weten wat je netto overhoudt van je salaris? Gebruik <a href="../netto-salaris-berekenen/">netto salaris berekenen</a>. Ben je werkgever, kijk dan bij <a href="../loonkosten-werkgever-berekenen/">loonkosten werkgever</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenExpat } from '../lib/calculators/expat';
+  import { euro, getal, live, vinkje, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenExpat({ salaris: getal('salaris'), maanden: getal('maanden', 12), jongMaster: vinkje('jong'), geenNorm: vinkje('geen') });
+    zet('r-verg', euro(r.maxVergoeding, false));
+    zet('r-status', r.voldoetAanNorm ? `Per maand ongeveer ${euro(r.maxVergoeding / Math.max(1, Math.min(12, getal('maanden', 12))))}` : 'Je salaris ligt niet boven de salarisnorm, dus de regeling geldt niet.');
+    zet('r-norm', r.norm ? euro(r.norm, false) : 'geen');
+    zet('r-plafond', euro(r.plafond));
+    zet('r-totaal', euro(r.totaalLoon));
+    zet('r-voordeel', `${euro(r.belastingvoordeel)} (${r.marginaal.toLocaleString('nl-NL')}%)`);
+  });
+</script>

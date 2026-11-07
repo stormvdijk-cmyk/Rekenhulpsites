@@ -1,0 +1,79 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const rk = tarieven.reiskosten;
+const eur2 = (n: number) => '€ ' + n.toLocaleString('nl-NL', { minimumFractionDigits: 2 });
+const faq = [
+  { vraag: 'Hoe hoog is de thuiswerkvergoeding in 2026?', antwoord: `Je werkgever mag je in 2026 maximaal ${eur2(rk.thuiswerkPerDag)} per thuiswerkdag onbelast geven. Het is niet verplicht, tenzij het in je cao of contract staat.` },
+  { vraag: 'Mag ik op één dag een thuiswerk- en een reiskostenvergoeding krijgen?', antwoord: `Nee. Voor dezelfde dag mag je werkgever óf de thuiswerkvergoeding óf de reiskostenvergoeding voor woon-werkverkeer onbelast geven.` },
+  { vraag: 'Hoe werkt een vaste vergoeding per maand?', antwoord: `Je werkgever mag rekenen met maximaal ${rk.vasteVergoedingDagenFulltime} werkdagen per jaar bij een vijfdaagse werkweek, en naar verhouding bij minder dagen. Werk je bijvoorbeeld 2 dagen thuis en 3 op kantoor, dan zijn dat 86 thuiswerkdagen en 128 reisdagen.` },
+  { vraag: 'Krijg ik de thuiswerkvergoeding ook als zzp\'er?', antwoord: 'Nee, de thuiswerkvergoeding is een regeling voor werkgevers en werknemers. Als ondernemer kun je de kosten van je werkruimte onder voorwaarden aftrekken van je winst.' },
+];
+---
+<CalculatorPage
+  slug="thuiswerkvergoeding-berekenen"
+  title="Thuiswerkvergoeding berekenen 2026"
+  description="Bereken je onbelaste thuiswerkvergoeding (€ 2,45 per dag) en reiskostenvergoeding (€ 0,25 per km) in 2026, per maand en per jaar."
+  h1="Thuiswerkvergoeding berekenen"
+  intro="Vul in hoeveel dagen je thuis werkt en hoeveel dagen je naar kantoor reist. Je ziet hoeveel je werkgever je onbelast mag vergoeden."
+  faq={faq}
+  bron={tarieven.werkgever.bron}
+  bronNaam="Belastingdienst (loonheffingen 2026)"
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Onbelaste vergoeding per maand</p>
+      <p class="result-main" id="r-maand">–</p>
+      <p class="result-sub">Per jaar <strong id="r-jaar">–</strong></p>
+      <dl>
+        <dt id="r-tw-l">Thuiswerkvergoeding</dt><dd id="r-tw">–</dd>
+        <dt id="r-rk-l">Reiskostenvergoeding</dt><dd id="r-rk">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <div class="row-2">
+        <Field id="thuis" label="Thuiswerkdagen per week" value="2" inputmode="numeric" />
+        <Field id="kantoor" label="Kantoordagen per week" value="3" inputmode="numeric" />
+      </div>
+      <Field id="km" label="Afstand naar je werk (enkele reis)" value="20" suffix="km" hint="0 als je met de auto van de zaak of het ov reist" />
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo werkt de thuiswerkvergoeding</h2>
+    <p>Werk je thuis, dan maak je kosten voor stroom, verwarming, koffie en het toilet. Je werkgever mag je daarvoor in 2026 maximaal <strong>{eur2(rk.thuiswerkPerDag)} per thuiswerkdag</strong> belastingvrij vergoeden. Dat is een gerichte vrijstelling: het gaat niet ten koste van de vrije ruimte van de werkkostenregeling.</p>
+    <p>Voor dagen dat je naar je werk reist, mag je werkgever maximaal <strong>{eur2(rk.onbelastPerKm)} per kilometer</strong> onbelast geven. Per dag kies je één van de twee. Veel werkgevers betalen een vaste vergoeding per maand op basis van je vaste werkpatroon; ze mogen daarbij uitgaan van {rk.vasteVergoedingDagenFulltime} werkdagen per jaar bij vijf dagen per week.</p>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je werkt <strong>2 dagen thuis</strong> en reist <strong>3 dagen</strong> naar kantoor, 20 km enkele reis.</p>
+      <ul>
+        <li>Thuiswerkdagen per jaar: 214 × 2/5 = 86 dagen → 86 × € 2,45 = € 210,70</li>
+        <li>Reisdagen per jaar: 214 × 3/5 = 128 dagen → 128 × 40 km × € 0,25 = € 1.280</li>
+        <li>Samen € 1.490,70 per jaar, ofwel <strong>€ 124,23 per maand</strong> onbelast</li>
+      </ul>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Meer dan het maximum?</h2>
+    <p>Geeft je werkgever meer dan {eur2(rk.thuiswerkPerDag)} per dag of meer dan {eur2(rk.onbelastPerKm)} per kilometer, dan is het deel daarboven loon. Je werkgever kan dat deel nog onbelast laten via de vrije ruimte van de werkkostenregeling. Is die vol, dan betaalt de werkgever 80% eindheffing, of je betaalt er zelf loonbelasting over.</p>
+    <p>Verandert je werkpatroon blijvend, bijvoorbeeld omdat je vaker thuis gaat werken, dan moet de vaste vergoeding worden aangepast.</p>
+    <p>Wil je alleen je kilometervergoeding uitrekenen? Gebruik <a href="../kilometervergoeding-berekenen/">kilometervergoeding berekenen</a>. Ben je werkgever, kijk dan bij <a href="../werkkostenregeling-vrije-ruimte/">werkkostenregeling: vrije ruimte</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenThuiswerk } from '../lib/calculators/thuiswerk';
+  import { euro, getal, live, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenThuiswerk({ thuisDagen: getal('thuis'), kantoorDagen: getal('kantoor'), kmEnkel: getal('km') });
+    zet('r-maand', euro(r.totaalMaand));
+    zet('r-jaar', euro(r.totaalJaar));
+    zet('r-tw-l', `Thuiswerkvergoeding (${r.thuisDagenJaar} dagen per jaar)`);
+    zet('r-tw', euro(r.thuiswerkMaand) + ' p/m');
+    zet('r-rk-l', `Reiskostenvergoeding (${r.reisDagenJaar} dagen per jaar)`);
+    zet('r-rk', euro(r.reiskostenMaand) + ' p/m');
+  });
+</script>

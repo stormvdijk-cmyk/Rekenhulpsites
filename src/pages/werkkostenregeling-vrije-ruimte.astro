@@ -1,0 +1,81 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const w = tarieven.wkr;
+const eur = (n: number) => '€ ' + n.toLocaleString('nl-NL');
+const pct = (n: number) => (n * 100).toLocaleString('nl-NL', { minimumFractionDigits: 2 }) + '%';
+const faq = [
+  { vraag: 'Hoe groot is de vrije ruimte in 2026?', antwoord: `${pct(w.percentageLaag)} van je totale fiscale loon tot en met ${eur(w.grens)}, en ${pct(w.percentageHoog)} over het loon daarboven. Bij een loonsom van € 200.000 is dat € 4.000.` },
+  { vraag: 'Wat gebeurt er als ik over de vrije ruimte heen ga?', antwoord: `Over het bedrag boven de vrije ruimte betaal je als werkgever ${Math.round(w.eindheffing * 100)}% eindheffing. Je werknemer merkt daar niets van; de eindheffing komt voor rekening van de werkgever.` },
+  { vraag: 'Kan ik ongebruikte vrije ruimte meenemen naar volgend jaar?', antwoord: 'Nee. De vrije ruimte geldt per kalenderjaar. Wat je niet gebruikt, vervalt.' },
+  { vraag: 'Wat valt niet onder de vrije ruimte?', antwoord: 'Gerichte vrijstellingen, zoals reiskosten tot € 0,25 per kilometer, de thuiswerkvergoeding, cursussen, een laptop of telefoon die nodig is voor het werk en verhuiskosten. Ook nihilwaarderingen, zoals koffie en thee op de werkplek en werkkleding, tellen niet mee.' },
+];
+---
+<CalculatorPage
+  slug="werkkostenregeling-vrije-ruimte"
+  title="Werkkostenregeling 2026: vrije ruimte berekenen"
+  description="Bereken de vrije ruimte van de werkkostenregeling in 2026 (2% en 1,18%) en de 80% eindheffing als je personeel meer onbelast geeft."
+  h1="Werkkostenregeling: vrije ruimte berekenen"
+  intro="Vul je totale fiscale loonsom in en wat je dit jaar onbelast aan personeel geeft. Je ziet hoeveel ruimte je hebt en wat het kost als je erover gaat."
+  faq={faq}
+  bron={w.bron}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label">Vrije ruimte 2026</p>
+      <p class="result-main" id="r-vrij">–</p>
+      <p class="result-sub" id="r-sub"></p>
+      <dl>
+        <dt>Besteed in de vrije ruimte</dt><dd id="r-besteed">–</dd>
+        <dt>Nog over</dt><dd id="r-over">–</dd>
+        <dt>Boven de vrije ruimte</dt><dd id="r-boven">–</dd>
+        <dt>Eindheffing (80%)</dt><dd id="r-eh">–</dd>
+      </dl>
+    </div>
+    <div class="form">
+      <Field id="loon" label="Totaal fiscaal loon van alle werknemers" value="250000" prefix="€" hint="Het loon voor de loonbelasting over het hele jaar" />
+      <Field id="besteed" label="Wat je onbelast geeft in de vrije ruimte" value="4000" prefix="€" hint="Kerstpakketten, cadeaubonnen, personeelsfeest, sportabonnement" />
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Zo werkt de vrije ruimte</h2>
+    <p>Met de werkkostenregeling (WKR) mag je als werkgever een deel van je loonsom vrij besteden aan vergoedingen en verstrekkingen voor je personeel, zonder dat je werknemers daar belasting over betalen. Dat deel heet de <strong>vrije ruimte</strong>. In 2026 is die {pct(w.percentageLaag)} van het fiscale loon tot en met {eur(w.grens)} en {pct(w.percentageHoog)} over het meerdere.</p>
+    <p>Geef je meer dan de vrije ruimte, dan betaal jij als werkgever over het meerdere <strong>{Math.round(w.eindheffing * 100)}% eindheffing</strong>. Een cadeau van € 100 boven de vrije ruimte kost je dus € 180.</p>
+
+    <h2>Rekenvoorbeeld</h2>
+    <div class="voorbeeld">
+      <p>Je hebt een loonsom van <strong>€ 1.000.000</strong> (voorbeeld van de Belastingdienst).</p>
+      <ul>
+        <li>2% × € 400.000 = € 8.000</li>
+        <li>1,18% × € 600.000 = € 7.080</li>
+        <li>Vrije ruimte: <strong>€ 15.080</strong></li>
+      </ul>
+      <p>Geef je € 17.000 uit, dan is € 1.920 te veel. Daarover betaal je 80% eindheffing: € 1.536.</p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Gerichte vrijstellingen en normbedragen</h2>
+    <p>Niet alles wat je je personeel geeft, gaat ten koste van de vrije ruimte. <strong>Gerichte vrijstellingen</strong> zijn altijd onbelast, zolang je binnen de regels blijft: reiskosten tot € 0,25 per kilometer, de thuiswerkvergoeding van € 2,45 per dag, opleidingen, verhuiskosten en noodzakelijke laptops en telefoons. Voor maaltijden in de bedrijfskantine geldt in 2026 een normbedrag van € {w.normMaaltijd.toLocaleString('nl-NL', { minimumFractionDigits: 2 })} per maaltijd.</p>
+    <p>Houd tijdens het jaar bij wat je uit de vrije ruimte betaalt. Je berekent de eindheffing pas na afloop van het jaar over de hele loonsom, dus een kerstpakket in december kan je nog over de grens duwen. Plan grotere uitgaven daarom liever vroeg in het jaar, als je weet hoeveel ruimte er nog is.</p>
+    <p>Deze rekenhulp gaat uit van één werkgever. Hoort je bv bij een concern, dan mag je de vrije ruimte op concernniveau berekenen. De concernregeling zit niet in de berekening.</p>
+    <p>Wil je weten wat een werknemer je in totaal kost? Gebruik <a href="../loonkosten-werkgever-berekenen/">loonkosten werkgever</a>. Voor thuiswerkers: <a href="../thuiswerkvergoeding-berekenen/">thuiswerkvergoeding berekenen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenWkr } from '../lib/calculators/wkr';
+  import { formatProcent } from '../lib/calculators/format';
+  import { euro, getal, live, zet } from '../lib/ui';
+  live('f', () => {
+    const r = berekenWkr(getal('loon'), getal('besteed'));
+    zet('r-vrij', euro(r.vrijeRuimte));
+    zet('r-sub', r.overschrijding > 0 ? `Je zit ${euro(r.overschrijding)} boven de vrije ruimte.` : `Je gebruikt ${formatProcent(r.benutPct, 0)} van je vrije ruimte.`);
+    zet('r-besteed', euro(r.besteed));
+    zet('r-over', euro(r.over));
+    zet('r-boven', euro(r.overschrijding));
+    zet('r-eh', euro(r.eindheffing));
+  });
+</script>

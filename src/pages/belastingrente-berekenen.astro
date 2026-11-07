@@ -1,0 +1,101 @@
+---
+import CalculatorPage from '../components/CalculatorPage.astro';
+import Field from '../components/Field.astro';
+import { tarieven } from '../data/tarieven';
+const r = tarieven.belastingrente;
+const huidig = r.perioden[r.perioden.length - 1];
+const faq = [
+  { vraag: 'Hoe hoog is de belastingrente in 2026?', antwoord: `${huidig.pct.toLocaleString('nl-NL')}% per jaar, voor alle belastingen behalve toeslagen. In 2025 was het 6,5% en in 2024 7,5%. Het percentage hangt af van de rente van de Europese Centrale Bank.` },
+  { vraag: 'Hoe voorkom ik belastingrente?', antwoord: 'Doe je aangifte inkomstenbelasting vóór 1 mei en vul alles juist in. Neemt de Belastingdienst je aangifte ongewijzigd over, dan betaal je geen belastingrente, ook niet als de aanslag pas later komt. Uitstel voor je aangifte voorkomt geen belastingrente.' },
+  { vraag: 'Krijg ik ook rente als ik geld terugkrijg?', antwoord: 'Soms. Je krijgt belastingrente vergoed als de Belastingdienst je aangifte ongewijzigd overneemt, er langer dan 13 weken over doet en de aanslag pas na 1 juli na het belastingjaar komt. De rente loopt dan vanaf 1 juli tot 6 weken na de datum op de aanslag.' },
+  { vraag: 'Hoe rekent de Belastingdienst de dagen?', antwoord: 'Met 30 dagen per maand en 360 dagen per jaar. Belastingrente die je moet betalen, wordt naar beneden afgerond op hele euro\'s. Rente die je krijgt, wordt naar boven afgerond.' },
+];
+---
+<CalculatorPage
+  slug="belastingrente-berekenen"
+  title="Belastingrente berekenen inkomstenbelasting"
+  description="Bereken hoeveel belastingrente je betaalt of krijgt bij je aanslag inkomstenbelasting. Met de regels, rentepercentages en 30/360-telling."
+  h1="Belastingrente berekenen"
+  intro="Vul het bedrag van je aanslag en de datums in. Je ziet of je belastingrente betaalt of krijgt, en hoeveel."
+  faq={faq}
+  bron={r.bronBetalen}
+>
+  <form slot="calculator" class="calc" id="f" novalidate>
+    <div class="result" aria-live="polite">
+      <p class="result-label" id="r-label">Belastingrente</p>
+      <p class="result-main" id="r-rente">–</p>
+      <p class="result-sub" id="r-reden"></p>
+      <dl id="r-delen"></dl>
+    </div>
+    <div class="form">
+      <fieldset class="seg">
+        <legend>Moet je betalen of krijg je geld terug?</legend>
+        <label><input type="radio" name="soort" value="betalen" checked /><span>Ik moet betalen</span></label>
+        <label><input type="radio" name="soort" value="ontvangen" /><span>Ik krijg terug</span></label>
+      </fieldset>
+      <div class="row-2 stack">
+        <Field id="bedrag" label="Bedrag van de aanslag" value="1000" prefix="€" />
+        <Field id="jaar" label="Belastingjaar" value="2025" inputmode="numeric" />
+      </div>
+      <div class="row-2 stack">
+        <div class="field"><label for="aangifte">Datum aangifte ontvangen</label><div class="input-wrap"><input type="date" id="aangifte" name="aangifte" value="2026-05-20" /></div></div>
+        <div class="field"><label for="aanslag">Datum op de aanslag</label><div class="input-wrap"><input type="date" id="aanslag" name="aanslag" value="2026-11-20" /></div></div>
+      </div>
+      <label class="check"><input type="checkbox" id="afw" name="afw" /> De aanslag wijkt af van mijn aangifte</label>
+    </div>
+  </form>
+
+  <Fragment slot="uitleg-1">
+    <h2>Wanneer betaal je belastingrente?</h2>
+    <p>Belastingrente is een vergoeding voor de tijd dat de Belastingdienst op zijn geld wacht, of jij op het jouwe. Bij de inkomstenbelasting betaal je belastingrente over het bedrag van je aanslag als:</p>
+    <ul>
+      <li>je aangifte <strong>op of na 1 mei</strong> binnenkwam, of</li>
+      <li>de Belastingdienst bij de aanslag <strong>afwijkt van je aangifte</strong>, ook als je op tijd was.</li>
+    </ul>
+    <p>De rente loopt vanaf <strong>1 juli</strong> na het belastingjaar. Hij stopt 6 weken na de datum op de aanslag. Wijkt de aanslag niet af van je aangifte, dan stopt hij uiterlijk 19 weken na ontvangst van je aangifte. Valt de periode over een jaarwisseling, dan geldt per jaar het percentage van dat jaar.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th scope="col">Vanaf</th><th scope="col">Belastingrente</th></tr></thead>
+      <tbody>{[...r.perioden].reverse().map((p) => <tr><td>{new Date(p.vanaf).toLocaleDateString('nl-NL')}</td><td>{p.pct.toLocaleString('nl-NL')}%</td></tr>)}</tbody>
+    </table></div>
+
+    <h2>Rekenvoorbeeld van de Belastingdienst</h2>
+    <div class="voorbeeld">
+      <p>Je doet op 3 mei 2024 aangifte over 2023. Op 4 december 2024 krijg je een aanslag van <strong>€ 1.000</strong>, zonder wijzigingen.</p>
+      <ul>
+        <li>Start: 1 juli 2024. Einde: 19 weken na 3 mei = 13 september 2024</li>
+        <li>Dagen: 2 maanden en 13 dagen = 73 dagen</li>
+        <li>73 / 360 × 7,5% × € 1.000 = <strong>€ 15</strong> (naar beneden afgerond)</li>
+      </ul>
+    </div>
+  </Fragment>
+
+  <Fragment slot="uitleg-2">
+    <h2>Navordering, voorlopige aanslag en andere belastingen</h2>
+    <p>Krijg je een navorderingsaanslag, dan loopt de belastingrente tot 1 maand na de datum op die aanslag. Bij een voorlopige aanslag gelden vergelijkbare regels; vraag je die op tijd aan of pas je hem aan zodra je weet dat je moet bijbetalen, dan voorkom je vaak rente. Voor btw, loonheffing en vennootschapsbelasting zijn de regels anders; deze rekenhulp gaat alleen over de inkomstenbelasting.</p>
+    <p>Belastingrente is iets anders dan <strong>invorderingsrente</strong>. Die betaal je als je een aanslag te laat betaalt. Belastingrente gaat over de periode vóór de aanslag.</p>
+    <p>Wil je weten hoeveel inkomstenbelasting je moet betalen of terugkrijgt? Gebruik <a href="../inkomstenbelasting-berekenen/">inkomstenbelasting berekenen</a>.</p>
+  </Fragment>
+</CalculatorPage>
+
+<script>
+  import { berekenBelastingrente } from '../lib/calculators/belastingrente';
+  import { $, euro, getal, live, radio, vinkje, zet } from '../lib/ui';
+  const datum = (id: string) => { const v = $<HTMLInputElement>(id).value; const [y, m, d] = (v || '2026-01-01').split('-').map(Number); return new Date(y, m - 1, d); };
+  const nl = (s: string) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' }); };
+  live('f', () => {
+    const soort = radio('soort') === 'ontvangen' ? 'ontvangen' : 'betalen';
+    const r = berekenBelastingrente({ soort, bedrag: getal('bedrag'), belastingjaar: Math.round(getal('jaar', 2025)), aangifte: datum('aangifte'), aanslag: datum('aanslag'), afwijking: vinkje('afw') });
+    zet('r-label', soort === 'betalen' ? 'Belastingrente die je betaalt' : 'Belastingrente die je krijgt');
+    zet('r-rente', euro(r.rente, false));
+    zet('r-reden', r.van && r.tot ? `${r.reden.replace(' hieronder.', '')}: ${nl(r.van)} t/m ${nl(r.tot)}.` : r.reden);
+    const dl = $('r-delen');
+    dl.replaceChildren();
+    r.delen.forEach((x) => {
+      const dt = document.createElement('dt');
+      dt.textContent = `${x.dagen} dagen × ${x.pct.toLocaleString('nl-NL')}%`;
+      const dd = document.createElement('dd');
+      dd.textContent = euro(x.rente, false);
+      dl.append(dt, dd);
+    });
+  });
+</script>

@@ -233,3 +233,4 @@ details.tabel summary { cursor: pointer; font-weight: 600; margin: var(--space-3
 .voorstel-meta dd { margin: 0; }
 .voorstel-bron { font-size: 0.85rem; color: var(--text-muted); margin: var(--space-2) 0 0; }
 @media (max-width: 30rem) { .voorstel-meta { grid-template-columns: 1fr; } .voorstel-meta dd { margin-bottom: var(--space-2); } }
+h1, h2 { overflow-wrap: break-word; hyphens: auto; }
